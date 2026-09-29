@@ -10,7 +10,6 @@ const Router = () => {
     <Suspense fallback={<Loading />}>
       <BrowserRouter>
         <Routes>
-          <Route path={Menus.Login} element={<Pages.Login />} />
           <Route element={<Layout />}>
             <Route path={Menus.Home} element={<Pages.Home />} />
           </Route>

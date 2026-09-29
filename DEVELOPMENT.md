@@ -45,8 +45,8 @@ pnpm dev
   비워두면 상대 경로로 요청하여 개발 시 프록시를 타게 됩니다.
 
 ```ts
-// 엔드포인트는 src/request/const.ts의 API 상수로 관리합니다
-fetchApi({ method: HTTP_METHOD.POST, url: API.Auth.Login, data: params })
+// 엔드포인트는 src/request/const.ts의 API 상수에 추가해서 사용합니다 (예: API.Example.List)
+fetchApi({ method: HTTP_METHOD.GET, url: API.Example.List })
 ```
 
 ### 2. 코드 작성
@@ -135,7 +135,7 @@ pnpm test:coverage  # 커버리지 측정
 ### 설정 파일
 
 - `vitest.config.ts` — jsdom 환경, `@` 별칭, SCSS 전역 변수 주입 설정
-- `src/test/setup.ts` — `@testing-library/jest-dom` 로드 및 SVG 모킹
+- `src/test/setup.ts` — `@testing-library/jest-dom/vitest` 로드(`toBeInTheDocument` 등 matcher와 타입) 및 SVG 모킹
 - `src/test/mocks/svgMock.tsx` — SVG 컴포넌트 모의 구현
 
 ### 테스트 작성 가이드

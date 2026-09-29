@@ -11,7 +11,6 @@ export const axiosInstance = axios.create({
 
 const makeRequest = (request: AxiosRequestConfig): AxiosRequestConfig => {
   const { url = '', method = HTTP_METHOD.GET, ...rest } = request
-  // const loginHeaders = url === API.Auth.Login ? { 'X-Return-Refresh-Token': true } : {}
   console.log('request :: ', request, ' // ', rest)
   return {
     url,
@@ -21,7 +20,6 @@ const makeRequest = (request: AxiosRequestConfig): AxiosRequestConfig => {
       Accept: '*/*',
       'Content-Type': 'application/json; charset=UTF-8',
       'X-Api-Envelope': true,
-      // ...loginHeaders,
     },
     ...rest,
   }

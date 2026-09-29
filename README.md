@@ -84,14 +84,11 @@ src/
 │   └── useExample.ts      # TanStack Query 사용 예시
 ├── pages/                 # 페이지 컴포넌트
 │   ├── index.ts           # lazy()로 페이지 일괄 export
-│   ├── home/              # 홈
-│   ├── login/             # 로그인 (index.tsx, loginApi.ts, type.ts)
-│   ├── main/              # Outlet 래퍼
+│   ├── home/              # 홈 (첫 화면)
 │   └── errorPage/         # 404
 ├── request/               # API 통신 레이어
 │   ├── axios.ts           # axiosInstance, fetchApi 래퍼
-│   ├── const.ts           # API_BASE_DOMAIN, HTTP_METHOD, API 엔드포인트
-│   └── useIntercept.ts    # 응답 인터셉터 (401 처리)
+│   └── const.ts           # API_BASE_DOMAIN, HTTP_METHOD, API 엔드포인트
 ├── routes/                # 라우팅 설정
 │   ├── index.tsx          # Suspense + BrowserRouter + Routes
 │   └── const.ts           # Menus 경로 상수
@@ -100,23 +97,23 @@ src/
 │   ├── global.scss
 │   └── variables.scss
 ├── test/                  # 테스트 설정 및 모킹
-└── utils/                 # 유틸리티 함수 (cookie, helpers)
+└── utils/                 # 유틸리티 함수 (helpers)
 ```
 
 ## 라우트 구조
 
-| 경로     | 컴포넌트     | 비고                     |
-| -------- | ------------ | ------------------------ |
-| `/`      | `Home`       | `Layout`으로 감싸짐      |
-| `/login` | `Login`      | 레이아웃 없음            |
-| `/*`     | `NotFound`   | 정의되지 않은 모든 경로  |
+| 경로 | 컴포넌트   | 비고                         |
+| ---- | ---------- | ---------------------------- |
+| `/`  | `Home`     | 첫 화면, `Layout`으로 감싸짐 |
+| `/*` | `NotFound` | 정의되지 않은 모든 경로      |
+
+로그인·계정 기능이 없는 공개 사이트라서 모든 화면을 누구나 볼 수 있습니다.
 
 경로 문자열은 [`src/routes/const.ts`](src/routes/const.ts)의 `Menus` 상수로 관리합니다.
 
 ```tsx
 export const Menus = {
   Home: '/',
-  Login: '/login',
 } as const
 ```
 
@@ -132,7 +129,6 @@ export const Menus = {
 <Suspense fallback={<Loading />}>
   <BrowserRouter>
     <Routes>
-      <Route path={Menus.Login} element={<Pages.Login />} />
       <Route element={<Layout />}>
         <Route path={Menus.Home} element={<Pages.Home />} />
       </Route>
@@ -187,18 +183,22 @@ const Component = () => <Logo className="icon" />
 
 ### API 호출
 
-`request/const.ts`에 엔드포인트를 정의하고, `fetchApi` 래퍼와 TanStack Query를 조합합니다.
+`request/const.ts`의 `API` 객체에 엔드포인트를 정의하고, `fetchApi` 래퍼와 TanStack Query를 조합합니다.
 
 ```ts
-// src/pages/login/loginApi.ts
-const useLoginApi = {
-  login: ({ onSuccess, onError }) =>
-    useMutation({
-      mutationFn: (params: ILoginParams) => fetchApi({ method: HTTP_METHOD.POST, url: API.Auth.Login, data: params }),
-      onSuccess: data => onSuccess(data.body),
-      onError,
-    }),
+// 예시: src/request/const.ts에 엔드포인트 추가
+export const API = {
+  Example: {
+    List: `${API_BASE_PATH}/examples`,
+  },
 }
+
+// 예시: 사용하는 쪽
+const useExampleList = () =>
+  useQuery({
+    queryKey: ['examples'],
+    queryFn: () => fetchApi({ method: HTTP_METHOD.GET, url: API.Example.List }),
+  })
 ```
 
 `axiosInstance`를 직접 사용하는 예시는 [`src/hooks/useExample.ts`](src/hooks/useExample.ts)를 참고하세요.
@@ -278,10 +278,8 @@ import { LOADING_TYPE } from '@/components/loading/const'
 
 초기 세팅 단계로, 다음 항목은 아직 미완성입니다.
 
-- **인증 플로우** — `Layout`이 마운트 시 무조건 `/login`으로 리다이렉트합니다. 토큰 검증 로직은 미구현 상태입니다.
-- **응답 인터셉터** — `useIntercept`의 로그아웃 / 토큰 갱신 로직이 주석 처리되어 있으며, 훅 자체가 아직 호출되지 않습니다.
-- **API 도메인** — `vite.config.ts`의 `getApiDomain()`이 모든 mode에서 빈 문자열을 반환합니다. 실제 서버 주소 설정이 필요합니다.
-- **`src/pages/main`** — 어느 라우트에도 연결되어 있지 않습니다.
+- **홈 화면** — 첫 화면(`/`)으로 연결되어 있지만 아직 내용이 비어 있습니다.
+- **API 도메인** — `vite.config.ts`의 `getApiDomain()`이 모든 mode에서 빈 문자열을 반환합니다. 서버 데이터를 쓰게 되면 실제 서버 주소 설정이 필요합니다.
 - `useExample.ts`, `useExampleStore.ts`는 참고용 예시 코드입니다.
 
 ## 관련 문서
