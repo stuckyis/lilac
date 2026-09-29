@@ -150,3 +150,8 @@ dist-ssr
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# AI 작업 문서 (로컬 전용: 규칙·계획·기록)
+CLAUDE.md
+AGENTS.md
+/docs/
