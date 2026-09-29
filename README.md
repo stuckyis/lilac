@@ -7,21 +7,23 @@ React 19 + TypeScript + Vite + pnpm 기반 SPA 프로젝트
 | 영역          | 사용 기술                                        |
 | ------------- | ------------------------------------------------ |
 | UI            | React 19                                         |
-| 언어          | TypeScript 5.9                                   |
+| 언어          | TypeScript 6.0                                   |
 | 빌드 도구     | Vite 8                                           |
-| 패키지 매니저 | pnpm 11                                          |
+| 패키지 매니저 | pnpm 12                                          |
 | 라우팅        | React Router 8 (`react-router`)                  |
 | 서버 상태     | TanStack Query 5                                 |
 | HTTP 클라이언트 | Axios                                          |
 | 전역 상태     | Zustand 5                                        |
 | 스타일링      | SCSS (Sass) + clsx                               |
-| 테스트        | Vitest 4 + Testing Library + jsdom               |
+| 테스트        | Vitest 5 + Testing Library + jsdom               |
 | 코드 품질     | ESLint 10 + Prettier 3                           |
 | 기타          | vite-plugin-svgr (SVG를 React 컴포넌트로 import) |
 
 ## 시작하기
 
 ### 패키지 설치
+
+Node.js 22.12 이상과 pnpm 12가 필요합니다. (Vitest 5가 Node.js 22.12 이상을 요구합니다.)
 
 ```bash
 pnpm install

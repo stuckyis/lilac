@@ -1,4 +1,4 @@
-import { AxiosError, AxiosResponse, HttpStatusCode, isAxiosError } from 'axios'
+import { type AxiosError, type AxiosResponse, HttpStatusCode, isAxiosError } from 'axios'
 import { useCallback, useLayoutEffect } from 'react'
 import axiosInstance from './axios'
 import { API } from './const'
