@@ -32,6 +32,16 @@ $color-line-100: #ece6f4;
 $color-line-200: #e6e0ee;
 $color-line-300: #ddd5e8;
 
+// Colors - 색 이름 → 색. src/data/const.ts의 TONE과 이름을 맞춘다 (제품 로고 자리 등 색 칸)
+$tones: (
+  lilac: $color-lilac-100,
+  mint: $color-mint-100,
+  butter: $color-butter-100,
+  peach: $color-peach-100,
+  accent: $color-accent,
+  ink: $color-ink,
+);
+
 // Colors - 어두운 영역 (숫자 띠, 연락)
 $color-dark: #1f1b2d;
 $color-on-dark: #f4f1fa;

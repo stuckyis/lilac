@@ -56,3 +56,16 @@ export const LayoutIcon = (props: IconProps) => (
     <rect x="13" y="13" width="8" height="8" rx="2" />
   </LineIcon>
 )
+
+export const PauseIcon = (props: IconProps) => (
+  <LineIcon {...props}>
+    <rect x="7" y="5" width="3" height="14" rx="1" fill="currentColor" stroke="none" />
+    <rect x="14" y="5" width="3" height="14" rx="1" fill="currentColor" stroke="none" />
+  </LineIcon>
+)
+
+export const PlayIcon = (props: IconProps) => (
+  <LineIcon {...props}>
+    <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" stroke="none" />
+  </LineIcon>
+)

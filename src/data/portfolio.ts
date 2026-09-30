@@ -1,4 +1,5 @@
-import type { Intro, Profile, Stat } from './type'
+import { TONE } from './const'
+import type { Intro, Product, Profile, Stat } from './type'
 
 // 화면에 들어가는 내용을 모아 둔 파일이다. 내용을 바꿀 때는 이 파일만 고친다.
 // 실제 내용을 받기 전까지는 시안의 자리표시자([이름], [YYYY] 등)를 쓴다.
@@ -33,4 +34,14 @@ export const STATS: Stat[] = [
   { value: '[N]+', label: '출시에 참여한 제품' },
   { value: '[N]만+', label: '제품을 쓴 사용자' },
   { value: '[N]%', label: '[대표 지표] 개선' },
+]
+
+/** 출시에 참여한 제품. 로고 띠에서 이 순서대로 흐른다 */
+export const PRODUCTS: Product[] = [
+  { name: '[제품 A]', tone: TONE.LILAC },
+  { name: '[제품 B]', tone: TONE.MINT },
+  { name: '[제품 C]', tone: TONE.BUTTER },
+  { name: '[제품 D]', tone: TONE.PEACH },
+  { name: '[제품 E]', tone: TONE.ACCENT },
+  { name: '[제품 F]', tone: TONE.INK },
 ]

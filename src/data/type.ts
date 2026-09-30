@@ -1,3 +1,5 @@
+import type { Tone } from './const'
+
 /** 외부 프로필 링크 */
 export interface SocialLinks {
   github: string
@@ -41,4 +43,12 @@ export interface Intro {
 export interface Stat {
   value: string
   label: string
+}
+
+/** 출시에 참여한 제품 (제품 로고 띠) */
+export interface Product {
+  name: string
+  /** 로고 이미지 주소. 없으면 tone 색의 네모를 대신 보여준다 */
+  logoUrl?: string
+  tone: Tone
 }
