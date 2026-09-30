@@ -79,6 +79,7 @@ src/
 ├── app.tsx                # QueryClientProvider, bfcache 복원 처리
 ├── assets/                # 이미지, SVG 등 정적 리소스
 ├── data/                  # 화면에 들어가는 내용
+│   ├── const.ts           # 색 이름(TONE) 등 콘텐츠에서 쓰는 상수
 │   ├── type.ts            # 콘텐츠 타입
 │   └── portfolio.ts       # 이력·프로젝트 등 내용 (지금은 자리표시자)
 ├── components/            # 재사용 가능한 컴포넌트
