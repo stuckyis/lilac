@@ -36,3 +36,9 @@ export interface Intro {
   /** 오른쪽 지표 패널(PERFORMANCE)에 보여줄 수치 */
   metric: string
 }
+
+/** 숫자 띠의 숫자 하나. 설명은 숫자 뒤에 이어 읽히도록 쓴다 (예: '10+' + '년 차 프론트엔드 경력') */
+export interface Stat {
+  value: string
+  label: string
+}

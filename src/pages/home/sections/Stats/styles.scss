@@ -1,0 +1,55 @@
+@use 'sass:list';
+
+// 숫자 색. 순서대로 돌아가며 쓴다
+$stats-tones: ($color-lilac-200, $color-mint-200, $color-butter-200, $color-peach-200);
+
+.stats {
+  // 1440 화면에서 양옆 40px만 남기는 폭(1360px). 안쪽 여백 80px과 합쳐 숫자가 다른 섹션의 콘텐츠 폭(1200px)과 나란하다.
+  @include container($content-max-width + 160px);
+  position: relative;
+  overflow: hidden;
+  padding: 50px 80px;
+  border-radius: $radius-3xl;
+  background-color: $color-dark;
+  color: $color-on-dark;
+
+  &__mark {
+    position: absolute;
+    top: -40px;
+    right: -30px;
+    opacity: 0.12;
+  }
+
+  &__list {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &__value {
+    font-family: $font-display;
+    font-size: 68px;
+    font-weight: $font-weight-bold;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  @for $index from 1 through list.length($stats-tones) {
+    &__item:nth-child(#{list.length($stats-tones)}n + #{$index}) &__value {
+      color: list.nth($stats-tones, $index);
+    }
+  }
+
+  &__label {
+    font-size: 16px;
+    color: $color-on-dark-muted;
+  }
+}
