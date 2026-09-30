@@ -84,14 +84,14 @@ src/
 ├── components/            # 재사용 가능한 컴포넌트
 │   ├── layout/            # Layout(본문 바로가기 + Header + Outlet + Footer), Header
 │   ├── loading/           # Loading (spinner / pulse 타입)
-│   └── ui/                # 여러 화면이 같이 쓰는 작은 조각 (BlockMark 등)
+│   └── ui/                # 여러 화면이 같이 쓰는 작은 조각 (BlockMark, Icon)
 ├── hooks/                 # 커스텀 훅
 │   ├── useExample.ts      # TanStack Query 사용 예시
 │   ├── useScrolled.ts     # 스크롤 여부 (헤더 모양 전환)
 │   └── useSeoulTime.ts    # 서울 시각 HH:mm (지금은 쓰지 않음)
 ├── pages/                 # 페이지 컴포넌트
 │   ├── index.ts           # lazy()로 페이지 일괄 export
-│   ├── home/              # 홈 (첫 화면)
+│   ├── home/              # 홈 (첫 화면). 섹션은 sections/<섹션>/에 있다 (Hero 등)
 │   └── errorPage/         # 404
 ├── request/               # API 통신 레이어
 │   ├── axios.ts           # axiosInstance, fetchApi 래퍼

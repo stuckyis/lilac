@@ -18,5 +18,21 @@ export interface Profile {
   email: string
   /** 이력서 PDF 주소 */
   resumeUrl: string
+  /** 프로필 사진 주소. 없으면 자리표시 원을 보여준다 */
+  photoUrl?: string
   links: SocialLinks
+}
+
+/** 첫 화면 소개 */
+export interface Intro {
+  /** 라벨 앞부분 (예: 'FRONTEND ENGINEER'). 뒤에 `· SINCE 시작 연도`가 붙는다 */
+  role: string
+  /** 큰 문장. 한 칸이 한 줄이다 */
+  headline: string[]
+  /** 큰 문장에서 라일락 바탕으로 강조할 단어 */
+  highlight: string
+  /** 소개 문장. 한 칸이 한 줄이다 */
+  lead: string[]
+  /** 오른쪽 지표 패널(PERFORMANCE)에 보여줄 수치 */
+  metric: string
 }

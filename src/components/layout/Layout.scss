@@ -3,12 +3,10 @@
   flex-direction: column;
   min-height: 100vh;
 
+  // 섹션마다 배경을 화면 끝까지 칠할 수 있도록 폭 제한과 여백을 두지 않는다. 콘텐츠 폭은 각 섹션이 container 믹스인으로 정한다.
   .main-content {
     flex: 1;
-    padding: $spacing-xl;
-    max-width: 1200px;
     width: 100%;
-    margin: 0 auto;
 
     // 본문 바로가기로 포커스가 옮겨 올 때 본문 전체에 외곽선을 그리지 않는다
     &:focus {
