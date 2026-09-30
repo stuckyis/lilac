@@ -52,3 +52,44 @@ export interface Product {
   logoUrl?: string
   tone: Tone
 }
+
+/** 성과 수치 하나. 설명은 수치 뒤에 이어 읽히도록 쓴다 (예: '+32%' + '전환율 개선') */
+export interface Metric {
+  value: string
+  label: string
+}
+
+/** 대표 작업 */
+export interface Work {
+  /** 목록 선택에 쓰는 고유 id */
+  id: string
+  title: string
+  company: string
+  period: string
+  role: string
+  /** 팀 규모 (예: '6명 팀') */
+  team: string
+  /** 무엇을, 누구를 위해 만들었는지 한 줄 */
+  summary: string
+  /** 성과 수치 2개 */
+  metrics: [Metric, Metric]
+  /** 사용 기술 */
+  tags: string[]
+  /** 썸네일 바탕색 (대표 화면 캡처가 없을 때) */
+  tone: Tone
+  /** 대표 화면 캡처 이미지 주소 */
+  imageUrl?: string
+  /** 케이스 스터디 주소. 있을 때만 버튼을 보여준다 */
+  caseUrl?: string
+}
+
+/** 그 밖의 작업 (카드) */
+export interface MoreWork {
+  title: string
+  company: string
+  year: string
+  tone: Tone
+  imageUrl?: string
+  /** 자세히 볼 주소. 있으면 카드 전체가 링크가 된다 */
+  url?: string
+}

@@ -85,7 +85,7 @@ src/
 ├── components/            # 재사용 가능한 컴포넌트
 │   ├── layout/            # Layout(본문 바로가기 + Header + Outlet + Footer), Header
 │   ├── loading/           # Loading (spinner / pulse 타입)
-│   └── ui/                # 여러 화면이 같이 쓰는 작은 조각 (BlockMark, Icon)
+│   └── ui/                # 여러 화면이 같이 쓰는 작은 조각 (BlockMark, Icon, SectionHeading)
 ├── hooks/                 # 커스텀 훅
 │   ├── useExample.ts      # TanStack Query 사용 예시
 │   ├── useScrolled.ts     # 스크롤 여부 (헤더 모양 전환)
@@ -299,6 +299,7 @@ import { LOADING_TYPE } from '@/components/loading/const'
 | `mono-label`      | 모노 라벨 (예: `01 — WORK`)                           |
 | `visually-hidden` | 화면에는 숨기고 스크린리더만 읽게 함                  |
 | `reduced-motion`  | 움직임 줄이기 설정을 켠 사용자에게만 적용             |
+| `tone-modifiers`  | 색 이름(`$tones`)마다 `--lilac` 같은 바탕색 수정자 생성 |
 
 ### 반응형 디자인
 

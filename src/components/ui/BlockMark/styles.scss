@@ -24,7 +24,11 @@
     fill: $color-surface;
   }
 
-  &--ink &__cell {
-    fill: $color-ink;
+  &--on-pastel &__cell {
+    fill: rgba($color-surface, 0.85);
+
+    &--accent {
+      fill: $color-ink;
+    }
   }
 }

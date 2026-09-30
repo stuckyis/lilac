@@ -1,0 +1,283 @@
+@keyframes work-preview-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.work {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: 100px 0;
+
+  &__main {
+    display: flex;
+    align-items: flex-start;
+    gap: 56px;
+  }
+
+  // 목록(세로 탭)
+  &__tabs {
+    flex-grow: 1;
+    min-width: 0;
+    border-bottom: 1px solid $color-line-200;
+  }
+
+  &__tab {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 16px;
+    width: 100%;
+    padding: 26px 0;
+    border-top: 1px solid $color-line-200;
+    text-align: left;
+  }
+
+  // 선택되면 번호와 제목만 오른쪽으로 밀린다 (구분선과 회사·기간은 제자리)
+  &__tab-no,
+  &__tab-title {
+    transition:
+      color 0.35s,
+      transform 0.35s $ease-soft;
+  }
+
+  &__tab-no {
+    font-family: $font-mono;
+    font-size: 15px;
+    color: $color-muted;
+  }
+
+  // 고르지 않은 제목은 흐리게. 시안의 투명도 45%는 대비가 2.8:1이라 3.6:1인 $color-faded를 쓴다
+  &__tab-title {
+    font-size: 36px;
+    font-weight: $font-weight-bold;
+    line-height: 1.25;
+    letter-spacing: -0.03em;
+    color: $color-faded;
+  }
+
+  &__tab-meta {
+    font-size: 15px;
+    color: $color-muted;
+    white-space: nowrap;
+  }
+
+  &__tab--active &__tab-no,
+  &__tab--active &__tab-title {
+    color: $color-accent;
+    transform: translateX(14px);
+  }
+}
+
+// 미리보기(탭 패널)
+.work-preview {
+  flex-shrink: 0;
+  width: 460px;
+  padding: 18px;
+  border: 1px solid $color-line-100;
+  border-radius: 32px;
+  background-color: $color-surface;
+  box-shadow: 0 30px 70px rgba($color-ink, 0.08);
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    animation: work-preview-in 0.35s $ease-soft;
+  }
+
+  &__thumb {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 250px;
+    overflow: hidden;
+    border-radius: 22px;
+    @include tone-modifiers;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__caption {
+    position: absolute;
+    left: 18px;
+    bottom: 14px;
+    font-size: 13px;
+    color: $color-ink;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 4px 8px 8px;
+  }
+
+  &__meta {
+    @include mono-label(12px, 0);
+    color: $color-muted;
+  }
+
+  &__summary {
+    font-size: 19px;
+    font-weight: $font-weight-medium;
+    line-height: 1.55;
+  }
+
+  &__metrics {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    list-style: none;
+  }
+
+  &__metric {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 14px 16px;
+    border-radius: $radius-lg;
+    background-color: $color-accent-soft;
+  }
+
+  &__metric-value {
+    font-family: $font-display;
+    font-size: 30px;
+    font-weight: $font-weight-bold;
+    line-height: 1.2;
+    color: $color-accent;
+  }
+
+  &__metric-label {
+    font-size: 13px;
+    color: $color-muted;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+  }
+
+  &__tag {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background-color: $color-surface-soft;
+    @include mono-label(12px, 0);
+  }
+
+  &__link {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 46px;
+    padding: 0 20px;
+    border-radius: 14px;
+    background-color: $color-dark;
+    font-size: 15px;
+    font-weight: $font-weight-medium;
+    color: $color-surface;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $color-accent;
+      color: $color-surface;
+    }
+  }
+}
+
+// 그 밖의 작업
+.more-work {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 24px;
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: $font-weight-bold;
+  }
+
+  &__mark {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background-color: $color-accent;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    list-style: none;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    color: $color-ink;
+  }
+
+  &__thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 22px;
+    font-size: 14px;
+    color: $color-muted;
+    transition: transform 0.3s $ease-soft;
+    @include tone-modifiers;
+  }
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__name {
+    font-size: 18px;
+    font-weight: $font-weight-bold;
+    transition: color 0.2s;
+  }
+
+  &__meta {
+    font-size: 14px;
+    color: $color-muted;
+  }
+
+  // 링크 카드에 마우스를 올리면 썸네일이 살짝 떠오르고 이름이 강조색이 된다
+  a.more-work__card:hover {
+    color: $color-ink;
+
+    .more-work__thumb {
+      transform: translateY(-4px);
+    }
+
+    .more-work__name {
+      color: $color-accent;
+    }
+  }
+}

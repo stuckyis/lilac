@@ -1,0 +1,40 @@
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    @include mono-label(13px);
+    color: $color-accent;
+  }
+
+  &__mark {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background-color: $color-accent;
+  }
+
+  &__title {
+    font-size: 56px;
+    font-weight: $font-weight-heavy;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+  }
+
+  &__note {
+    font-size: 15px;
+    color: $color-muted;
+  }
+}

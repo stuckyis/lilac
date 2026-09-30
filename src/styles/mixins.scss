@@ -36,3 +36,13 @@
     @content;
   }
 }
+
+// $tones 맵의 색 이름마다 `&--이름` 수정자를 만든다 (예: .thumb--lilac { background-color: ... }).
+// 데이터의 tone 값(src/data/const.ts의 TONE)을 클래스 이름으로 그대로 쓴다.
+@mixin tone-modifiers($property: background-color) {
+  @each $tone, $color in $tones {
+    &--#{$tone} {
+      #{$property}: $color;
+    }
+  }
+}

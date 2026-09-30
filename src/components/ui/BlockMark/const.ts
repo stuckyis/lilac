@@ -3,8 +3,8 @@ export const BLOCK_MARK_VARIANT = {
   DEFAULT: 'default',
   /** 어두운 바탕: 강조 칸을 흰색으로 */
   ON_DARK: 'on-dark',
-  /** 한 가지 색: 파스텔 바탕 위 */
-  INK: 'ink',
+  /** 파스텔 바탕 위: 흰 칸 셋 + 잉크색 한 칸 (작업 미리보기 썸네일) */
+  ON_PASTEL: 'on-pastel',
 } as const
 
 export type BlockMarkVariant = (typeof BLOCK_MARK_VARIANT)[keyof typeof BLOCK_MARK_VARIANT]

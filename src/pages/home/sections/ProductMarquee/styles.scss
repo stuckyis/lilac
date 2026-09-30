@@ -105,11 +105,7 @@
     border-radius: 9px;
     object-fit: contain;
 
-    @each $tone, $color in $tones {
-      &--#{$tone} {
-        background-color: $color;
-      }
-    }
+    @include tone-modifiers;
   }
 
   // 움직임 줄이기: 흐르지 않고 복제본 없이 모든 제품을 여러 줄로 보여준다
