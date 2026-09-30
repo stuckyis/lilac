@@ -1,27 +1,43 @@
 # Lilac
 
-React + TypeScript + Vite + pnpm + Zustand 기반 프로젝트
+React 19 + TypeScript + Vite + pnpm 기반 SPA 프로젝트
 
 ## 기술 스택
 
-- **React 18** - UI 라이브러리
-- **TypeScript** - 타입 안정성
-- **Vite** - 빌드 도구
-- **pnpm** - 패키지 매니저
-- **Zustand** - 상태 관리
-- **React Router DOM** - 클라이언트 사이드 라우팅
-- **SCSS** - 스타일링
-- **Axios** - HTTP 클라이언트
-- **TanStack Query** - 서버 상태 관리
-- **vite-plugin-svgr** - SVG를 React 컴포넌트로 import
+| 영역          | 사용 기술                                        |
+| ------------- | ------------------------------------------------ |
+| UI            | React 19                                         |
+| 언어          | TypeScript 6.0                                   |
+| 빌드 도구     | Vite 8                                           |
+| 패키지 매니저 | pnpm 12                                          |
+| 라우팅        | React Router 8 (`react-router`)                  |
+| 서버 상태     | TanStack Query 5                                 |
+| HTTP 클라이언트 | Axios                                          |
+| 전역 상태     | Zustand 5                                        |
+| 스타일링      | SCSS (Sass) + clsx                               |
+| 테스트        | Vitest 5 + Testing Library + jsdom               |
+| 코드 품질     | ESLint 10 + Prettier 3                           |
+| 기타          | vite-plugin-svgr (SVG를 React 컴포넌트로 import) |
 
 ## 시작하기
 
 ### 패키지 설치
 
+Node.js 22.12 이상과 pnpm 12가 필요합니다. (Vitest 5가 Node.js 22.12 이상을 요구합니다.)
+
 ```bash
 pnpm install
 ```
+
+### 환경 변수
+
+프로젝트 루트의 `.env` 파일에 API 서버 주소를 설정합니다.
+
+```bash
+VITE_API_BASE_URL=https://api.example.com
+```
+
+값이 비어 있으면 Axios가 상대 경로로 요청하며, 개발 환경에서는 Vite 프록시를 타게 됩니다.
 
 ### 개발 서버 실행
 
@@ -29,81 +45,124 @@ pnpm install
 pnpm dev
 ```
 
-개발 서버는 `http://localhost:5055`에서 실행됩니다.
+개발 서버는 `http://localhost:5055`에서 실행됩니다. (`pnpm dev`는 `pnpm install`을 먼저 수행합니다.)
 
-### 빌드
-
-```bash
-pnpm build
-```
-
-### 프리뷰
+### 빌드 / 프리뷰
 
 ```bash
-pnpm preview
+pnpm build     # tsc -b 후 vite build
+pnpm preview   # 빌드 결과 미리보기
 ```
+
+## 스크립트
+
+| 명령어               | 설명                          |
+| -------------------- | ----------------------------- |
+| `pnpm dev`           | 개발 서버 실행 (포트 5055)    |
+| `pnpm build`         | 타입 체크 후 프로덕션 빌드    |
+| `pnpm preview`       | 빌드 결과 로컬 미리보기       |
+| `pnpm lint`          | ESLint 검사                   |
+| `pnpm lint:fix`      | ESLint 검사 및 자동 수정      |
+| `pnpm format`        | Prettier 포맷팅               |
+| `pnpm format:check`  | 포맷 검사만 수행              |
+| `pnpm test`          | 테스트 실행 (watch 모드)      |
+| `pnpm test:run`      | 테스트 1회 실행               |
+| `pnpm test:ui`       | Vitest UI 모드                |
+| `pnpm test:coverage` | 커버리지 측정                 |
 
 ## 프로젝트 구조
 
 ```
 src/
-├── components/         # 재사용 가능한 컴포넌트
-│   └── layout/        # 레이아웃 컴포넌트 (Navigation, Layout)
-├── pages/             # 페이지 컴포넌트
-│   ├── HomePage.tsx
-│   ├── AboutPage.tsx
-│   ├── ExamplePage.tsx
-│   └── NotFoundPage.tsx
-├── routes/            # 라우터 설정
-│   └── index.tsx
-├── hooks/             # 커스텀 훅
-├── lib/               # 라이브러리 설정 (axios 등)
-├── stores/            # Zustand 스토어
-├── styles/            # 전역 스타일 및 변수
+├── index.tsx              # 진입점 (createRoot + StrictMode)
+├── app.tsx                # QueryClientProvider, bfcache 복원 처리
+├── assets/                # 이미지, SVG 등 정적 리소스
+├── components/            # 재사용 가능한 컴포넌트
+│   ├── layout/            # Layout(Navigation + Outlet + Footer), Navigation
+│   └── loading/           # Loading (spinner / pulse 타입)
+├── hooks/                 # 커스텀 훅
+│   └── useExample.ts      # TanStack Query 사용 예시
+├── pages/                 # 페이지 컴포넌트
+│   ├── index.ts           # lazy()로 페이지 일괄 export
+│   ├── home/              # 홈 (첫 화면)
+│   └── errorPage/         # 404
+├── request/               # API 통신 레이어
+│   ├── axios.ts           # axiosInstance, fetchApi 래퍼
+│   └── const.ts           # API_BASE_DOMAIN, HTTP_METHOD, API 엔드포인트
+├── routes/                # 라우팅 설정
+│   ├── index.tsx          # Suspense + BrowserRouter + Routes
+│   └── const.ts           # Menus 경로 상수
+├── stores/                # Zustand 스토어
+├── styles/                # 전역 스타일 및 변수
 │   ├── global.scss
 │   └── variables.scss
-└── main.tsx
+├── test/                  # 테스트 설정 및 모킹
+└── utils/                 # 유틸리티 함수 (helpers)
+```
+
+## 라우트 구조
+
+| 경로 | 컴포넌트   | 비고                         |
+| ---- | ---------- | ---------------------------- |
+| `/`  | `Home`     | 첫 화면, `Layout`으로 감싸짐 |
+| `/*` | `NotFound` | 정의되지 않은 모든 경로      |
+
+로그인·계정 기능이 없는 공개 사이트라서 모든 화면을 누구나 볼 수 있습니다.
+
+경로 문자열은 [`src/routes/const.ts`](src/routes/const.ts)의 `Menus` 상수로 관리합니다.
+
+```tsx
+export const Menus = {
+  Home: '/',
+} as const
 ```
 
 ## 주요 기능
 
 ### 라우팅
 
-React Router DOM v7을 사용한 선언적 라우팅:
+`react-router`의 선언적 `<Routes>` 방식을 사용하며, 페이지는 `lazy()`로 코드 스플리팅됩니다.
+로딩 중에는 `<Suspense>`의 fallback으로 `Loading` 컴포넌트가 표시됩니다.
 
 ```tsx
 // src/routes/index.tsx
-import { createBrowserRouter } from 'react-router-dom'
-
-export const router = createBrowserRouter([
-  {
-    path: '/',
-    element: <Layout />,
-    children: [
-      { index: true, element: <HomePage /> },
-      { path: 'about', element: <AboutPage /> },
-      // ...
-    ],
-  },
-])
+<Suspense fallback={<Loading />}>
+  <BrowserRouter>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path={Menus.Home} element={<Pages.Home />} />
+      </Route>
+      <Route path="*" element={<Pages.NotFound />} />
+    </Routes>
+  </BrowserRouter>
+</Suspense>
 ```
+
+페이지를 추가할 때는 `src/pages/index.ts`에 `lazy()` 항목을 등록하고, `Menus`에 경로를 추가한 뒤 `<Route>`를 연결합니다.
 
 ### 네비게이션
 
 `NavLink`를 사용한 활성 링크 스타일링:
 
 ```tsx
-<NavLink 
-  to="/about" 
-  className={({ isActive }) => isActive ? 'active' : ''}
->
-  소개
+<NavLink to={Menus.Home} className={({ isActive }) => (isActive ? 'active' : '')} end>
+  홈
 </NavLink>
+```
+
+### Path Alias
+
+`@` 별칭으로 `src` 폴더를 참조합니다. (`vite.config.ts`, `tsconfig.json`에 설정)
+
+```tsx
+import Loading from '@/components/loading'
+import { useExampleStore } from '@/stores/useExampleStore'
+import { API } from '@/request/const'
 ```
 
 ### SCSS 전역 변수
 
-`variables.scss` 파일의 변수는 모든 SCSS 파일에서 자동으로 사용 가능합니다.
+`variables.scss`는 Vite 설정의 `additionalData`로 모든 SCSS 파일에 자동 주입되므로 별도 import 없이 사용할 수 있습니다.
 
 ```scss
 .my-component {
@@ -114,101 +173,116 @@ export const router = createBrowserRouter([
 
 ### SVG Import
 
-SVG 파일을 React 컴포넌트로 import할 수 있습니다:
+`?react` 쿼리로 SVG를 React 컴포넌트처럼 사용할 수 있습니다.
 
 ```tsx
-import Logo from '@/assets/logo.svg?react'
+import Logo from '@/assets/example.svg?react'
 
 const Component = () => <Logo className="icon" />
 ```
 
-### Path Alias
-
-`@` 별칭을 사용하여 src 폴더를 참조할 수 있습니다:
-
-```tsx
-import Component from '@/components/Component'
-import { useStore } from '@/stores/useStore'
-import { useCustomHook } from '@/hooks/useCustomHook'
-```
-
 ### API 호출
 
-TanStack Query와 Axios를 사용한 API 호출:
+`request/const.ts`의 `API` 객체에 엔드포인트를 정의하고, `fetchApi` 래퍼와 TanStack Query를 조합합니다.
 
-```tsx
-import { useExampleQuery, useCreateExample } from '@/hooks/useExample'
-
-const Component = () => {
-  const { data, isLoading } = useExampleQuery()
-  const createMutation = useCreateExample()
-  
-  // ...
+```ts
+// 예시: src/request/const.ts에 엔드포인트 추가
+export const API = {
+  Example: {
+    List: `${API_BASE_PATH}/examples`,
+  },
 }
+
+// 예시: 사용하는 쪽
+const useExampleList = () =>
+  useQuery({
+    queryKey: ['examples'],
+    queryFn: () => fetchApi({ method: HTTP_METHOD.GET, url: API.Example.List }),
+  })
 ```
+
+`axiosInstance`를 직접 사용하는 예시는 [`src/hooks/useExample.ts`](src/hooks/useExample.ts)를 참고하세요.
+
+개발 환경에서는 `/api/v1`로 시작하는 요청이 Vite 프록시를 통해 API 서버로 전달됩니다. (`vite.config.ts`의 `server.proxy`)
 
 ### 상태 관리
 
-Zustand를 사용한 전역 상태 관리:
+Zustand로 전역 상태를 관리하며, `devtools` 미들웨어가 적용되어 있습니다.
 
 ```tsx
 import { useExampleStore } from '@/stores/useExampleStore'
 
 const Component = () => {
   const { count, increment } = useExampleStore()
-  
+
   return <button onClick={increment}>{count}</button>
 }
 ```
 
-## 라우트 구조
+### 로딩 컴포넌트
 
-- `/` - 홈 페이지
-- `/about` - 소개 페이지
-- `/example` - 예시 페이지 (Zustand + SVG 활용)
-- `/404` - 404 에러 페이지
-- `/*` - 존재하지 않는 경로는 자동으로 `/404`로 리다이렉트
+`spinner`(기본)와 `pulse` 두 가지 타입을 지원합니다.
 
-## 환경 변수
+```tsx
+import Loading from '@/components/loading'
+import { LOADING_TYPE } from '@/components/loading/const'
 
-`.env.example` 파일을 `.env`로 복사하여 환경 변수를 설정하세요:
-
-```bash
-cp .env.example .env
+<Loading />
+<Loading type={LOADING_TYPE.PULSE} />
 ```
 
 ## 레이아웃 구조
 
-모든 페이지는 `Layout` 컴포넌트로 감싸져 있으며, 다음 요소를 포함합니다:
+`Layout`으로 감싸진 페이지는 다음 요소를 포함합니다.
 
-- **Navigation** - 상단 네비게이션 바 (sticky)
-- **Main Content** - 페이지별 콘텐츠 영역
-- **Footer** - 하단 푸터
+- **Navigation** — 상단 네비게이션 바
+- **Main Content** — `<Outlet />`으로 렌더링되는 페이지 콘텐츠
+- **Footer** — 하단 푸터
 
 ## 스타일 가이드
 
-### 반응형 디자인
+### 색상 팔레트
 
-SCSS 변수로 정의된 브레이크포인트를 사용:
+| 변수                 | 값        | 용도            |
+| -------------------- | --------- | --------------- |
+| `$primary-color`     | `#8b3fd9` | 주요 색상       |
+| `$secondary-color`   | `#6b2fb9` | 보조 색상       |
+| `$accent-color`      | `#a855f7` | 강조 색상       |
+| `$text-color`        | `#1a1a1a` | 기본 텍스트     |
+| `$text-secondary`    | `#666666` | 보조 텍스트     |
+| `$background-color`  | `#ffffff` | 배경            |
+| `$border-color`      | `#e5e5e5` | 테두리          |
+
+### 간격 / 폰트 / 라운드
+
+- `$spacing-xs` ~ `$spacing-xxl` — 간격 시스템
+- `$font-size-xs` ~ `$font-size-xxl` — 폰트 크기
+- `$border-radius-sm` ~ `$border-radius-xl` — 모서리 반경
+- `$z-index-dropdown`, `$z-index-modal`, `$z-index-tooltip` — z-index 레이어
+
+### 반응형 디자인
 
 ```scss
 @media (max-width: $breakpoint-tablet) {
-  // 태블릿 이하
+  // 768px 이하
 }
 
 @media (max-width: $breakpoint-mobile) {
-  // 모바일
+  // 480px 이하
 }
 ```
 
-### 색상 팔레트
+브레이크포인트: `$breakpoint-mobile`(480px), `$breakpoint-tablet`(768px), `$breakpoint-desktop`(1024px), `$breakpoint-wide`(1280px)
 
-- `$primary-color` - 주요 색상
-- `$secondary-color` - 보조 색상
-- `$text-color` - 텍스트 색상
-- `$background-color` - 배경 색상
-- `$border-color` - 테두리 색상
+## 현재 구현 상태
 
-### 간격 시스템
+초기 세팅 단계로, 다음 항목은 아직 미완성입니다.
 
-- `$spacing-xs` ~ `$spacing-xxl` - 일관된 간격 시스템
+- **홈 화면** — 첫 화면(`/`)으로 연결되어 있지만 아직 내용이 비어 있습니다.
+- **API 도메인** — `vite.config.ts`의 `getApiDomain()`이 모든 mode에서 빈 문자열을 반환합니다. 서버 데이터를 쓰게 되면 실제 서버 주소 설정이 필요합니다.
+- `useExample.ts`, `useExampleStore.ts`는 참고용 예시 코드입니다.
+
+## 관련 문서
+
+- [DEVELOPMENT.md](DEVELOPMENT.md) — 개발 워크플로우, 코드 품질 도구, 테스트 가이드
+- [PERFORMANCE_ANALYSIS.md](PERFORMANCE_ANALYSIS.md) — 성능 분석

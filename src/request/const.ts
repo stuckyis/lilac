@@ -9,10 +9,5 @@ export const HTTP_METHOD = {
   DELETE: 'DELETE',
 }
 
-export const API = {
-  Auth: {
-    Login: `${API_BASE_PATH}/auth/login`,
-    Logout: `${API_BASE_PATH}/auth/logout`,
-    Refresh: `${API_BASE_PATH}/auth/refresh`,
-  },
-}
+/** 도메인별 API 엔드포인트 (예: Example: { List: `${API_BASE_PATH}/examples` }) */
+export const API = {}
