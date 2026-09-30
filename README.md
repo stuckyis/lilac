@@ -88,7 +88,7 @@ src/
 ├── hooks/                 # 커스텀 훅
 │   ├── useExample.ts      # TanStack Query 사용 예시
 │   ├── useScrolled.ts     # 스크롤 여부 (헤더 모양 전환)
-│   └── useSeoulTime.ts    # 서울 시각 HH:mm
+│   └── useSeoulTime.ts    # 서울 시각 HH:mm (지금은 쓰지 않음)
 ├── pages/                 # 페이지 컴포넌트
 │   ├── index.ts           # lazy()로 페이지 일괄 export
 │   ├── home/              # 홈 (첫 화면)
@@ -246,7 +246,7 @@ import { LOADING_TYPE } from '@/components/loading/const'
 `Layout`으로 감싸진 페이지는 다음 요소를 포함합니다.
 
 - **본문 바로가기** — 키보드 사용자가 메뉴를 건너뛰는 링크. 포커스를 받을 때만 보입니다
-- **Header** — 화면 위에 고정된 헤더 (로고, 섹션 메뉴, 서울 시각, 이력서). 스크롤하면 반투명 블록 모양으로 바뀝니다
+- **Header** — 화면 위에 고정된 헤더 (블록 로고, 섹션 메뉴). 스크롤하면 반투명 블록 모양으로 바뀝니다
 - **Main Content** — `<Outlet />`으로 렌더링되는 페이지 콘텐츠
 - **Footer** — 하단 푸터
 
