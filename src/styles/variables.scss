@@ -1,12 +1,81 @@
-// Colors - Theme
-$primary-color: #8b3fd9; // Purple
-$secondary-color: #6b2fb9; // Darker Purple
-$accent-color: #a855f7; // Light Purple
-$text-color: #1a1a1a; // Dark Gray/Black
-$text-secondary: #666666; // Medium Gray
-$background-color: #ffffff;
-$background-light: #f8f9fa;
-$border-color: #e5e5e5;
+@use 'sass:color';
+
+// ─────────────────────────────────────────────
+// A2 · Soft Blocks 디자인 토큰
+// ─────────────────────────────────────────────
+
+// Colors - 기본
+$color-bg: #faf7f1; // 미색 바탕
+$color-surface: #ffffff; // 카드 바탕
+$color-ink: #1f1b2d; // 본문 글자
+$color-muted: #5e5870; // 보조 글자
+$color-accent: #6b4fd8; // 강조: 라벨, 링크, 포커스
+$color-accent-soft: #f3effc; // 강조색 연한 바탕: 수치 칸
+
+// Colors - 파스텔 (100: 넓은 면, 200: 블록 마크 같은 작은 조각)
+$color-lilac-100: #d9ccfa;
+$color-lilac-200: #cdbdf6;
+$color-mint-100: #cfefe3;
+$color-mint-200: #bdebda;
+$color-butter-100: #ffefc0;
+$color-butter-200: #ffe7a3;
+$color-peach-100: #ffdccd;
+$color-peach-200: #ffc9b5;
+
+// Colors - 파스텔 위 글자 (파스텔 바탕에서 대비를 확보하는 진한 색)
+$color-mint-ink: #2f5a4b;
+$color-butter-ink: #6a5516;
+
+// Colors - 선 (100: 카드 테두리, 200: 목록 구분선, 300: 버튼 테두리)
+$color-line-100: #ece6f4;
+$color-line-200: #e6e0ee;
+$color-line-300: #ddd5e8;
+
+// Colors - 어두운 영역 (숫자 띠, 연락)
+$color-dark: #1f1b2d;
+$color-on-dark: #f4f1fa;
+$color-on-dark-muted: #b3abc4;
+
+// Fonts
+$font-sans:
+  'Pretendard Variable',
+  Pretendard,
+  -apple-system,
+  BlinkMacSystemFont,
+  system-ui,
+  'Apple SD Gothic Neo',
+  'Noto Sans KR',
+  'Malgun Gothic',
+  sans-serif;
+$font-display: 'Bricolage Grotesque Variable', $font-sans; // 영문·숫자 강조
+$font-mono: 'JetBrains Mono', 'Pretendard Variable', ui-monospace, SFMono-Regular, Menlo, monospace; // 라벨·날짜·시각 (한글은 Pretendard로 표시)
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-bold: 700;
+$font-weight-heavy: 800;
+
+// Radius
+$radius-sm: 6px; // 작은 조각
+$radius-md: 12px; // 버튼, 아이콘 칸
+$radius-lg: 16px; // 수치 칸
+$radius-xl: 24px; // 카드
+$radius-2xl: 28px; // 큰 카드
+$radius-pill: 999px;
+
+// Shadows
+$shadow-sm: 0 10px 30px rgba($color-ink, 0.06);
+$shadow-md: 0 24px 50px rgba($color-ink, 0.14);
+$shadow-lg: 0 30px 60px rgba($color-ink, 0.16);
+
+// Motion
+$ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1); // 시안의 등장 곡선
+
+// Layout
+$content-max-width: 1200px; // 섹션 콘텐츠 폭 (1440 화면에서 좌우 120px)
+$page-gutter: 40px; // 화면 가장자리 최소 여백
+$section-padding-y: 90px;
+$header-offset: 100px; // 섹션으로 이동할 때 헤더에 가리지 않도록 남기는 위쪽 여백
 
 // Spacing
 $spacing-xs: 0.25rem;
@@ -24,7 +93,7 @@ $font-size-lg: 1.25rem;
 $font-size-xl: 1.5rem;
 $font-size-xxl: 2rem;
 
-// Border radius
+// Border radius (기존 값, PC-11에서 $radius-*로 정리)
 $border-radius-sm: 4px;
 $border-radius-md: 8px;
 $border-radius-lg: 12px;
@@ -40,3 +109,16 @@ $breakpoint-wide: 1280px;
 $z-index-dropdown: 1000;
 $z-index-modal: 2000;
 $z-index-tooltip: 3000;
+
+// ─────────────────────────────────────────────
+// 기존 색 변수: 404·로딩 화면과 기존 메뉴가 아직 쓰고 있다.
+// 새 토큰을 가리키게 해 두고, 화면을 새로 만들면서 PC-11에서 지운다.
+// ─────────────────────────────────────────────
+$primary-color: $color-accent;
+$secondary-color: color.scale($color-accent, $lightness: -18%);
+$accent-color: $color-lilac-200;
+$text-color: $color-ink;
+$text-secondary: $color-muted;
+$background-color: $color-surface;
+$background-light: $color-bg;
+$border-color: $color-line-100;

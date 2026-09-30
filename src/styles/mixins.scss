@@ -1,0 +1,38 @@
+@use './variables' as *;
+
+// 여러 섹션에서 반복하는 스타일. variables.scss와 함께 모든 SCSS 파일에 자동 주입된다.
+
+// 콘텐츠를 가운데 정렬하고 최대 폭을 제한한다. 화면이 좁으면 가장자리 여백을 남긴다.
+@mixin container($max-width: $content-max-width) {
+  width: min(100% - #{$page-gutter * 2}, #{$max-width});
+  margin-inline: auto;
+}
+
+// 모노 라벨 (예: `01 — WORK`, `SEOUL 14:05`)
+@mixin mono-label($size: 13px, $tracking: 0.08em) {
+  font-family: $font-mono;
+  font-size: $size;
+  font-weight: $font-weight-regular;
+  line-height: 1.4;
+  letter-spacing: $tracking;
+}
+
+// 화면에는 보이지 않고 스크린리더만 읽는다.
+@mixin visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// 움직임 줄이기를 켠 사용자에게만 적용한다.
+@mixin reduced-motion {
+  @media (prefers-reduced-motion: reduce) {
+    @content;
+  }
+}

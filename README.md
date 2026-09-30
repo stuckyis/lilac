@@ -15,6 +15,7 @@ React 19 + TypeScript + Vite + pnpm 기반 SPA 프로젝트
 | HTTP 클라이언트 | Axios                                          |
 | 전역 상태     | Zustand 5                                        |
 | 스타일링      | SCSS (Sass) + clsx                               |
+| 글꼴          | Pretendard, Bricolage Grotesque, JetBrains Mono  |
 | 테스트        | Vitest 5 + Testing Library + jsdom               |
 | 코드 품질     | ESLint 10 + Prettier 3                           |
 | 기타          | vite-plugin-svgr (SVG를 React 컴포넌트로 import) |
@@ -77,6 +78,9 @@ src/
 ├── index.tsx              # 진입점 (createRoot + StrictMode)
 ├── app.tsx                # QueryClientProvider, bfcache 복원 처리
 ├── assets/                # 이미지, SVG 등 정적 리소스
+├── data/                  # 화면에 들어가는 내용
+│   ├── type.ts            # 콘텐츠 타입
+│   └── portfolio.ts       # 이력·프로젝트 등 내용 (지금은 자리표시자)
 ├── components/            # 재사용 가능한 컴포넌트
 │   ├── layout/            # Layout(Navigation + Outlet + Footer), Navigation
 │   └── loading/           # Loading (spinner / pulse 타입)
@@ -93,9 +97,11 @@ src/
 │   ├── index.tsx          # Suspense + BrowserRouter + Routes
 │   └── const.ts           # Menus 경로 상수
 ├── stores/                # Zustand 스토어
-├── styles/                # 전역 스타일 및 변수
-│   ├── global.scss
-│   └── variables.scss
+├── styles/                # 전역 스타일, 디자인 토큰, 글꼴
+│   ├── fonts.ts           # 글꼴 불러오기
+│   ├── global.scss        # 초기화, 기본 글꼴·색, 포커스, 움직임 줄이기
+│   ├── mixins.scss        # 반복 스타일 (container, mono-label 등)
+│   └── variables.scss     # 디자인 토큰 (색, 글꼴, 모서리, 그림자, 레이아웃)
 ├── test/                  # 테스트 설정 및 모킹
 └── utils/                 # 유틸리티 함수 (helpers)
 ```
@@ -160,13 +166,14 @@ import { useExampleStore } from '@/stores/useExampleStore'
 import { API } from '@/request/const'
 ```
 
-### SCSS 전역 변수
+### SCSS 전역 변수 · 믹스인
 
-`variables.scss`는 Vite 설정의 `additionalData`로 모든 SCSS 파일에 자동 주입되므로 별도 import 없이 사용할 수 있습니다.
+`variables.scss`와 `mixins.scss`는 Vite 설정의 `additionalData`로 모든 SCSS 파일에 자동 주입되므로 별도 import 없이 사용할 수 있습니다.
 
 ```scss
 .my-component {
-  color: $primary-color;
+  @include container;
+  color: $color-accent;
   padding: $spacing-md;
 }
 ```
@@ -241,24 +248,52 @@ import { LOADING_TYPE } from '@/components/loading/const'
 
 ## 스타일 가이드
 
-### 색상 팔레트
+디자인 토큰은 `src/styles/variables.scss`에 있습니다. 미색 바탕에 라일락·민트·버터·복숭아 파스텔을 쓰고, 강조색은 `#6b4fd8`입니다.
 
-| 변수                 | 값        | 용도            |
-| -------------------- | --------- | --------------- |
-| `$primary-color`     | `#8b3fd9` | 주요 색상       |
-| `$secondary-color`   | `#6b2fb9` | 보조 색상       |
-| `$accent-color`      | `#a855f7` | 강조 색상       |
-| `$text-color`        | `#1a1a1a` | 기본 텍스트     |
-| `$text-secondary`    | `#666666` | 보조 텍스트     |
-| `$background-color`  | `#ffffff` | 배경            |
-| `$border-color`      | `#e5e5e5` | 테두리          |
+### 색상
 
-### 간격 / 폰트 / 라운드
+| 변수                                               | 값        | 용도                                    |
+| -------------------------------------------------- | --------- | --------------------------------------- |
+| `$color-bg`                                        | `#faf7f1` | 미색 바탕                               |
+| `$color-surface`                                   | `#ffffff` | 카드 바탕                               |
+| `$color-ink`                                       | `#1f1b2d` | 본문 글자                               |
+| `$color-muted`                                     | `#5e5870` | 보조 글자                               |
+| `$color-accent`                                    | `#6b4fd8` | 강조: 라벨, 링크, 포커스                |
+| `$color-accent-soft`                               | `#f3effc` | 강조색 연한 바탕                        |
+| `$color-lilac-100` ~ `$color-peach-200`            |           | 파스텔 4종. 100은 넓은 면, 200은 작은 조각 |
+| `$color-mint-ink`, `$color-butter-ink`             |           | 파스텔 바탕 위 글자                     |
+| `$color-line-100` ~ `$color-line-300`              |           | 카드 테두리, 목록 구분선, 버튼 테두리   |
+| `$color-dark`, `$color-on-dark`, `$color-on-dark-muted` |      | 어두운 영역과 그 위 글자                |
 
-- `$spacing-xs` ~ `$spacing-xxl` — 간격 시스템
-- `$font-size-xs` ~ `$font-size-xxl` — 폰트 크기
-- `$border-radius-sm` ~ `$border-radius-xl` — 모서리 반경
+기존 색 변수(`$primary-color` 등)는 새 토큰을 가리키도록 남겨 두었습니다. 404·로딩 화면을 새 디자인으로 바꾸면서 정리합니다.
+
+### 글꼴
+
+| 변수            | 글꼴                | 용도           |
+| --------------- | ------------------- | -------------- |
+| `$font-sans`    | Pretendard          | 한글 본문·제목 |
+| `$font-display` | Bricolage Grotesque | 영문·숫자 강조 |
+| `$font-mono`    | JetBrains Mono      | 라벨·날짜·시각 |
+
+글꼴 파일은 npm 패키지에서 불러와(`src/styles/fonts.ts`) 사이트가 직접 제공합니다. 외부 CDN을 부르지 않습니다. 세 글꼴 모두 SIL Open Font License 1.1입니다.
+
+### 간격 / 모서리 / 그림자 / 레이아웃
+
+- `$spacing-xs` ~ `$spacing-xxl` — 간격
+- `$font-size-xs` ~ `$font-size-xxl` — 글자 크기
+- `$radius-sm` ~ `$radius-2xl`, `$radius-pill` — 모서리 반경 (`$border-radius-*`는 기존 값)
+- `$shadow-sm` ~ `$shadow-lg` — 그림자
+- `$content-max-width`(1200px), `$page-gutter`(40px), `$section-padding-y`(90px) — 레이아웃
 - `$z-index-dropdown`, `$z-index-modal`, `$z-index-tooltip` — z-index 레이어
+
+### 믹스인
+
+| 믹스인            | 용도                                                  |
+| ----------------- | ----------------------------------------------------- |
+| `container`       | 콘텐츠를 가운데 정렬하고 최대 폭(1200px)을 제한       |
+| `mono-label`      | 모노 라벨 (예: `01 — WORK`)                           |
+| `visually-hidden` | 화면에는 숨기고 스크린리더만 읽게 함                  |
+| `reduced-motion`  | 움직임 줄이기 설정을 켠 사용자에게만 적용             |
 
 ### 반응형 디자인
 

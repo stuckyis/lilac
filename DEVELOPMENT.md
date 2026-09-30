@@ -194,7 +194,7 @@ return <div>{isPulse ? <PulseDots /> : <Spinner />}</div>
 ### 스타일링
 
 - SCSS 사용, 컴포넌트별 스타일 파일 분리 (`styles.scss` 또는 `컴포넌트명.scss`)
-- 전역 변수는 `src/styles/variables.scss`에 정의하며, Vite 설정으로 자동 주입되므로 `@use` 없이 사용 가능합니다
+- 디자인 토큰은 `src/styles/variables.scss`, 반복 스타일은 `src/styles/mixins.scss`에 정의하며, Vite 설정으로 자동 주입되므로 `@use` 없이 사용 가능합니다
 - 조건부 className은 `clsx` 사용
 
 ## Git 커밋 메시지
@@ -222,9 +222,9 @@ return <div>{isPulse ? <PulseDots /> : <Spinner />}</div>
 pnpm lint:fix && pnpm format
 ```
 
-### SCSS 변수를 찾을 수 없음
+### SCSS 변수·믹스인을 찾을 수 없음
 
-`variables.scss`는 `vite.config.ts`와 `vitest.config.ts` 양쪽의 `additionalData`로 주입됩니다.
+`variables.scss`와 `mixins.scss`는 `vite.config.ts`와 `vitest.config.ts` 양쪽의 `additionalData`로 주입됩니다.
 새 빌드/테스트 설정을 추가할 때 이 옵션이 빠지면 변수를 인식하지 못합니다.
 
 ### `@` 별칭 인식 실패

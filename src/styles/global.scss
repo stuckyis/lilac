@@ -1,17 +1,27 @@
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: $font-sans;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: $background-light;
-  color: $text-color;
+  background-color: $color-bg;
+  color: $color-ink;
   line-height: 1.6;
+  // 한글이 단어 중간에서 줄바꿈되지 않게 하고, 긴 영문·주소는 넘치지 않게 끊는다.
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 #root {
@@ -19,21 +29,61 @@ body {
 }
 
 a {
-  color: $primary-color;
+  color: inherit;
   text-decoration: none;
+  transition: color 0.2s;
 
   &:hover {
-    color: $secondary-color;
+    color: $color-accent;
   }
 }
 
 button {
-  font-family: inherit;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
   cursor: pointer;
 }
 
 input,
 textarea,
 select {
-  font-family: inherit;
+  font: inherit;
+}
+
+img,
+picture,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid $color-accent;
+  outline-offset: 3px;
+}
+
+::selection {
+  background-color: $color-lilac-100;
+  color: $color-ink;
+}
+
+// 메뉴로 섹션에 이동할 때 제목이 헤더에 가리지 않게 한다.
+section[id] {
+  scroll-margin-top: $header-offset;
+}
+
+// 움직임 줄이기를 켜면 애니메이션·전환·부드러운 스크롤을 모두 끈다.
+@include reduced-motion {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
