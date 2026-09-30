@@ -1,5 +1,5 @@
 import { TONE } from './const'
-import type { Intro, MoreWork, Product, Profile, Stat, Work } from './type'
+import type { Intro, MoreWork, Principle, Product, Profile, Stat, Work } from './type'
 
 // 화면에 들어가는 내용을 모아 둔 파일이다. 내용을 바꿀 때는 이 파일만 고친다.
 // 실제 내용을 받기 전까지는 시안의 자리표시자([이름], [YYYY] 등)를 쓴다.
@@ -135,4 +135,11 @@ export const MORE_WORKS: MoreWork[] = [
   { title: '[프로젝트명 1]', company: '[회사명]', year: '[YYYY]', tone: TONE.LILAC_SOFT, url: '#' },
   { title: '[프로젝트명 2]', company: '[회사명]', year: '[YYYY]', tone: TONE.MINT_SOFT, url: '#' },
   { title: '[프로젝트명 3]', company: '[회사명]', year: '[YYYY]', tone: TONE.BUTTER_SOFT, url: '#' },
+]
+
+/** 일하는 방식. 3개를 기준으로 디자인했다 (카드 색은 순서대로 연보라·연민트·연버터) */
+export const PRINCIPLES: Principle[] = [
+  { title: '[일하는 원칙 하나]', description: '[이 원칙이 드러난 경험 한두 문장]' },
+  { title: '[일하는 원칙 둘]', description: '[이 원칙이 드러난 경험 한두 문장]' },
+  { title: '[일하는 원칙 셋]', description: '[이 원칙이 드러난 경험 한두 문장]' },
 ]

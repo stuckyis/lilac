@@ -1,12 +1,11 @@
 import { WORKS } from '@/data/portfolio'
+import { toOrderNumber } from '@/utils/helpers/helpers'
 import clsx from 'clsx'
 import { useRef, useState, type KeyboardEvent } from 'react'
 import WorkPreview from './WorkPreview'
 
 const PANEL_ID = 'work-panel'
 const toTabId = (workId: string) => `${workId}-tab`
-/** 목록 번호 (0 → '01') */
-const toNumber = (index: number) => String(index + 1).padStart(2, '0')
 
 /**
  * 대표 작업 목록(세로 탭)과 미리보기(탭 패널).
@@ -59,7 +58,7 @@ const WorkTabs = () => {
               onMouseEnter={() => setActiveId(work.id)}
             >
               <span className="work__tab-no" aria-hidden>
-                {toNumber(index)}
+                {toOrderNumber(index)}
               </span>
               <span className="work__tab-title">{work.title}</span>{' '}
               <span className="work__tab-meta">

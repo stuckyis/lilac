@@ -93,3 +93,10 @@ export interface MoreWork {
   /** 자세히 볼 주소. 있으면 카드 전체가 링크가 된다 */
   url?: string
 }
+
+/** 일하는 방식: 원칙 하나 */
+export interface Principle {
+  title: string
+  /** 이 원칙이 드러난 경험 한두 문장 */
+  description: string
+}
