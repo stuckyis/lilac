@@ -100,3 +100,23 @@ export interface Principle {
   /** 이 원칙이 드러난 경험 한두 문장 */
   description: string
 }
+
+/** 경력 타임라인의 마디 하나 (회사) */
+export interface CareerItem {
+  /** 시작 연도 */
+  start: string
+  /** 끝난 연도. 없으면 지금 다니는 곳이다 (타임라인에서 강조하고 기간 끝에 NOW를 붙인다) */
+  end?: string
+  company: string
+  role: string
+  /** 이때 맡은 일 한 줄 */
+  summary: string
+}
+
+/** 초기 경력 아카이브의 프로젝트 하나 */
+export interface ArchiveItem {
+  /** 기간 (예: '2016.03 – 2016.11') */
+  period: string
+  name: string
+  org: string
+}

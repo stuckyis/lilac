@@ -1,0 +1,183 @@
+@use 'sass:list';
+
+// 지난 경력 블록: (한 변, 모서리, 색). 오래된 곳부터 차례로 커지고 진해진다.
+// 경력이 더 많으면 마지막 단계 모양을 이어서 쓴다. 지금 다니는 곳은 --current에서 따로 정한다.
+$career-steps: ((20px, 4px, $color-mint-100), (24px, 5px, $color-lilac-100), (28px, 6px, $color-lilac-300), (32px, 7px, $color-lilac-400));
+// 블록이 놓이는 줄의 높이(가장 큰 블록 한 변). 선은 이 줄의 가운데를 지나서 모든 블록의 중심과 맞는다
+$marker-row: 34px;
+
+@keyframes career-archive-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.career {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: $section-padding-y 0;
+
+  // 경력 수만큼 같은 폭의 칸을 만든다
+  &__timeline {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    column-gap: 24px;
+    list-style: none;
+
+    // 블록을 잇는 선 (연민트 → 라일락 → 강조색)
+    &::before {
+      content: '';
+      position: absolute;
+      top: calc(#{$marker-row} / 2 - 1px);
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, $color-mint-100, $color-lilac-200, $color-accent);
+    }
+  }
+
+  &__node {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  &__marker-area {
+    display: flex;
+    align-items: center;
+    height: $marker-row;
+  }
+
+  // 바탕색 테두리로 선을 끊어서, 블록이 선 위에 올라앉은 것처럼 보이게 한다
+  &__marker {
+    $last-step: list.nth($career-steps, list.length($career-steps));
+    display: block;
+    width: list.nth($last-step, 1);
+    height: list.nth($last-step, 1);
+    border: 3px solid $color-bg;
+    border-radius: list.nth($last-step, 2);
+    background-color: list.nth($last-step, 3);
+  }
+
+  @for $index from 1 through list.length($career-steps) - 1 {
+    $step: list.nth($career-steps, $index);
+
+    &__node:nth-child(#{$index}) &__marker {
+      width: list.nth($step, 1);
+      height: list.nth($step, 1);
+      border-radius: list.nth($step, 2);
+      background-color: list.nth($step, 3);
+    }
+  }
+
+  &__period {
+    font-family: $font-mono;
+    font-size: 13px;
+    color: $color-muted;
+  }
+
+  &__company {
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+    line-height: 1.4;
+  }
+
+  &__summary {
+    font-size: 15px;
+    line-height: 1.6;
+    color: $color-muted;
+  }
+
+  // 지금 다니는 곳: 가장 큰 강조색 블록 + 둘레 빛
+  &__node--current &__marker {
+    width: $marker-row;
+    height: $marker-row;
+    border-radius: 9px;
+    background-color: $color-accent;
+    box-shadow: 0 0 0 6px rgba($color-accent, 0.18);
+  }
+
+  &__node--current &__period {
+    color: $color-accent;
+  }
+}
+
+.career-archive {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__toggle {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 48px;
+    padding: 0 20px;
+    border: 1px solid $color-line-300;
+    border-radius: 14px;
+    background-color: $color-surface;
+    font-size: 15px;
+    font-weight: $font-weight-medium;
+    color: $color-ink;
+    transition: border-color 0.2s;
+
+    &:hover {
+      border-color: $color-accent;
+    }
+  }
+
+  &__count {
+    font-family: $font-mono;
+    font-size: 13px;
+    color: $color-accent;
+  }
+
+  &__chevron {
+    transition: transform 0.3s $ease-soft;
+  }
+
+  &__toggle[aria-expanded='true'] &__chevron {
+    transform: rotate(180deg);
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 48px;
+    border-top: 1px solid $color-line-200;
+    list-style: none;
+    animation: career-archive-in 0.3s $ease-soft;
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid $color-line-200;
+    font-size: 15px;
+  }
+
+  &__period {
+    font-family: $font-mono;
+    font-size: 13px;
+    color: $color-muted;
+  }
+
+  &__org {
+    color: $color-muted;
+  }
+}

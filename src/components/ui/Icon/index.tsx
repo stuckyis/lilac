@@ -69,3 +69,9 @@ export const PlayIcon = (props: IconProps) => (
     <path d="M8 5.5v13l10.5-6.5z" fill="currentColor" stroke="none" />
   </LineIcon>
 )
+
+export const ChevronDownIcon = (props: IconProps) => (
+  <LineIcon {...props}>
+    <path d="M6 9l6 6 6-6" />
+  </LineIcon>
+)

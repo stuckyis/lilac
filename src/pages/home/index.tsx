@@ -1,3 +1,4 @@
+import Career from './sections/Career'
 import Hero from './sections/Hero'
 import ProductMarquee from './sections/ProductMarquee'
 import Stats from './sections/Stats'
@@ -13,6 +14,7 @@ const Home = () => {
       <ProductMarquee />
       <Work />
       <Way />
+      <Career />
     </>
   )
 }

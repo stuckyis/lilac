@@ -52,6 +52,11 @@ select {
   font: inherit;
 }
 
+// hidden 속성은 컴포넌트의 display 값보다 항상 우선한다 (펼치기·접기 목록 등)
+[hidden] {
+  display: none !important;
+}
+
 img,
 picture,
 video {

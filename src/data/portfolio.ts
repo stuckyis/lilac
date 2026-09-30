@@ -1,5 +1,5 @@
 import { TONE } from './const'
-import type { Intro, MoreWork, Principle, Product, Profile, Stat, Work } from './type'
+import type { ArchiveItem, CareerItem, Intro, MoreWork, Principle, Product, Profile, Stat, Work } from './type'
 
 // 화면에 들어가는 내용을 모아 둔 파일이다. 내용을 바꿀 때는 이 파일만 고친다.
 // 실제 내용을 받기 전까지는 시안의 자리표시자([이름], [YYYY] 등)를 쓴다.
@@ -143,3 +143,22 @@ export const PRINCIPLES: Principle[] = [
   { title: '[일하는 원칙 둘]', description: '[이 원칙이 드러난 경험 한두 문장]' },
   { title: '[일하는 원칙 셋]', description: '[이 원칙이 드러난 경험 한두 문장]' },
 ]
+
+/** 경력 섹션 제목. 연차가 바뀌면 함께 고친다 */
+export const CAREER_TITLE = '10년의 경력'
+
+/** 경력 타임라인. 오래된 곳부터 적는다. 끝난 연도(end)가 없는 곳이 지금 다니는 곳이다 */
+export const CAREER: CareerItem[] = [
+  { start: '[YYYY]', end: '[YYYY]', company: '[첫 회사명]', role: '[직무]', summary: '[이때 맡은 일 한 줄]' },
+  { start: '[YYYY]', end: '[YYYY]', company: '[두 번째 회사명]', role: '[직무]', summary: '[이때 맡은 일 한 줄]' },
+  { start: '[YYYY]', end: '[YYYY]', company: '[세 번째 회사명]', role: '[직무]', summary: '[이때 맡은 일 한 줄]' },
+  { start: '[YYYY]', end: '[YYYY]', company: '[네 번째 회사명]', role: '[직무]', summary: '[이때 맡은 일 한 줄]' },
+  { start: '[YYYY]', company: '[현재 회사명]', role: '[직무]', summary: '[요즘 하는 일 한 줄]' },
+]
+
+/** 초기 경력 아카이브. 펼치면 2열로 보인다 */
+export const ARCHIVE: ArchiveItem[] = Array.from({ length: 8 }, (_, index) => ({
+  period: '[YYYY.MM – YYYY.MM]',
+  name: `[프로젝트명 ${index + 1}]`,
+  org: '[회사명]',
+}))
