@@ -23,8 +23,9 @@ describe('Router', () => {
 
     renderAt('/')
 
-    expect(await screen.findByRole('navigation')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: '홈' })).toBeInTheDocument()
+    expect(await screen.findByRole('navigation', { name: '주요 메뉴' })).toBeInTheDocument()
+    expect(screen.getByRole('link', { name: '작업' })).toHaveAttribute('href', '#work')
+    expect(screen.getByRole('main')).toBeInTheDocument()
     expect(window.location.pathname).toBe('/')
     jsdom.virtualConsole.off('jsdomError', onJsdomError)
     expect(navigationErrors).toHaveLength(0)

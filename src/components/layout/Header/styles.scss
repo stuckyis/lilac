@@ -1,0 +1,119 @@
+$header-top: 28px;
+$header-top-scrolled: 16px;
+
+// 반투명 알약: 뒤 콘텐츠가 흐리게 비친다
+@mixin glass-pill($opacity: 0.7) {
+  background-color: rgba($color-surface, $opacity);
+  border-color: $color-line-100;
+  box-shadow: $shadow-sm;
+  backdrop-filter: blur(14px);
+}
+
+.header {
+  position: fixed;
+  top: $header-top;
+  left: $page-gutter;
+  right: $page-gutter;
+  z-index: $z-index-header;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  // 세 묶음 사이의 빈 공간이 아래 콘텐츠 클릭을 막지 않게 한다
+  pointer-events: none;
+  transition: top 0.4s $ease-soft;
+
+  &__block {
+    display: flex;
+    align-items: center;
+    min-height: 58px;
+    padding: 6px;
+    border: 1px solid transparent;
+    border-radius: $radius-pill;
+    pointer-events: auto;
+    transition:
+      background-color 0.3s,
+      border-color 0.3s,
+      box-shadow 0.3s;
+  }
+
+  &__brand {
+    gap: 12px;
+    padding-inline: 10px 20px;
+    font-size: 19px;
+    font-weight: $font-weight-bold;
+    color: $color-ink;
+    white-space: nowrap;
+  }
+
+  &__nav {
+    @include glass-pill;
+  }
+
+  &__menu {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: $radius-pill;
+    font-size: 15px;
+    font-weight: $font-weight-medium;
+    color: $color-ink;
+    white-space: nowrap;
+    transition:
+      color 0.2s,
+      background-color 0.2s;
+
+    &:hover {
+      background-color: $color-surface;
+    }
+  }
+
+  &__side {
+    gap: 16px;
+    padding-left: 18px;
+  }
+
+  &__time {
+    font-family: $font-mono;
+    font-size: 14px;
+    color: $color-muted;
+    white-space: nowrap;
+  }
+
+  &__resume {
+    display: flex;
+    align-items: center;
+    height: 44px;
+    padding: 0 20px;
+    border-radius: $radius-pill;
+    background-color: $color-dark;
+    font-size: 15px;
+    font-weight: $font-weight-medium;
+    color: $color-surface;
+    white-space: nowrap;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: $color-accent;
+      color: $color-surface;
+    }
+  }
+
+  // 스크롤하면 세 묶음이 모두 떠 있는 블록이 된다. 어두운 영역 위에서도 읽히도록 조금 더 불투명하게 한다.
+  &--scrolled {
+    top: $header-top-scrolled;
+
+    .header__brand,
+    .header__nav,
+    .header__side {
+      @include glass-pill(0.85);
+    }
+  }
+}

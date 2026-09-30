@@ -82,10 +82,13 @@ src/
 │   ├── type.ts            # 콘텐츠 타입
 │   └── portfolio.ts       # 이력·프로젝트 등 내용 (지금은 자리표시자)
 ├── components/            # 재사용 가능한 컴포넌트
-│   ├── layout/            # Layout(Navigation + Outlet + Footer), Navigation
-│   └── loading/           # Loading (spinner / pulse 타입)
+│   ├── layout/            # Layout(본문 바로가기 + Header + Outlet + Footer), Header
+│   ├── loading/           # Loading (spinner / pulse 타입)
+│   └── ui/                # 여러 화면이 같이 쓰는 작은 조각 (BlockMark 등)
 ├── hooks/                 # 커스텀 훅
-│   └── useExample.ts      # TanStack Query 사용 예시
+│   ├── useExample.ts      # TanStack Query 사용 예시
+│   ├── useScrolled.ts     # 스크롤 여부 (헤더 모양 전환)
+│   └── useSeoulTime.ts    # 서울 시각 HH:mm
 ├── pages/                 # 페이지 컴포넌트
 │   ├── index.ts           # lazy()로 페이지 일괄 export
 │   ├── home/              # 홈 (첫 화면)
@@ -95,7 +98,7 @@ src/
 │   └── const.ts           # API_BASE_DOMAIN, HTTP_METHOD, API 엔드포인트
 ├── routes/                # 라우팅 설정
 │   ├── index.tsx          # Suspense + BrowserRouter + Routes
-│   └── const.ts           # Menus 경로 상수
+│   └── const.ts           # Menus 경로 상수, SECTION_ID(홈 섹션 id)
 ├── stores/                # Zustand 스토어
 ├── styles/                # 전역 스타일, 디자인 토큰, 글꼴
 │   ├── fonts.ts           # 글꼴 불러오기
@@ -115,7 +118,7 @@ src/
 
 로그인·계정 기능이 없는 공개 사이트라서 모든 화면을 누구나 볼 수 있습니다.
 
-경로 문자열은 [`src/routes/const.ts`](src/routes/const.ts)의 `Menus` 상수로 관리합니다.
+경로 문자열은 [`src/routes/const.ts`](src/routes/const.ts)의 `Menus` 상수로 관리합니다. 홈 화면의 섹션 id(`#work` 등)는 같은 파일의 `SECTION_ID`로 관리하고, 헤더 메뉴와 각 섹션이 함께 씁니다.
 
 ```tsx
 export const Menus = {
@@ -242,7 +245,8 @@ import { LOADING_TYPE } from '@/components/loading/const'
 
 `Layout`으로 감싸진 페이지는 다음 요소를 포함합니다.
 
-- **Navigation** — 상단 네비게이션 바
+- **본문 바로가기** — 키보드 사용자가 메뉴를 건너뛰는 링크. 포커스를 받을 때만 보입니다
+- **Header** — 화면 위에 고정된 헤더 (로고, 섹션 메뉴, 서울 시각, 이력서). 스크롤하면 반투명 블록 모양으로 바뀝니다
 - **Main Content** — `<Outlet />`으로 렌더링되는 페이지 콘텐츠
 - **Footer** — 하단 푸터
 

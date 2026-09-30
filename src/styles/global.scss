@@ -69,6 +69,11 @@ video {
   color: $color-ink;
 }
 
+// 화면에는 보이지 않고 스크린리더만 읽는 글자 (예: "새 창에서 열림")
+.visually-hidden {
+  @include visually-hidden;
+}
+
 // 메뉴로 섹션에 이동할 때 제목이 헤더에 가리지 않게 한다.
 section[id] {
   scroll-margin-top: $header-offset;

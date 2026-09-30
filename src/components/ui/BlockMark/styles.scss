@@ -1,0 +1,30 @@
+.block-mark {
+  display: block;
+  flex-shrink: 0;
+
+  &__cell {
+    &--lilac {
+      fill: $color-lilac-200;
+    }
+
+    &--accent {
+      fill: $color-accent;
+    }
+
+    &--mint {
+      fill: $color-mint-200;
+    }
+
+    &--butter {
+      fill: $color-butter-200;
+    }
+  }
+
+  &--on-dark &__cell--accent {
+    fill: $color-surface;
+  }
+
+  &--ink &__cell {
+    fill: $color-ink;
+  }
+}

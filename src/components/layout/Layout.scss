@@ -9,6 +9,11 @@
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
+
+    // 본문 바로가기로 포커스가 옮겨 올 때 본문 전체에 외곽선을 그리지 않는다
+    &:focus {
+      outline: none;
+    }
   }
 
   .footer {
@@ -22,5 +27,29 @@
       color: $text-color;
       font-size: $font-size-sm;
     }
+  }
+}
+
+.skip-link {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: $z-index-header + 1;
+  padding: 10px 18px;
+  border-radius: $radius-pill;
+  background-color: $color-dark;
+  font-size: 14px;
+  font-weight: $font-weight-medium;
+  color: $color-surface;
+  transform: translateY(-200%);
+  transition: transform 0.2s;
+
+  &:hover,
+  &:focus {
+    color: $color-surface;
+  }
+
+  &:focus {
+    transform: translateY(0);
   }
 }
