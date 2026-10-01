@@ -16,7 +16,6 @@ export const PROFILE: Profile = {
   links: {
     github: '#',
     linkedin: '#',
-    blog: '#',
   },
 }
 

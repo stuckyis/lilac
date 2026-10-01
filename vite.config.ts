@@ -19,7 +19,14 @@ export default defineConfig(({ mode }) => {
 
   console.log('getApiDomain :: ', getApiDomain(), ' // mode :: ', mode)
 
+  // 사이트 푸터의 "마지막 업데이트": 빌드(또는 개발 서버를 켠) 달을 서울 시각 기준 YYYY.MM으로 넣는다
+  const SEOUL_OFFSET_MS = 9 * 60 * 60 * 1000
+  const lastUpdated = new Date(Date.now() + SEOUL_OFFSET_MS).toISOString().slice(0, 7).replace('-', '.')
+
   return {
+    define: {
+      'import.meta.env.VITE_LAST_UPDATED': JSON.stringify(lastUpdated),
+    },
     plugins: [
       react(),
       svgr({

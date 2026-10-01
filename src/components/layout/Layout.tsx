@@ -12,13 +12,10 @@ const Layout = () => {
 
       <Header />
 
+      {/* 사이트 푸터는 홈의 연락 섹션 안에 있다 (어두운 마무리 블록의 아래쪽) */}
       <main id="main" className="main-content" tabIndex={-1}>
         <Outlet />
       </main>
-
-      <footer className="footer">
-        <p>&copy; All rights reserved.</p>
-      </footer>
     </div>
   )
 }

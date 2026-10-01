@@ -1,5 +1,6 @@
 import Behind from './sections/Behind'
 import Career from './sections/Career'
+import Contact from './sections/Contact'
 import Hero from './sections/Hero'
 import ProductMarquee from './sections/ProductMarquee'
 import Stack from './sections/Stack'
@@ -19,6 +20,7 @@ const Home = () => {
       <Career />
       <Stack />
       <Behind />
+      <Contact />
     </>
   )
 }

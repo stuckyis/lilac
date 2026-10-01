@@ -4,7 +4,6 @@ import type { BehindVisual, Tone } from './const'
 export interface SocialLinks {
   github: string
   linkedin: string
-  blog: string
 }
 
 /** 기본 정보. 헤더, 첫 화면, 연락 섹션에서 같이 쓴다. */

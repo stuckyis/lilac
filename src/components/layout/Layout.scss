@@ -13,19 +13,6 @@
       outline: none;
     }
   }
-
-  .footer {
-    padding: $spacing-lg;
-    text-align: center;
-    background-color: rgba($primary-color, 0.05);
-    border-top: 1px solid $border-color;
-
-    p {
-      margin: 0;
-      color: $text-color;
-      font-size: $font-size-sm;
-    }
-  }
 }
 
 .skip-link {
