@@ -70,6 +70,21 @@ export const PlayIcon = (props: IconProps) => (
   </LineIcon>
 )
 
+/** 두 줄. 펼침 메뉴를 여는 버튼에 쓴다 */
+export const MenuIcon = (props: IconProps) => (
+  <LineIcon {...props}>
+    <path d="M4 8h16" />
+    <path d="M4 16h16" />
+  </LineIcon>
+)
+
+export const CloseIcon = (props: IconProps) => (
+  <LineIcon {...props}>
+    <path d="M6 6l12 12" />
+    <path d="M18 6L6 18" />
+  </LineIcon>
+)
+
 export const ChevronDownIcon = (props: IconProps) => (
   <LineIcon {...props}>
     <path d="M6 9l6 6 6-6" />

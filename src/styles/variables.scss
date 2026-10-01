@@ -98,11 +98,13 @@ $ease-soft: cubic-bezier(0.2, 0.8, 0.2, 1); // 시안의 등장 곡선
 
 // Layout
 $content-max-width: 1200px; // 섹션 콘텐츠 폭 (1440 화면에서 좌우 120px)
-$page-gutter: 40px; // 화면 가장자리 최소 여백
+$page-gutter: 40px; // 화면 가장자리 최소 여백 (PC)
+$page-gutter-tablet: 32px; // 1024px 미만
+$page-gutter-mobile: 20px; // 768px 미만 (모바일 시안)
 $section-padding-y: 90px;
 $header-offset: 20px; // 메뉴로 섹션에 이동할 때 위에 더 남기는 여백. 섹션 위 안쪽 여백(90~100px)과 합쳐 제목이 헤더 아래 약 45px에 온다
 
-// Breakpoints
+// Breakpoints (src/styles/breakpoints.ts의 BREAKPOINT와 값을 맞춘다)
 $breakpoint-mobile: 480px;
 $breakpoint-tablet: 768px;
 $breakpoint-desktop: 1024px;

@@ -6,6 +6,19 @@
   box-sizing: border-box;
 }
 
+:root {
+  // 화면 가장자리 여백. container 믹스인과 헤더가 같이 쓴다
+  --page-gutter: #{$page-gutter};
+
+  @include tablet {
+    --page-gutter: #{$page-gutter-tablet};
+  }
+
+  @include mobile {
+    --page-gutter: #{$page-gutter-mobile};
+  }
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;

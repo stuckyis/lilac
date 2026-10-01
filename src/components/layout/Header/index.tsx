@@ -3,6 +3,7 @@ import useScrolled from '@/hooks/useScrolled'
 import { useSectionStore } from '@/stores/useSectionStore'
 import clsx from 'clsx'
 import { NAV_ITEMS } from './const'
+import MobileMenu from './MobileMenu'
 import './styles.scss'
 // [숨김] 서울 시각·이력서 묶음에서 쓰는 import. 다시 보이게 할 때 아래 주석을 모두 푼다.
 // import { PROFILE } from '@/data/portfolio'
@@ -12,6 +13,7 @@ import './styles.scss'
  * 화면 위에 고정된 헤더. 왼쪽 로고, 가운데 메뉴로 나뉜다.
  * 맨 위에서는 메뉴만 반투명 알약이고, 스크롤하면 로고도 떠 있는 블록이 된다.
  * 지금 보는 섹션의 메뉴는 어두운 알약으로 표시한다 (홈이 useSectionStore에 넣는다).
+ * 1024px 미만에서는 가운데 메뉴 대신 오른쪽 메뉴 버튼(MobileMenu)이 펼침 메뉴를 연다.
  */
 const Header = () => {
   const isScrolled = useScrolled()
@@ -45,6 +47,8 @@ const Header = () => {
           })}
         </ul>
       </nav>
+
+      <MobileMenu />
 
       {/* [숨김] 서울 시각·이력서 묶음. 다시 보이게 할 때 위 import와 useSeoulTime 호출, styles.scss·index.test.tsx의 [숨김] 주석을 함께 푼다.
       <div className="header__block header__side">
