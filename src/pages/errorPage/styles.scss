@@ -8,8 +8,7 @@
   padding: 80px $page-gutter;
   text-align: center;
   // 첫 화면과 같은 점 격자 배경
-  background-image: radial-gradient(circle, rgba($color-ink, 0.1) 1px, transparent 1.4px);
-  background-size: 26px 26px;
+  @include dot-grid;
 
   &__mark {
     margin-bottom: 20px;

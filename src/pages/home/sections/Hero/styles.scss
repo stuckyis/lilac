@@ -146,9 +146,7 @@ $hero-layouts: (
 .hero {
   position: relative;
   overflow: hidden;
-  // 점 격자 배경
-  background-image: radial-gradient(circle, rgba($color-ink, 0.1) 1px, transparent 1.4px);
-  background-size: 26px 26px;
+  @include dot-grid;
 
   // 패널 영역이 콘텐츠 폭 오른쪽 밖으로 나가는 거리. 1440 화면에서 80px(시안과 같은 자리), 1280 이하에서는 0이다.
   --hero-bleed: clamp(0px, (100vw - #{$content-max-width}) / 2 - #{$page-gutter}, 80px);

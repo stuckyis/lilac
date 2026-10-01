@@ -30,6 +30,13 @@
   border: 0;
 }
 
+// 점 격자 배경 (첫 화면, 404).
+// 시안은 점 농도가 10%인데, 점 위에 걸친 강조색 작은 글자(첫 화면 라벨)의 대비가 4.3:1이라 7%로 낮췄다 (4.6:1).
+@mixin dot-grid {
+  background-image: radial-gradient(circle, rgba($color-ink, 0.07) 1px, transparent 1.4px);
+  background-size: 26px 26px;
+}
+
 // 움직임 줄이기를 켠 사용자에게만 적용한다.
 @mixin reduced-motion {
   @media (prefers-reduced-motion: reduce) {
