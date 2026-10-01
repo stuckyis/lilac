@@ -1,6 +1,8 @@
 # Lilac
 
-React 19 + TypeScript + Vite + pnpm 기반 SPA 프로젝트
+프론트엔드 엔지니어 포트폴리오 사이트입니다. 한 화면(홈)에서 작업, 일하는 방식, 경력, 기술을 짧게 볼 수 있습니다.
+
+React 19 + TypeScript + Vite + pnpm 기반 SPA입니다.
 
 ## 기술 스택
 
@@ -55,6 +57,45 @@ pnpm build     # tsc -b 후 vite build
 pnpm preview   # 빌드 결과 미리보기
 ```
 
+## 화면 구성
+
+홈(`/`)은 위에서 아래로 다음 섹션을 차례로 보여줍니다. 섹션 코드는 `src/pages/home/sections/<폴더>/`에, 내용은 `src/data/portfolio.ts`에 있습니다.
+
+| 순서 | 섹션           | 헤더 메뉴 (id)        | 폴더             | 내용 (`portfolio.ts`)                |
+| ---- | -------------- | --------------------- | ---------------- | ------------------------------------ |
+| 1    | 첫 화면        | -                     | `Hero`           | `PROFILE`, `INTRO`                   |
+| 2    | 숫자 띠        | -                     | `Stats`          | `STATS`                              |
+| 3    | 제품 로고 띠   | -                     | `ProductMarquee` | `PRODUCTS`                           |
+| 4    | 대표 작업      | 작업 (`#work`)        | `Work`           | `WORKS`, `MORE_WORKS`                |
+| 5    | 일하는 방식    | 일하는 방식 (`#way`)  | `Way`            | `PRINCIPLES`                         |
+| 6    | 경력           | 경력 (`#career`)      | `Career`         | `CAREER_TITLE`, `CAREER`, `ARCHIVE`  |
+| 7    | 기술 스택      | 기술 (`#stack`)       | `Stack`          | `STACK`                              |
+| 8    | 이 화면의 구조 | 구조 (`#behind`)      | `Behind`         | `BEHIND_NOTES`                       |
+| 9    | 연락 + 푸터    | - (`#contact`)        | `Contact`        | `PROFILE`(이메일, GitHub·LinkedIn)   |
+
+- **헤더**: 블록 로고(누르면 맨 위로)와 섹션 메뉴. 지금 보는 섹션의 메뉴가 어두운 알약으로 표시됩니다.
+- **404**: 없는 주소로 들어오면 한 칸이 빠진 블록 마크와 "홈으로 돌아가기"를 보여줍니다.
+- PC 화면(1280px 이상)을 기준으로 만들었고, 1024px까지 깨지지 않게 맞췄습니다. 모바일 화면은 작업 중입니다.
+
+## 콘텐츠 수정 방법
+
+| 바꿀 것                       | 고칠 곳                                                                 |
+| ----------------------------- | ----------------------------------------------------------------------- |
+| 화면에 보이는 내용            | `src/data/portfolio.ts`                                                 |
+| 브라우저 탭 제목, 검색·공유 미리보기 | `src/data/site.ts` (`title`, `description`, `url`)              |
+| 사진·로고·작업 캡처           | `public/images/`에 파일을 넣고 `portfolio.ts`에 주소를 적는다           |
+| 파비콘, 공유 미리보기 이미지  | `public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `og-image.png` |
+
+- **내용**: `portfolio.ts`만 고치면 화면에 반영됩니다. 지금은 `[이름]`, `[YYYY]` 같은 자리표시자가 들어 있습니다. 각 칸의 뜻과 예시는 `src/data/type.ts`의 주석에 있습니다.
+- **사이트 정보**: `site.ts`의 제목·설명은 빌드할 때 `index.html`의 `<title>`, `description`, 공유 미리보기(Open Graph) 태그로 들어갑니다(`vite.config.ts`의 `siteMeta` 플러그인). 링크 미리보기를 만드는 크롤러는 JS를 실행하지 않아서 HTML에 미리 넣습니다.
+  - `url`에 배포 주소(예: `https://example.com`)를 적으면 공유 이미지(`og-image.png`)와 주소 태그도 들어갑니다. 비워 두면 넣지 않습니다.
+  - 이름을 바꾸면 `portfolio.ts`의 `PROFILE.name`과 `site.ts`를 함께 고칩니다.
+- **이미지**: `public/images/profile.jpg`에 넣었다면 `'/images/profile.jpg'`처럼 적습니다. 비워 두면 색 칸(`tone`)이나 자리표시 원이 대신 보입니다.
+  - 프로필 사진 `PROFILE.photoUrl`, 제품 로고 `PRODUCTS[].logoUrl`, 대표 작업 캡처 `WORKS[].imageUrl`, 그 밖의 작업 `MORE_WORKS[].imageUrl`
+- **링크**: 케이스 스터디(`WORKS[].caseUrl`)와 그 밖의 작업(`MORE_WORKS[].url`)은 주소를 적었을 때만 버튼·링크가 됩니다.
+- **색 칸**: `tone`에 `TONE.LILAC`처럼 색 이름을 적습니다(`src/data/const.ts`). 실제 색은 `src/styles/variables.scss`의 `$tones`에 있습니다.
+- **마지막 업데이트**: 연락 섹션 아래의 날짜는 빌드한 달(서울 기준)이 자동으로 들어갑니다.
+
 ## 스크립트
 
 | 명령어               | 설명                          |
@@ -81,12 +122,14 @@ src/
 ├── data/                  # 화면에 들어가는 내용
 │   ├── const.ts           # 색 이름(TONE) 등 콘텐츠에서 쓰는 상수
 │   ├── type.ts            # 콘텐츠 타입
-│   └── portfolio.ts       # 이력·프로젝트 등 내용 (지금은 자리표시자)
+│   ├── portfolio.ts       # 이력·프로젝트 등 내용 (지금은 자리표시자)
+│   └── site.ts            # 사이트 제목·설명 (빌드할 때 index.html에 들어감)
 ├── components/            # 재사용 가능한 컴포넌트
-│   ├── layout/            # Layout(본문 바로가기 + Header + Outlet + Footer), Header
+│   ├── layout/            # Layout(본문 바로가기 + Header + Outlet), Header
 │   ├── loading/           # Loading (spinner / pulse 타입)
 │   └── ui/                # 여러 화면이 같이 쓰는 작은 조각 (BlockMark, Icon, SectionHeading)
 ├── hooks/                 # 커스텀 훅
+│   ├── useActiveSection.ts # 지금 보는 섹션 찾기 (IntersectionObserver)
 │   ├── useExample.ts      # TanStack Query 사용 예시
 │   ├── useScrolled.ts     # 스크롤 여부 (헤더 모양 전환)
 │   └── useSeoulTime.ts    # 서울 시각 HH:mm (지금은 쓰지 않음)
@@ -101,6 +144,8 @@ src/
 │   ├── index.tsx          # Suspense + BrowserRouter + Routes
 │   └── const.ts           # Menus 경로 상수, SECTION_ID(홈 섹션 id)
 ├── stores/                # Zustand 스토어
+│   ├── useExampleStore.ts # 사용 예시
+│   └── useSectionStore.ts # 지금 보는 섹션 (홈이 쓰고 헤더가 읽음)
 ├── styles/                # 전역 스타일, 디자인 토큰, 글꼴
 │   ├── fonts.ts           # 글꼴 불러오기
 │   ├── global.scss        # 초기화, 기본 글꼴·색, 포커스, 움직임 줄이기
@@ -150,14 +195,22 @@ export const Menus = {
 
 페이지를 추가할 때는 `src/pages/index.ts`에 `lazy()` 항목을 등록하고, `Menus`에 경로를 추가한 뒤 `<Route>`를 연결합니다.
 
-### 네비게이션
+### 헤더 메뉴 (지금 보는 섹션)
 
-`NavLink`를 사용한 활성 링크 스타일링:
+헤더 메뉴는 `#work` 같은 섹션 id로 이동합니다. 지금 보는 섹션은 다음처럼 표시합니다.
+
+1. 홈이 `useActiveSection`으로 섹션들을 지켜봅니다. `IntersectionObserver`로 화면 위에서 40% 지점의 얇은 띠에 걸친 섹션을 찾습니다.
+2. 찾은 id를 Zustand 스토어 `useSectionStore`에 넣습니다. 띠에 걸친 섹션이 없으면(첫 화면 등) `null`입니다.
+3. 헤더가 스토어 값을 읽어 해당 메뉴에 `aria-current="true"`와 어두운 알약 모양을 붙입니다.
+
+헤더는 `Layout`에, 섹션은 `<Outlet />`(홈)에 있어서 props로 이어지지 않기 때문에 스토어로 연결합니다.
 
 ```tsx
-<NavLink to={Menus.Home} className={({ isActive }) => (isActive ? 'active' : '')} end>
-  홈
-</NavLink>
+// src/pages/home/index.tsx — 섹션을 가진 쪽이 지켜본다
+useActiveSection(SECTION_IDS)
+
+// src/components/layout/Header/index.tsx — 메뉴는 값만 읽는다
+const activeId = useSectionStore(state => state.activeId)
 ```
 
 ### Path Alias
@@ -178,7 +231,7 @@ import { API } from '@/request/const'
 .my-component {
   @include container;
   color: $color-accent;
-  padding: $spacing-md;
+  border-radius: $radius-xl;
 }
 ```
 
@@ -218,17 +271,19 @@ const useExampleList = () =>
 
 ### 상태 관리
 
-Zustand로 전역 상태를 관리하며, `devtools` 미들웨어가 적용되어 있습니다.
+Zustand로 여러 화면이 함께 쓰는 상태를 관리합니다. `devtools` 미들웨어를 붙여 개발 중에 Redux DevTools로 값을 볼 수 있습니다(`useSectionStore`는 개발 모드에서만 켜짐). 컴포넌트에서는 selector로 필요한 값만 구독합니다(다른 값이 바뀌어도 다시 그리지 않습니다).
 
 ```tsx
-import { useExampleStore } from '@/stores/useExampleStore'
+import { useSectionStore } from '@/stores/useSectionStore'
 
 const Component = () => {
-  const { count, increment } = useExampleStore()
+  const activeId = useSectionStore(state => state.activeId)
 
-  return <button onClick={increment}>{count}</button>
+  return <p>지금 보는 섹션: {activeId ?? '없음'}</p>
 }
 ```
+
+`src/stores/useExampleStore.ts`는 참고용 예시입니다.
 
 ### 로딩 컴포넌트
 
@@ -249,7 +304,8 @@ import { LOADING_TYPE } from '@/components/loading/const'
 - **본문 바로가기** — 키보드 사용자가 메뉴를 건너뛰는 링크. 포커스를 받을 때만 보입니다
 - **Header** — 화면 위에 고정된 헤더 (블록 로고, 섹션 메뉴). 스크롤하면 반투명 블록 모양으로 바뀝니다
 - **Main Content** — `<Outlet />`으로 렌더링되는 페이지 콘텐츠
-- **Footer** — 하단 푸터
+
+사이트 푸터(연도, 마지막 업데이트, 만든 기술)는 따로 두지 않고 홈의 연락 섹션 아래쪽에 넣었습니다.
 
 ## 스타일 가이드
 
@@ -270,8 +326,6 @@ import { LOADING_TYPE } from '@/components/loading/const'
 | `$color-line-100` ~ `$color-line-300`              |           | 카드 테두리, 목록 구분선, 버튼 테두리   |
 | `$color-dark`, `$color-on-dark`, `$color-on-dark-muted` |      | 어두운 영역과 그 위 글자                |
 
-기존 색 변수(`$primary-color` 등)는 새 토큰을 가리키도록 남겨 두었습니다. 404·로딩 화면을 새 디자인으로 바꾸면서 정리합니다.
-
 ### 글꼴
 
 | 변수            | 글꼴                | 용도           |
@@ -282,14 +336,15 @@ import { LOADING_TYPE } from '@/components/loading/const'
 
 글꼴 파일은 npm 패키지에서 불러와(`src/styles/fonts.ts`) 사이트가 직접 제공합니다. 외부 CDN을 부르지 않습니다. 세 글꼴 모두 SIL Open Font License 1.1입니다.
 
-### 간격 / 모서리 / 그림자 / 레이아웃
+### 모서리 / 그림자 / 움직임 / 레이아웃
 
-- `$spacing-xs` ~ `$spacing-xxl` — 간격
-- `$font-size-xs` ~ `$font-size-xxl` — 글자 크기
-- `$radius-sm` ~ `$radius-2xl`, `$radius-pill` — 모서리 반경 (`$border-radius-*`는 기존 값)
+- `$radius-sm` ~ `$radius-4xl`, `$radius-pill` — 모서리 반경
 - `$shadow-sm` ~ `$shadow-lg` — 그림자
-- `$content-max-width`(1200px), `$page-gutter`(40px), `$section-padding-y`(90px) — 레이아웃
-- `$z-index-dropdown`, `$z-index-modal`, `$z-index-tooltip` — z-index 레이어
+- `$ease-soft` — 등장·전환 곡선
+- `$content-max-width`(1200px), `$page-gutter`(40px), `$section-padding-y`(90px), `$header-offset`(20px) — 레이아웃
+- `$z-index-header`, `$z-index-dropdown`, `$z-index-modal`, `$z-index-tooltip` — z-index 레이어
+
+글자 크기와 간격은 섹션마다 시안의 값을 그대로 씁니다.
 
 ### 믹스인
 
@@ -300,6 +355,7 @@ import { LOADING_TYPE } from '@/components/loading/const'
 | `visually-hidden` | 화면에는 숨기고 스크린리더만 읽게 함                  |
 | `reduced-motion`  | 움직임 줄이기 설정을 켠 사용자에게만 적용             |
 | `tone-modifiers`  | 색 이름(`$tones`)마다 `--lilac` 같은 바탕색 수정자 생성 |
+| `dot-grid`        | 점 격자 배경 (첫 화면, 404)                           |
 
 ### 반응형 디자인
 
@@ -317,9 +373,9 @@ import { LOADING_TYPE } from '@/components/loading/const'
 
 ## 현재 구현 상태
 
-초기 세팅 단계로, 다음 항목은 아직 미완성입니다.
-
-- **홈 화면** — 첫 화면(`/`)으로 연결되어 있지만 아직 내용이 비어 있습니다.
+- **홈 화면** — PC 화면(1280px 이상 기준, 1024px까지 확인)을 완성했습니다. 모바일 화면(390px 기준)은 작업 중입니다.
+- **내용** — `src/data/portfolio.ts`와 `src/data/site.ts`의 내용은 아직 자리표시자(`[이름]` 등)입니다.
+- **잠시 숨긴 기능** — 헤더의 서울 시각·이력서 버튼, 첫 화면의 이력서 버튼은 지우지 않고 `[숨김]` 주석으로 남겨 두었습니다.
 - **API 도메인** — `vite.config.ts`의 `getApiDomain()`이 모든 mode에서 빈 문자열을 반환합니다. 서버 데이터를 쓰게 되면 실제 서버 주소 설정이 필요합니다.
 - `useExample.ts`, `useExampleStore.ts`는 참고용 예시 코드입니다.
 
