@@ -1,6 +1,7 @@
 import Career from './sections/Career'
 import Hero from './sections/Hero'
 import ProductMarquee from './sections/ProductMarquee'
+import Stack from './sections/Stack'
 import Stats from './sections/Stats'
 import Way from './sections/Way'
 import Work from './sections/Work'
@@ -15,6 +16,7 @@ const Home = () => {
       <Work />
       <Way />
       <Career />
+      <Stack />
     </>
   )
 }

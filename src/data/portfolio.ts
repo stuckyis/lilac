@@ -1,5 +1,5 @@
 import { TONE } from './const'
-import type { ArchiveItem, CareerItem, Intro, MoreWork, Principle, Product, Profile, Stat, Work } from './type'
+import type { ArchiveItem, CareerItem, Intro, MoreWork, Principle, Product, Profile, StackGroup, Stat, Work } from './type'
 
 // 화면에 들어가는 내용을 모아 둔 파일이다. 내용을 바꿀 때는 이 파일만 고친다.
 // 실제 내용을 받기 전까지는 시안의 자리표시자([이름], [YYYY] 등)를 쓴다.
@@ -162,3 +162,47 @@ export const ARCHIVE: ArchiveItem[] = Array.from({ length: 8 }, (_, index) => ({
   name: `[프로젝트명 ${index + 1}]`,
   org: '[회사명]',
 }))
+
+/** 기술 스택. 분야 4개를 기준으로 디자인했다 */
+export const STACK: StackGroup[] = [
+  {
+    label: 'UI',
+    title: '화면',
+    tone: TONE.LILAC,
+    items: [
+      { name: 'React', short: 'Re', years: '[N]년' },
+      { name: 'TypeScript', short: 'TS', years: '[N]년' },
+      { name: 'Next.js', short: 'Nx', years: '[N]년' },
+    ],
+  },
+  {
+    label: 'STATE · DATA',
+    title: '상태 · 데이터',
+    tone: TONE.MINT,
+    items: [
+      { name: 'Zustand', short: 'Zu', years: '[N]년' },
+      { name: 'TanStack Query', short: 'TQ', years: '[N]년' },
+      { name: 'Axios', short: 'Ax', years: '[N]년' },
+    ],
+  },
+  {
+    label: 'STYLE · MOTION',
+    title: '스타일 · 인터랙션',
+    tone: TONE.BUTTER,
+    items: [
+      { name: 'SCSS', short: 'Sc', years: '[N]년' },
+      { name: '디자인 시스템', short: 'DS', years: '[N]년' },
+      { name: 'CSS 애니메이션', short: 'Mo', years: '[N]년' },
+    ],
+  },
+  {
+    label: 'QUALITY · TOOLS',
+    title: '품질 · 도구',
+    tone: TONE.PEACH,
+    items: [
+      { name: 'Vitest', short: 'Vt', years: '[N]년' },
+      { name: 'Testing Library', short: 'TL', years: '[N]년' },
+      { name: 'Vite', short: 'Vi', years: '[N]년' },
+    ],
+  },
+]

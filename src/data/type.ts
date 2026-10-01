@@ -120,3 +120,23 @@ export interface ArchiveItem {
   name: string
   org: string
 }
+
+/** 기술 하나 */
+export interface StackItem {
+  name: string
+  /** 아이콘 칸에 넣을 두 글자 (예: 'Re', 'TS') */
+  short: string
+  /** 사용 연수 (예: '7년') */
+  years: string
+}
+
+/** 기술 분야 카드 */
+export interface StackGroup {
+  /** 영문 라벨 (예: 'STATE · DATA') */
+  label: string
+  /** 한글 제목 (예: '상태 · 데이터') */
+  title: string
+  /** 아이콘 칸 색 */
+  tone: Tone
+  items: StackItem[]
+}

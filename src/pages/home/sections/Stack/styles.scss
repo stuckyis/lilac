@@ -1,0 +1,79 @@
+.stack {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  padding: $section-padding-y 0;
+
+  &__groups {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+    list-style: none;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 26px;
+    border: 1px solid $color-line-100;
+    border-radius: $radius-xl;
+    background-color: $color-surface;
+  }
+
+  &__label {
+    @include mono-label(12px, 0.06em);
+    color: $color-accent;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+    line-height: 1.4;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    list-style: none;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  // 두 글자 아이콘 칸. 색은 분야의 tone을 따른다
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: $radius-md;
+    font-family: $font-display;
+    font-size: 15px;
+    font-weight: $font-weight-bold;
+    @include tone-modifiers;
+  }
+
+  &__text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: 16px;
+    font-weight: $font-weight-medium;
+  }
+
+  &__years {
+    @include mono-label(12px, 0);
+    color: $color-muted;
+  }
+}
