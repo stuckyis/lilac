@@ -23,7 +23,9 @@ describe('Router', () => {
 
     renderAt('/')
 
-    expect(await screen.findByRole('navigation', { name: '주요 메뉴' })).toBeInTheDocument()
+    // 홈은 lazy로 나눠 불러오고, 테스트 환경은 이때 섹션 스타일(SCSS)을 처음 변환해서 1초 가까이 걸린다.
+    // 기본 대기 시간(1초)에 걸려 가끔 실패하므로 넉넉히 기다린다.
+    expect(await screen.findByRole('navigation', { name: '주요 메뉴' }, { timeout: 5000 })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: '작업' })).toHaveAttribute('href', '#work')
     expect(screen.getByRole('main')).toBeInTheDocument()
     expect(window.location.pathname).toBe('/')

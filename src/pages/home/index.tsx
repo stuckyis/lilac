@@ -1,3 +1,4 @@
+import Behind from './sections/Behind'
 import Career from './sections/Career'
 import Hero from './sections/Hero'
 import ProductMarquee from './sections/ProductMarquee'
@@ -17,6 +18,7 @@ const Home = () => {
       <Way />
       <Career />
       <Stack />
+      <Behind />
     </>
   )
 }

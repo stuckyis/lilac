@@ -1,4 +1,4 @@
-import type { Tone } from './const'
+import type { BehindVisual, Tone } from './const'
 
 /** 외부 프로필 링크 */
 export interface SocialLinks {
@@ -139,4 +139,16 @@ export interface StackGroup {
   /** 아이콘 칸 색 */
   tone: Tone
   items: StackItem[]
+}
+
+/** "이 화면의 구조" 카드 하나: 이 사이트를 어떻게 만들었는지 */
+export interface BehindNote {
+  /** 영문 라벨 (예: 'DESIGN') */
+  label: string
+  title: string
+  description: string
+  /** 위쪽 그림 바탕색 */
+  tone: Tone
+  /** 위쪽 그림 종류 */
+  visual: BehindVisual
 }

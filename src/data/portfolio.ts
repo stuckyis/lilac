@@ -1,5 +1,5 @@
-import { TONE } from './const'
-import type { ArchiveItem, CareerItem, Intro, MoreWork, Principle, Product, Profile, StackGroup, Stat, Work } from './type'
+import { BEHIND_VISUAL, TONE } from './const'
+import type { ArchiveItem, BehindNote, CareerItem, Intro, MoreWork, Principle, Product, Profile, StackGroup, Stat, Work } from './type'
 
 // 화면에 들어가는 내용을 모아 둔 파일이다. 내용을 바꿀 때는 이 파일만 고친다.
 // 실제 내용을 받기 전까지는 시안의 자리표시자([이름], [YYYY] 등)를 쓴다.
@@ -204,5 +204,35 @@ export const STACK: StackGroup[] = [
       { name: 'Testing Library', short: 'TL', years: '[N]년' },
       { name: 'Vite', short: 'Vi', years: '[N]년' },
     ],
+  },
+]
+
+/**
+ * 이 화면의 구조: 이 사이트를 어떻게 설계하고 검증했는지. 실제로 구현·확인한 내용만 적는다.
+ * 바뀔 수 있는 숫자(테스트 수 등)는 넣지 않는다.
+ */
+export const BEHIND_NOTES: BehindNote[] = [
+  {
+    label: 'DESIGN',
+    title: '블록 하나에서 시작한 화면',
+    description:
+      '색·글꼴·모서리·그림자를 이름 붙인 디자인 토큰으로 관리하고, 네 칸 블록 하나를 로고와 경력, 장식에 되풀이해 화면 전체의 결을 맞췄어요.',
+    tone: TONE.LILAC,
+    visual: BEHIND_VISUAL.TOKENS,
+  },
+  {
+    label: 'ACCESSIBILITY',
+    title: '키보드만으로도 전부',
+    description:
+      '작업 목록은 방향키로, 아카이브는 Enter로 열려요. 스크린리더가 읽을 이름과 움직임 줄이기 설정, 글자 대비까지 계산해 맞췄어요. Tab 키로 이 페이지를 둘러보세요.',
+    tone: TONE.MINT,
+    visual: BEHIND_VISUAL.KEYS,
+  },
+  {
+    label: 'QUALITY',
+    title: '단계마다 검증',
+    description: '화면을 하나 만들 때마다 타입 검사와 코드 검사, 테스트를 통과시키고, 실제 브라우저에서 위치와 폭을 재서 확인했어요.',
+    tone: TONE.BUTTER,
+    visual: BEHIND_VISUAL.CHECKS,
   },
 ]

@@ -8,6 +8,6 @@ export const SECTION_ID = {
   WAY: 'way',
   CAREER: 'career',
   STACK: 'stack',
-  ACTIVITY: 'activity',
+  BEHIND: 'behind',
   CONTACT: 'contact',
 } as const

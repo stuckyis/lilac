@@ -19,7 +19,7 @@ describe('Header', () => {
       ['일하는 방식', '#way'],
       ['경력', '#career'],
       ['기술', '#stack'],
-      ['활동', '#activity'],
+      ['구조', '#behind'],
     ])
   })
 

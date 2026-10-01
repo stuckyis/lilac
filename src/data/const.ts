@@ -13,3 +13,15 @@ export const TONE = {
 } as const
 
 export type Tone = (typeof TONE)[keyof typeof TONE]
+
+/** "이 화면의 구조" 카드 위쪽 그림의 종류 */
+export const BEHIND_VISUAL = {
+  /** 블록 마크 + 디자인 토큰 이름 */
+  TOKENS: 'tokens',
+  /** 키보드 자판 */
+  KEYS: 'keys',
+  /** 검사 명령이 통과한 터미널 창 */
+  CHECKS: 'checks',
+} as const
+
+export type BehindVisual = (typeof BEHIND_VISUAL)[keyof typeof BEHIND_VISUAL]

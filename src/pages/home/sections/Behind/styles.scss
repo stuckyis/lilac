@@ -1,0 +1,135 @@
+.behind {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  padding: $section-padding-y 0 70px;
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    list-style: none;
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid $color-line-100;
+    border-radius: $radius-2xl;
+    background-color: $color-surface;
+  }
+
+  // 위쪽 그림 영역. 색은 카드의 tone을 따른다
+  &__visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    @include tone-modifiers;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 24px 26px;
+  }
+
+  &__label {
+    @include mono-label(12px, 0.06em);
+    color: $color-accent;
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+    line-height: 1.4;
+  }
+
+  &__description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: $color-muted;
+  }
+}
+
+// 카드 위쪽 그림 (Visuals.tsx)
+.behind-visual {
+  &--tokens {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  &__chips {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+  }
+
+  &__chip {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background-color: rgba($color-surface, 0.85);
+    @include mono-label(12px, 0);
+    color: $color-ink;
+  }
+
+  &--keys {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  // 아래 테두리를 두껍게 해서 눌리는 자판처럼 보이게 한다
+  &__key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 48px;
+    padding: 0 14px;
+    border: 1px solid $color-line-300;
+    border-bottom-width: 4px;
+    border-radius: 10px;
+    background-color: $color-surface;
+    box-shadow: $shadow-sm;
+    font-family: $font-mono;
+    font-size: 14px;
+    color: $color-ink;
+  }
+
+  &--checks {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &__terminal {
+    width: 78%;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background-color: $color-dark;
+    box-shadow: $shadow-md;
+  }
+
+  &__line {
+    display: flex;
+    gap: 8px;
+    @include mono-label(12px, 0);
+    line-height: 1.9;
+    color: $color-on-dark;
+  }
+
+  &__prompt {
+    color: $color-on-dark-muted;
+  }
+
+  &__ok {
+    margin-left: auto;
+    color: $color-mint-200;
+  }
+}
