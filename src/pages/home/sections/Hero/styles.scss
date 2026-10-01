@@ -184,8 +184,8 @@ $hero-layouts: (
   }
 
   &__title {
-    // 1440 화면에서 72px, 1280 화면에서 64px
-    font-size: clamp(64px, calc(64px + (100vw - 1280px) * 0.05), 72px);
+    // 1440 화면에서 72px, 1280 화면에서 64px. 1280보다 좁으면 같은 비율로 줄여 1024 화면에서 52px (제목이 4줄을 넘지 않게)
+    font-size: clamp(52px, calc(64px + (100vw - 1280px) * 0.05), 72px);
     font-weight: $font-weight-heavy;
     line-height: 1.16;
     letter-spacing: -0.045em;

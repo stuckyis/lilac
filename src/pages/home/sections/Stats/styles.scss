@@ -36,7 +36,8 @@ $stats-tones: ($color-lilac-200, $color-mint-200, $color-butter-200, $color-peac
 
   &__value {
     font-family: $font-display;
-    font-size: 68px;
+    // 1280 이상에서 68px, 1024 화면에서 56px (한 칸이 좁아져도 숫자가 두 줄로 나뉘지 않게)
+    font-size: clamp(56px, calc(56px + (100vw - 1024px) * 0.047), 68px);
     font-weight: $font-weight-bold;
     line-height: 1;
     letter-spacing: -0.03em;
