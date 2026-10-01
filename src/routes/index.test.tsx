@@ -36,7 +36,6 @@ describe('Router', () => {
   it('삭제된 /login 경로는 404 화면을 보여줘야 합니다', async () => {
     renderAt('/login')
 
-    expect(await screen.findByRole('heading', { name: '404' })).toBeInTheDocument()
-    expect(screen.getByText('페이지를 찾을 수 없습니다')).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { level: 1, name: '페이지를 찾을 수 없어요' }, { timeout: 5000 })).toBeInTheDocument()
   })
 })

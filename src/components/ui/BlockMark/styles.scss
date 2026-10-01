@@ -31,4 +31,12 @@
       fill: $color-ink;
     }
   }
+
+  // 빠진 칸: 굵기·점선 간격은 24칸 격자 단위라 크기에 맞춰 함께 커진다
+  &--missing &__cell--accent {
+    fill: none;
+    stroke: $color-accent;
+    stroke-width: 0.5;
+    stroke-dasharray: 1.5 1.2;
+  }
 }

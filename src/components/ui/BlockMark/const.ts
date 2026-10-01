@@ -5,6 +5,8 @@ export const BLOCK_MARK_VARIANT = {
   ON_DARK: 'on-dark',
   /** 파스텔 바탕 위: 흰 칸 셋 + 잉크색 한 칸 (작업 미리보기 썸네일) */
   ON_PASTEL: 'on-pastel',
+  /** 한 칸이 빠진 블록: 강조 칸 자리를 점선 빈칸으로 (404) */
+  MISSING: 'missing',
 } as const
 
 export type BlockMarkVariant = (typeof BLOCK_MARK_VARIANT)[keyof typeof BLOCK_MARK_VARIANT]
