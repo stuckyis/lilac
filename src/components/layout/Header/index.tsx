@@ -1,5 +1,6 @@
 import BlockMark from '@/components/ui/BlockMark'
 import useScrolled from '@/hooks/useScrolled'
+import { useSectionStore } from '@/stores/useSectionStore'
 import clsx from 'clsx'
 import { NAV_ITEMS } from './const'
 import './styles.scss'
@@ -10,9 +11,11 @@ import './styles.scss'
 /**
  * 화면 위에 고정된 헤더. 왼쪽 로고, 가운데 메뉴로 나뉜다.
  * 맨 위에서는 메뉴만 반투명 알약이고, 스크롤하면 로고도 떠 있는 블록이 된다.
+ * 지금 보는 섹션의 메뉴는 어두운 알약으로 표시한다 (홈이 useSectionStore에 넣는다).
  */
 const Header = () => {
   const isScrolled = useScrolled()
+  const activeId = useSectionStore(state => state.activeId)
   // const time = useSeoulTime() // [숨김] 서울 시각
 
   return (
@@ -25,13 +28,21 @@ const Header = () => {
 
       <nav className="header__block header__nav" aria-label="주요 메뉴">
         <ul className="header__menu" role="list">
-          {NAV_ITEMS.map(item => (
-            <li key={item.id}>
-              <a className="header__link" href={`#${item.id}`}>
-                {item.label}
-              </a>
-            </li>
-          ))}
+          {NAV_ITEMS.map(item => {
+            const isActive = item.id === activeId
+
+            return (
+              <li key={item.id}>
+                <a
+                  className={clsx('header__link', isActive && 'header__link--active')}
+                  href={`#${item.id}`}
+                  aria-current={isActive ? 'true' : undefined}
+                >
+                  {item.label}
+                </a>
+              </li>
+            )
+          })}
         </ul>
       </nav>
 

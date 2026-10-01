@@ -1,4 +1,6 @@
 // import { PROFILE } from '@/data/portfolio' // [숨김] 이력서 테스트에서 쓴다
+import { SECTION_ID } from '@/routes/const'
+import { useSectionStore } from '@/stores/useSectionStore'
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it } from 'vitest'
 import Header from '.'
@@ -6,6 +8,7 @@ import Header from '.'
 describe('Header', () => {
   afterEach(() => {
     Object.defineProperty(window, 'scrollY', { value: 0, configurable: true })
+    useSectionStore.setState({ activeId: null })
   })
 
   it('메뉴는 각 섹션으로 이동하는 링크 5개여야 합니다', () => {
@@ -21,6 +24,25 @@ describe('Header', () => {
       ['기술', '#stack'],
       ['구조', '#behind'],
     ])
+  })
+
+  it('지금 보는 섹션의 메뉴만 표시해야 합니다', () => {
+    render(<Header />)
+    const nav = screen.getByRole('navigation', { name: '주요 메뉴' })
+    expect(within(nav).queryAllByRole('link', { current: true })).toHaveLength(0)
+
+    act(() => {
+      useSectionStore.getState().setActiveId(SECTION_ID.CAREER)
+    })
+    const current = within(nav).getByRole('link', { current: true })
+    expect(current).toHaveTextContent('경력')
+    expect(current).toHaveClass('header__link--active')
+
+    // 연락 섹션은 메뉴에 없어서 아무 메뉴도 표시하지 않는다
+    act(() => {
+      useSectionStore.getState().setActiveId(SECTION_ID.CONTACT)
+    })
+    expect(within(nav).queryAllByRole('link', { current: true })).toHaveLength(0)
   })
 
   it('로고는 이름 없이 블록만 보이고, 누르면 맨 위로 이동해야 합니다', () => {
