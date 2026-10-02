@@ -14,11 +14,32 @@ $way-tones: (
   gap: 44px;
   padding: $section-padding-y 0;
 
+  @include tablet {
+    gap: 32px;
+    padding: 72px 0 56px;
+  }
+
+  // 모바일 시안
+  @include mobile {
+    gap: 22px;
+    padding: 56px 0 40px;
+  }
+
   &__list {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 20px;
     list-style: none;
+
+    @include tablet {
+      gap: 16px;
+    }
+
+    // 768px 미만: 세로로 쌓는다
+    @include mobile {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
   }
 
   &__card {
@@ -27,6 +48,16 @@ $way-tones: (
     gap: 16px;
     padding: 32px;
     border-radius: $radius-2xl;
+
+    @include tablet {
+      gap: 12px;
+      padding: 24px;
+    }
+
+    @include mobile {
+      gap: 10px;
+      border-radius: 22px;
+    }
   }
 
   &__no {
@@ -34,17 +65,37 @@ $way-tones: (
     font-size: 44px;
     font-weight: $font-weight-heavy;
     line-height: 1;
+
+    @include tablet {
+      font-size: 36px;
+    }
+
+    @include mobile {
+      font-size: 32px;
+    }
   }
 
   &__title {
     font-size: 22px;
     font-weight: $font-weight-bold;
     line-height: 1.4;
+
+    @include tablet {
+      font-size: 20px;
+    }
+
+    @include mobile {
+      font-size: 19px;
+    }
   }
 
   &__description {
     font-size: 16px;
     line-height: 1.7;
+
+    @include mobile {
+      font-size: 15px;
+    }
   }
 
   @for $index from 1 through list.length($way-tones) {
