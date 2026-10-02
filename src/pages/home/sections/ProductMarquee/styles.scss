@@ -15,6 +15,12 @@
   gap: 22px;
   padding: 70px 0 20px;
 
+  // 모바일 시안
+  @include mobile {
+    gap: 16px;
+    padding: 50px 0 10px;
+  }
+
   &__head {
     @include container;
     display: flex;
@@ -30,6 +36,11 @@
     font-size: 15px;
     font-weight: $font-weight-medium;
     color: $color-muted;
+
+    @include mobile {
+      gap: 8px;
+      font-size: 14px;
+    }
   }
 
   &__title-mark {
@@ -59,6 +70,12 @@
       border-color: $color-accent;
       color: $color-accent;
     }
+
+    // 손가락으로 누르기 쉬운 크기
+    @include tablet {
+      width: 44px;
+      height: 44px;
+    }
   }
 
   // 양끝을 흐리게 가린다
@@ -76,6 +93,11 @@
     display: flex;
     list-style: none;
     animation: product-marquee 44s linear infinite;
+
+    // 카드가 작아져 같은 시간이면 너무 느리게 보인다 (모바일 시안 34초)
+    @include mobile {
+      animation-duration: 34s;
+    }
   }
 
   &__viewport:hover &__list,
@@ -96,6 +118,15 @@
     font-size: 18px;
     font-weight: $font-weight-bold;
     white-space: nowrap;
+
+    @include mobile {
+      gap: 10px;
+      height: 56px;
+      margin-right: 12px;
+      padding: 0 20px;
+      border-radius: 16px;
+      font-size: 15px;
+    }
   }
 
   &__logo {
@@ -106,6 +137,12 @@
     object-fit: contain;
 
     @include tone-modifiers;
+
+    @include mobile {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+    }
   }
 
   // 움직임 줄이기: 흐르지 않고 복제본 없이 모든 제품을 여러 줄로 보여준다

@@ -13,11 +13,27 @@ $stats-tones: ($color-lilac-200, $color-mint-200, $color-butter-200, $color-peac
   background-color: $color-dark;
   color: $color-on-dark;
 
+  @include tablet {
+    padding: 40px 48px;
+  }
+
+  // 모바일 시안: 화면 양옆 16px만 남기고 다른 콘텐츠(20px)보다 조금 넓게 둔다
+  @include mobile {
+    width: calc(100% - 32px);
+    padding: 30px 24px;
+    border-radius: 28px;
+  }
+
   &__mark {
     position: absolute;
     top: -40px;
     right: -30px;
     opacity: 0.12;
+
+    // 모바일 시안에 없고, 좁은 화면에서는 숫자 위에 겹친다
+    @include mobile {
+      display: none;
+    }
   }
 
   &__list {
@@ -26,12 +42,26 @@ $stats-tones: ($color-lilac-200, $color-mint-200, $color-butter-200, $color-peac
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 24px;
     list-style: none;
+
+    // 1024 미만: 2×2. 4칸이면 768 화면에서 한 칸이 118px라 숫자가 들어가지 않는다
+    @include tablet {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px 24px;
+    }
+
+    @include mobile {
+      gap: 26px 16px;
+    }
   }
 
   &__item {
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+    @include mobile {
+      gap: 6px;
+    }
   }
 
   &__value {
@@ -41,6 +71,10 @@ $stats-tones: ($color-lilac-200, $color-mint-200, $color-butter-200, $color-peac
     font-weight: $font-weight-bold;
     line-height: 1;
     letter-spacing: -0.03em;
+
+    @include mobile {
+      font-size: 42px;
+    }
   }
 
   @for $index from 1 through list.length($stats-tones) {
@@ -52,5 +86,9 @@ $stats-tones: ($color-lilac-200, $color-mint-200, $color-butter-200, $color-peac
   &__label {
     font-size: 16px;
     color: $color-on-dark-muted;
+
+    @include mobile {
+      font-size: 13px;
+    }
   }
 }
