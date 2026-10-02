@@ -5,6 +5,9 @@ import { Fragment, type ReactNode } from 'react'
 import HeroComposition from './HeroComposition'
 import './styles.scss'
 
+/** 큰 문장 끝의 깜빡이는 커서. 앞에 단어 잇기 문자를 붙여 마지막 단어와 같은 줄에 둔다 */
+const CARET = '\u2060_'
+
 /**
  * 여러 줄 문장을 <br>로 나눠 그린다.
  * 줄 끝에 공백을 남겨서, 스크린리더가 줄바꿈 앞뒤 단어를 붙여 읽지 않게 한다.
@@ -45,8 +48,9 @@ const Hero = () => {
 
           <h1 id="hero-title" className="hero__title">
             {renderLines(INTRO.headline, highlightWord)}
+            {/* 단어 잇기 문자(U+2060)로 커서가 앞 글자와 떨어져 혼자 다음 줄로 넘어가지 않게 한다 */}
             <span className="hero__caret" aria-hidden>
-              _
+              {CARET}
             </span>
           </h1>
 
