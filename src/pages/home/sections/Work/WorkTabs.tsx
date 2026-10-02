@@ -1,28 +1,33 @@
 import { WORKS } from '@/data/portfolio'
 import { toOrderNumber } from '@/utils/helpers/helpers'
 import clsx from 'clsx'
-import { useRef, useState, type KeyboardEvent } from 'react'
+import { useRef, type KeyboardEvent } from 'react'
 import WorkPreview from './WorkPreview'
 
 const PANEL_ID = 'work-panel'
 const toTabId = (workId: string) => `${workId}-tab`
 
+interface WorkTabsProps {
+  /** 고른 작업 id */
+  activeId: string
+  onSelect: (workId: string) => void
+}
+
 /**
- * 대표 작업 목록(세로 탭)과 미리보기(탭 패널).
+ * 대표 작업 목록(세로 탭)과 미리보기(탭 패널). 1024px 이상에서 쓴다.
  * 제목에 마우스를 올리거나 클릭하면 고르고, 키보드는 위·아래 방향키와 Home·End로 고른다(WAI-ARIA 탭 패턴).
  */
-const WorkTabs = () => {
-  const [activeId, setActiveId] = useState(WORKS[0].id)
+const WorkTabs = ({ activeId, onSelect }: WorkTabsProps) => {
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([])
   const activeWork = WORKS.find(work => work.id === activeId) ?? WORKS[0]
 
   const selectAndFocus = (index: number) => {
-    setActiveId(WORKS[index].id)
+    onSelect(WORKS[index].id)
     tabRefs.current[index]?.focus()
   }
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    const current = WORKS.findIndex(work => work.id === activeId)
+    const current = WORKS.findIndex(work => work.id === activeWork.id)
     const last = WORKS.length - 1
 
     // 끝에서 누르면 반대쪽 끝으로 돈다
@@ -39,7 +44,7 @@ const WorkTabs = () => {
     <div className="work__main">
       <div className="work__tabs" role="tablist" aria-orientation="vertical" aria-labelledby="work-title" onKeyDown={handleKeyDown}>
         {WORKS.map((work, index) => {
-          const isActive = work.id === activeId
+          const isActive = work.id === activeWork.id
 
           return (
             <button
@@ -54,8 +59,8 @@ const WorkTabs = () => {
               aria-selected={isActive}
               aria-controls={PANEL_ID}
               tabIndex={isActive ? 0 : -1}
-              onClick={() => setActiveId(work.id)}
-              onMouseEnter={() => setActiveId(work.id)}
+              onClick={() => onSelect(work.id)}
+              onMouseEnter={() => onSelect(work.id)}
             >
               <span className="work__tab-no" aria-hidden>
                 {toOrderNumber(index)}

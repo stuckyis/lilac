@@ -1,27 +1,9 @@
 import { SECTION_ID } from '@/routes/const'
 import { useSectionStore } from '@/stores/useSectionStore'
+import { mockScreenWidth } from '@/test/matchMedia'
 import { act, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import MobileMenu from './MobileMenu'
-
-/** 화면 폭을 바꿀 수 있는 가짜 matchMedia. `(width < Npx)` 형태만 해석한다 */
-const mockScreenWidth = (initialWidth: number) => {
-  let width = initialWidth
-  const listeners = new Set<() => void>()
-
-  vi.stubGlobal('matchMedia', (query: string) => ({
-    get matches() {
-      return width < Number(query.match(/(\d+)px/)?.[1])
-    },
-    addEventListener: (_: string, listener: () => void) => listeners.add(listener),
-    removeEventListener: (_: string, listener: () => void) => listeners.delete(listener),
-  }))
-
-  return (nextWidth: number) => {
-    width = nextWidth
-    act(() => listeners.forEach(listener => listener()))
-  }
-}
 
 const getMenuButton = () => screen.getByRole('button', { name: '메뉴 열기' })
 const getDialog = () => document.querySelector('dialog')!
@@ -111,7 +93,7 @@ describe('MobileMenu', () => {
   })
 
   it('PC 폭으로 넓어지면 열려 있던 메뉴를 닫아야 합니다', () => {
-    const resize = mockScreenWidth(390)
+    const { resize } = mockScreenWidth(390)
     render(<MobileMenu />)
     openMenu()
 

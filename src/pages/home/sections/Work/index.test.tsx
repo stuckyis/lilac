@@ -1,11 +1,16 @@
 import { MORE_WORKS, WORKS } from '@/data/portfolio'
+import { mockScreenWidth } from '@/test/matchMedia'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import Work from '.'
 
 const getTabs = () => within(screen.getByRole('tablist', { name: '대표 작업' })).getAllByRole('tab')
 const getPanel = () => screen.getByRole('tabpanel')
+/** 아코디언 제목 버튼 (펼침 상태를 가진 버튼) */
+const getAccordionButtons = () => screen.getAllByRole('button').filter(button => button.hasAttribute('aria-expanded'))
+/** 펼친 상세 영역 (접힌 영역은 hidden이라 찾지 않는다). 대표 작업 섹션 자체도 영역이라 뺀다 */
+const getOpenPanels = () => screen.queryAllByRole('region').filter(region => region.id !== 'work')
 
 describe('Work', () => {
   it('메뉴의 #work로 이동할 수 있는 "대표 작업" 영역이어야 합니다', () => {
@@ -80,5 +85,72 @@ describe('Work', () => {
     MORE_WORKS.forEach(work => {
       expect(screen.getByRole('link', { name: new RegExp(work.title.replace(/[[\]]/g, '\\$&')) })).toHaveAttribute('href', work.url)
     })
+  })
+})
+
+describe('Work (1024px 미만)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
+  it('목록이 아코디언으로 바뀌고, 처음에는 첫 작업만 펼쳐져 있어야 합니다', () => {
+    mockScreenWidth(390)
+    render(<Work />)
+
+    expect(screen.queryByRole('tablist')).not.toBeInTheDocument()
+    expect(screen.getByText('제목을 누르면 자세히 보여요')).toBeInTheDocument()
+
+    const buttons = getAccordionButtons()
+    expect(buttons).toHaveLength(WORKS.length)
+    // 제목 버튼은 h3 안에 있어 제목 목록으로도 훑을 수 있다
+    buttons.forEach(button => expect(button.closest('h3')).not.toBeNull())
+    expect(buttons.map(button => button.getAttribute('aria-expanded'))).toEqual(WORKS.map((_, index) => String(index === 0)))
+
+    const [panel] = getOpenPanels()
+    expect(getOpenPanels()).toHaveLength(1)
+    expect(buttons[0]).toHaveAttribute('aria-controls', panel.id)
+    expect(within(panel).getByText(WORKS[0].summary)).toBeInTheDocument()
+    // 회사·기간은 제목 줄에 있어서 상세에서는 역할·팀만 보여준다
+    expect(within(panel).getByText(`${WORKS[0].role} · ${WORKS[0].team}`)).toBeInTheDocument()
+  })
+
+  it('다른 제목을 누르면 그 작업만 펼치고, 펼친 제목을 다시 누르면 접혀야 합니다', async () => {
+    const user = userEvent.setup()
+    mockScreenWidth(390)
+    render(<Work />)
+
+    await user.click(getAccordionButtons()[2])
+    expect(getAccordionButtons()[2]).toHaveAttribute('aria-expanded', 'true')
+    expect(getAccordionButtons()[0]).toHaveAttribute('aria-expanded', 'false')
+    expect(within(getOpenPanels()[0]).getByText(WORKS[2].summary)).toBeInTheDocument()
+
+    await user.click(getAccordionButtons()[2])
+    expect(getAccordionButtons().every(button => button.getAttribute('aria-expanded') === 'false')).toBe(true)
+    expect(getOpenPanels()).toHaveLength(0)
+  })
+
+  it('화면 폭이 바뀌어도 고른 작업이 이어져야 합니다', async () => {
+    const user = userEvent.setup()
+    const { resize } = mockScreenWidth(390)
+    render(<Work />)
+
+    await user.click(getAccordionButtons()[3])
+    resize(1280)
+    expect(getTabs()[3]).toHaveAttribute('aria-selected', 'true')
+
+    await user.hover(getTabs()[1])
+    resize(768)
+    expect(getAccordionButtons()[1]).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('모두 접은 채 넓은 화면이 되면 첫 작업을 보여줘야 합니다', async () => {
+    const user = userEvent.setup()
+    const { resize } = mockScreenWidth(390)
+    render(<Work />)
+
+    await user.click(getAccordionButtons()[0])
+    resize(1440)
+
+    expect(getTabs()[0]).toHaveAttribute('aria-selected', 'true')
   })
 })
