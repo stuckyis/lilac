@@ -398,7 +398,7 @@ $hero-layouts-mobile: (
     color: $color-surface;
     transition: background-color 0.2s;
 
-    &:hover {
+    @include hover {
       background-color: $color-accent;
       color: $color-surface;
     }
@@ -417,7 +417,7 @@ $hero-layouts-mobile: (
     //   background-color: $color-surface;
     //   color: $color-ink;
     //
-    //   &:hover {
+    //   @include hover {
     //     border-color: $color-accent;
     //     background-color: $color-surface;
     //     color: $color-accent;
@@ -439,7 +439,7 @@ $hero-layouts-mobile: (
       color 0.2s,
       border-color 0.2s;
 
-    &:hover {
+    @include hover {
       border-color: $color-accent;
       color: $color-accent;
     }
@@ -592,7 +592,7 @@ $hero-layouts-mobile: (
     color: $color-ink;
     transition: border-color 0.2s;
 
-    &:hover {
+    @include hover {
       border-color: $color-accent;
     }
 

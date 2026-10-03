@@ -159,7 +159,7 @@
     color: $color-ink;
     transition: background-color 0.2s;
 
-    &:hover {
+    @include hover {
       background-color: $color-surface;
       color: $color-ink;
     }
@@ -201,7 +201,7 @@
       color 0.2s,
       border-color 0.2s;
 
-    &:hover {
+    @include hover {
       border-color: $color-lilac-200;
       color: $color-lilac-200;
     }

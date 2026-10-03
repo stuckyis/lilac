@@ -20,7 +20,11 @@
   top: 12px;
   left: 12px;
   z-index: $z-index-header + 1;
-  padding: 10px 18px;
+  // 손가락으로도 누르기 쉬운 높이(44px)
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
   border-radius: $radius-pill;
   background-color: $color-dark;
   font-size: 14px;
@@ -29,8 +33,11 @@
   transform: translateY(-200%);
   transition: transform 0.2s;
 
-  &:hover,
   &:focus {
+    color: $color-surface;
+  }
+
+  @include hover {
     color: $color-surface;
   }
 

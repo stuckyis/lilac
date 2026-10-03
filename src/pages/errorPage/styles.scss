@@ -55,7 +55,7 @@
     color: $color-surface;
     transition: background-color 0.2s;
 
-    &:hover {
+    @include hover {
       background-color: $color-accent;
       color: $color-surface;
     }

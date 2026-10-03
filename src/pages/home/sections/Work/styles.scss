@@ -330,7 +330,7 @@
     color: $color-surface;
     transition: background-color 0.2s;
 
-    &:hover {
+    @include hover {
       background-color: $color-accent;
       color: $color-surface;
     }
@@ -462,15 +462,17 @@
   }
 
   // 링크 카드에 마우스를 올리면 썸네일이 살짝 떠오르고 이름이 강조색이 된다
-  a.more-work__card:hover {
-    color: $color-ink;
+  a.more-work__card {
+    @include hover {
+      color: $color-ink;
 
-    .more-work__thumb {
-      transform: translateY(-4px);
-    }
+      .more-work__thumb {
+        transform: translateY(-4px);
+      }
 
-    .more-work__name {
-      color: $color-accent;
+      .more-work__name {
+        color: $color-accent;
+      }
     }
   }
 }

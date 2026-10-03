@@ -59,6 +59,16 @@
   background-size: 26px 26px;
 }
 
+// 마우스처럼 올려 둘 수 있는 기기에서만 :hover 효과를 준다.
+// 터치 화면은 누르면 :hover가 붙은 채 남아서(다른 곳을 누를 때까지) 버튼이 바뀐 색으로 멈춰 보인다.
+@mixin hover {
+  @media (hover: hover) {
+    &:hover {
+      @content;
+    }
+  }
+}
+
 // 움직임 줄이기를 켠 사용자에게만 적용한다.
 @mixin reduced-motion {
   @media (prefers-reduced-motion: reduce) {

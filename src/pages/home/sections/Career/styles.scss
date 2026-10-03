@@ -217,7 +217,7 @@ $marker-center-y: 10px;
     color: $color-ink;
     transition: border-color 0.2s;
 
-    &:hover {
+    @include hover {
       border-color: $color-accent;
     }
 

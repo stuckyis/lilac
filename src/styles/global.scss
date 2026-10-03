@@ -46,7 +46,7 @@ a {
   text-decoration: none;
   transition: color 0.2s;
 
-  &:hover {
+  @include hover {
     color: $color-accent;
   }
 }
