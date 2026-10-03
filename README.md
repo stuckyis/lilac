@@ -75,7 +75,9 @@ pnpm preview   # 빌드 결과 미리보기
 
 - **헤더**: 블록 로고(누르면 맨 위로)와 섹션 메뉴. 지금 보는 섹션의 메뉴가 어두운 알약으로 표시됩니다.
 - **404**: 없는 주소로 들어오면 한 칸이 빠진 블록 마크와 "홈으로 돌아가기"를 보여줍니다.
-- PC 화면(1280px 이상)을 기준으로 만들었고, 1024px까지 깨지지 않게 맞췄습니다. 모바일 화면은 작업 중입니다.
+- 화면 폭에 따라 세 가지로 보여줍니다. PC(1024px 이상, 1440px 기준), 태블릿(768~1023px), 모바일(768px 미만, 390px 기준. 360px까지 확인)
+  - 1024px 미만: 헤더 메뉴가 메뉴 버튼 + 펼침 메뉴로, 대표 작업이 탭에서 아코디언으로, 경력이 세로 타임라인으로, "이 화면의 구조"가 가로로 넘기는 카드로 바뀝니다.
+  - 768px 미만: 섹션마다 모바일 시안의 크기·배치를 씁니다(카드 세로 쌓기, "그 밖의 작업" 가로 스크롤 등).
 
 ## 콘텐츠 수정 방법
 
@@ -356,24 +358,48 @@ import { LOADING_TYPE } from '@/components/loading/const'
 | `reduced-motion`  | 움직임 줄이기 설정을 켠 사용자에게만 적용             |
 | `tone-modifiers`  | 색 이름(`$tones`)마다 `--lilac` 같은 바탕색 수정자 생성 |
 | `dot-grid`        | 점 격자 배경 (첫 화면, 404)                           |
+| `tablet`, `mobile` | 1024px 미만, 768px 미만에서만 적용 (`below($breakpoint)`로 직접 지정도 가능) |
+| `hover`           | 마우스로 올려 둘 수 있는 기기에서만 `:hover` 적용      |
 
 ### 반응형 디자인
 
-```scss
-@media (max-width: $breakpoint-tablet) {
-  // 768px 이하
-}
+기본 스타일은 PC이고, 좁은 화면 스타일을 믹스인으로 덧씌웁니다(`src/styles/mixins.scss`).
 
-@media (max-width: $breakpoint-mobile) {
-  // 480px 이하
+```scss
+.my-section {
+  padding: 90px 0;
+
+  @include tablet {
+    // 1024px 미만 (태블릿·모바일)
+    padding: 72px 0 56px;
+  }
+
+  @include mobile {
+    // 768px 미만 (모바일)
+    padding: 56px 0 40px;
+  }
+
+  // 마우스로 올려 둘 수 있는 기기에서만 (터치 화면은 누른 뒤 효과가 남지 않게)
+  @include hover {
+    color: $color-accent;
+  }
 }
 ```
 
-브레이크포인트: `$breakpoint-mobile`(480px), `$breakpoint-tablet`(768px), `$breakpoint-desktop`(1024px), `$breakpoint-wide`(1280px)
+화면 폭에 따라 컴포넌트 자체를 바꿀 때는 같은 구간을 TS에서 씁니다(`src/styles/breakpoints.ts`).
+
+```tsx
+const isCompact = useMediaQuery(MEDIA_QUERY.TABLET) // 1024px 미만이면 true
+
+return isCompact ? <WorkAccordion /> : <WorkTabs />
+```
+
+- 브레이크포인트: `$breakpoint-mobile`(480px), `$breakpoint-tablet`(768px), `$breakpoint-desktop`(1024px), `$breakpoint-wide`(1280px). 값을 바꾸면 `breakpoints.ts`의 `BREAKPOINT`도 같이 고칩니다.
+- 화면 가장자리 여백은 CSS 변수 `--page-gutter`입니다(PC 40px, 1024px 미만 32px, 768px 미만 20px). `container` 믹스인이 씁니다.
 
 ## 현재 구현 상태
 
-- **홈 화면** — PC 화면(1280px 이상 기준, 1024px까지 확인)을 완성했습니다. 모바일 화면(390px 기준)은 작업 중입니다.
+- **홈 화면** — PC(1024px 이상)·태블릿(768~1023px)·모바일(360px까지) 화면을 완성했습니다.
 - **내용** — `src/data/portfolio.ts`와 `src/data/site.ts`의 내용은 아직 자리표시자(`[이름]` 등)입니다.
 - **잠시 숨긴 기능** — 헤더의 서울 시각·이력서 버튼, 첫 화면의 이력서 버튼은 지우지 않고 `[숨김]` 주석으로 남겨 두었습니다.
 - **API 도메인** — `vite.config.ts`의 `getApiDomain()`이 모든 mode에서 빈 문자열을 반환합니다. 서버 데이터를 쓰게 되면 실제 서버 주소 설정이 필요합니다.
