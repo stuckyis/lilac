@@ -223,7 +223,7 @@ export const BEHIND_NOTES: BehindNote[] = [
     label: 'ACCESSIBILITY',
     title: '키보드만으로도 전부',
     description:
-      '작업 목록은 방향키로, 아카이브는 Enter로 열려요. 스크린리더가 읽을 이름과 움직임 줄이기 설정, 글자 대비까지 계산해 맞췄어요. Tab 키로 이 페이지를 둘러보세요.',
+      '작업 목록과 아카이브는 키보드로 열 수 있어요. 스크린리더가 읽을 이름과 움직임 줄이기 설정, 글자 대비까지 계산해 맞췄어요. Tab 키로 이 페이지를 둘러보세요.',
     tone: TONE.MINT,
     visual: BEHIND_VISUAL.KEYS,
   },
