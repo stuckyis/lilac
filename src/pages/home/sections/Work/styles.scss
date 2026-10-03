@@ -383,6 +383,8 @@
 
     // 768px 미만: 가로로 넘겨 본다. 화면 끝까지 넘어가게 가장자리 여백만큼 넓히고, 카드는 콘텐츠 줄에 맞춰 멈춘다
     @include mobile {
+      // 카드 안 visually-hidden 글자(position: absolute)가 스크롤 영역 밖으로 빠져 페이지 폭을 넓히지 않게 기준 상자를 만든다
+      position: relative;
       display: flex;
       gap: 12px;
       margin: -6px calc(var(--page-gutter) * -1);

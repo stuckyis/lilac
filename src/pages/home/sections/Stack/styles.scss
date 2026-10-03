@@ -5,11 +5,33 @@
   gap: 44px;
   padding: $section-padding-y 0;
 
+  @include tablet {
+    gap: 32px;
+    padding: 72px 0 56px;
+  }
+
+  // 모바일 시안
+  @include mobile {
+    gap: 22px;
+    padding: 56px 0 40px;
+  }
+
   &__groups {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
     list-style: none;
+
+    // 1024px 미만: 2×2 (4칸이면 768 화면에서 한 칸이 161px라 비좁다)
+    @include tablet {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @include mobile {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
   }
 
   &__card {
@@ -20,17 +42,31 @@
     border: 1px solid $color-line-100;
     border-radius: $radius-xl;
     background-color: $color-surface;
+
+    @include mobile {
+      gap: 12px;
+      padding: 20px;
+      border-radius: 20px;
+    }
   }
 
   &__label {
     @include mono-label(12px, 0.06em);
     color: $color-accent;
+
+    @include mobile {
+      font-size: 11px;
+    }
   }
 
   &__title {
     font-size: 20px;
     font-weight: $font-weight-bold;
     line-height: 1.4;
+
+    @include mobile {
+      font-size: 17px;
+    }
   }
 
   &__items {
@@ -38,12 +74,27 @@
     flex-direction: column;
     gap: 16px;
     list-style: none;
+
+    // 768px 미만: 줄바꿈되는 칩 (모바일 시안)
+    @include mobile {
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
   }
 
   &__item {
     display: flex;
     align-items: center;
     gap: 12px;
+
+    @include mobile {
+      gap: 8px;
+      min-height: 40px;
+      padding: 0 12px 0 6px;
+      border-radius: 12px;
+      background-color: $color-surface-soft;
+    }
   }
 
   // 두 글자 아이콘 칸. 색은 분야의 tone을 따른다
@@ -59,21 +110,43 @@
     font-size: 15px;
     font-weight: $font-weight-bold;
     @include tone-modifiers;
+
+    @include mobile {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      font-size: 11px;
+    }
   }
 
   &__text {
     display: flex;
     flex-direction: column;
     min-width: 0;
+
+    // 칩 안에서는 이름 뒤에 사용 연수를 작게 붙인다 (시안 칩에는 연수가 없지만 내용이 빠지지 않게)
+    @include mobile {
+      flex-direction: row;
+      align-items: baseline;
+      gap: 6px;
+    }
   }
 
   &__name {
     font-size: 16px;
     font-weight: $font-weight-medium;
+
+    @include mobile {
+      font-size: 14px;
+    }
   }
 
   &__years {
     @include mono-label(12px, 0);
     color: $color-muted;
+
+    @include mobile {
+      font-size: 11px;
+    }
   }
 }
