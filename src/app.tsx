@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import Router from './routes'
 
+import './styles/fonts'
 import './styles/global.scss'
 
 const queryClient = new QueryClient({

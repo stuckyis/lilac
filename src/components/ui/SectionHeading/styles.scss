@@ -1,0 +1,71 @@
+.section-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    @include mobile {
+      gap: 10px;
+    }
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    @include mono-label(13px);
+    color: $color-accent;
+
+    // 모바일 시안
+    @include mobile {
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  &__mark {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background-color: $color-accent;
+
+    @include mobile {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+  }
+
+  &__title {
+    font-size: 56px;
+    font-weight: $font-weight-heavy;
+    line-height: 1.15;
+    letter-spacing: -0.04em;
+
+    @include tablet {
+      font-size: 48px;
+    }
+
+    @include mobile {
+      font-size: 36px;
+      line-height: 1.2;
+    }
+  }
+
+  &__note {
+    font-size: 15px;
+    color: $color-muted;
+
+    // 모바일 시안에는 안내 문구가 없다 (좁은 폭에서 제목 옆에 둘 자리도 없다)
+    @include mobile {
+      display: none;
+    }
+  }
+}

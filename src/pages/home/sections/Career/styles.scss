@@ -1,0 +1,291 @@
+@use 'sass:list';
+
+// 지난 경력 블록: (한 변, 모서리, 색). 오래된 곳부터 차례로 커지고 진해진다.
+// 경력이 더 많으면 마지막 단계 모양을 이어서 쓴다. 지금 다니는 곳은 --current에서 따로 정한다.
+$career-steps: ((20px, 4px, $color-mint-100), (24px, 5px, $color-lilac-100), (28px, 6px, $color-lilac-300), (32px, 7px, $color-lilac-400));
+// 블록이 놓이는 줄의 높이(가장 큰 블록 한 변). 선은 이 줄의 가운데를 지나서 모든 블록의 중심과 맞는다
+$marker-row: 34px;
+// 1024px 미만 세로 타임라인: 블록 한 변·모서리(모바일 시안). 색은 $career-steps를 그대로 쓴다
+$career-steps-compact: ((14px, 4px), (18px, 5px), (22px, 6px), (26px, 7px));
+// 세로 타임라인 왼쪽 칸 폭(선과 블록 자리)과, 블록 가운데가 오는 높이(기간 글줄 가운데)
+$timeline-gutter: 44px;
+$marker-center-y: 10px;
+
+@keyframes career-archive-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.career {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding: $section-padding-y 0;
+
+  @include tablet {
+    gap: 36px;
+    padding: 72px 0 56px;
+  }
+
+  // 모바일 시안
+  @include mobile {
+    gap: 24px;
+    padding: 56px 0 40px;
+  }
+
+  // 경력 수만큼 같은 폭의 칸을 만든다
+  &__timeline {
+    position: relative;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    column-gap: 24px;
+    list-style: none;
+
+    // 블록을 잇는 선 (연민트 → 라일락 → 강조색)
+    &::before {
+      content: '';
+      position: absolute;
+      top: calc(#{$marker-row} / 2 - 1px);
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, $color-mint-100, $color-lilac-200, $color-accent);
+    }
+
+    // 1024px 미만: 위에서 아래로 쌓고, 왼쪽 칸에 세로 선과 블록을 둔다 (768에서 가로 5칸이면 한 칸이 121px라 비좁다)
+    @include tablet {
+      grid-auto-flow: row;
+      grid-auto-columns: auto;
+      row-gap: 28px;
+      padding-left: $timeline-gutter;
+
+      &::before {
+        top: 8px;
+        bottom: 8px;
+        left: calc(#{$marker-row} / 2 - 1px);
+        right: auto;
+        width: 2px;
+        height: auto;
+        background: linear-gradient(180deg, $color-mint-100, $color-lilac-200, $color-accent);
+      }
+    }
+  }
+
+  &__node {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    @include tablet {
+      gap: 4px;
+    }
+  }
+
+  &__marker-area {
+    display: flex;
+    align-items: center;
+    height: $marker-row;
+
+    // 왼쪽 칸에서 블록 가운데가 선 가운데·기간 글줄 가운데에 오게 놓는다
+    @include tablet {
+      position: absolute;
+      top: $marker-center-y - $marker-row * 0.5;
+      left: -$timeline-gutter;
+      justify-content: center;
+      width: $marker-row;
+    }
+  }
+
+  // 바탕색 테두리로 선을 끊어서, 블록이 선 위에 올라앉은 것처럼 보이게 한다
+  &__marker {
+    $last-step: list.nth($career-steps, list.length($career-steps));
+    display: block;
+    width: list.nth($last-step, 1);
+    height: list.nth($last-step, 1);
+    border: 3px solid $color-bg;
+    border-radius: list.nth($last-step, 2);
+    background-color: list.nth($last-step, 3);
+  }
+
+  @for $index from 1 through list.length($career-steps) - 1 {
+    $step: list.nth($career-steps, $index);
+
+    &__node:nth-child(#{$index}) &__marker {
+      width: list.nth($step, 1);
+      height: list.nth($step, 1);
+      border-radius: list.nth($step, 2);
+      background-color: list.nth($step, 3);
+    }
+  }
+
+  // 1024px 미만: 블록을 모바일 시안 크기로 줄인다 (지금 다니는 곳은 그대로 34px)
+  @include tablet {
+    $last-compact: list.nth($career-steps-compact, list.length($career-steps-compact));
+
+    &__marker {
+      width: list.nth($last-compact, 1);
+      height: list.nth($last-compact, 1);
+      border-radius: list.nth($last-compact, 2);
+    }
+
+    @for $index from 1 through list.length($career-steps-compact) - 1 {
+      $step: list.nth($career-steps-compact, $index);
+
+      &__node:nth-child(#{$index}) &__marker {
+        width: list.nth($step, 1);
+        height: list.nth($step, 1);
+        border-radius: list.nth($step, 2);
+      }
+    }
+  }
+
+  &__period {
+    font-family: $font-mono;
+    font-size: 13px;
+    color: $color-muted;
+
+    @include mobile {
+      font-size: 12px;
+    }
+  }
+
+  &__company {
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+    line-height: 1.4;
+
+    @include mobile {
+      font-size: 18px;
+    }
+  }
+
+  &__summary {
+    font-size: 15px;
+    line-height: 1.6;
+    color: $color-muted;
+
+    @include mobile {
+      font-size: 14px;
+    }
+  }
+
+  // 지금 다니는 곳: 가장 큰 강조색 블록 + 둘레 빛
+  &__node--current &__marker {
+    width: $marker-row;
+    height: $marker-row;
+    border-radius: 9px;
+    background-color: $color-accent;
+    box-shadow: 0 0 0 6px rgba($color-accent, 0.18);
+
+    @include tablet {
+      box-shadow: 0 0 0 5px rgba($color-accent, 0.18);
+    }
+  }
+
+  &__node--current &__period {
+    color: $color-accent;
+  }
+}
+
+.career-archive {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &__toggle {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 48px;
+    padding: 0 20px;
+    border: 1px solid $color-line-300;
+    border-radius: 14px;
+    background-color: $color-surface;
+    font-size: 15px;
+    font-weight: $font-weight-medium;
+    color: $color-ink;
+    transition: border-color 0.2s;
+
+    @include hover {
+      border-color: $color-accent;
+    }
+
+    @include mobile {
+      gap: 8px;
+      padding: 0 18px;
+      font-size: 14px;
+    }
+  }
+
+  &__count {
+    font-family: $font-mono;
+    font-size: 13px;
+    color: $color-accent;
+  }
+
+  &__chevron {
+    transition: transform 0.3s $ease-soft;
+  }
+
+  &__toggle[aria-expanded='true'] &__chevron {
+    transform: rotate(180deg);
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 48px;
+    border-top: 1px solid $color-line-200;
+    list-style: none;
+    animation: career-archive-in 0.3s $ease-soft;
+
+    // 1024px 미만: 1열
+    @include tablet {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  &__item {
+    display: grid;
+    grid-template-columns: 200px minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid $color-line-200;
+    font-size: 15px;
+
+    // 768px 미만: 기간을 이름 위에 쌓는다 (모바일 시안)
+    @include mobile {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 12px 0;
+      font-size: 14px;
+    }
+  }
+
+  &__period {
+    font-family: $font-mono;
+    font-size: 13px;
+    color: $color-muted;
+
+    @include mobile {
+      font-size: 11px;
+    }
+  }
+
+  &__org {
+    color: $color-muted;
+  }
+}

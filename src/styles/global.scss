@@ -1,17 +1,40 @@
-* {
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+:root {
+  // 화면 가장자리 여백. container 믹스인과 헤더가 같이 쓴다
+  --page-gutter: #{$page-gutter};
+
+  @include tablet {
+    --page-gutter: #{$page-gutter-tablet};
+  }
+
+  @include mobile {
+    --page-gutter: #{$page-gutter-mobile};
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
-  font-family:
-    -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  font-family: $font-sans;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: $background-light;
-  color: $text-color;
+  background-color: $color-bg;
+  color: $color-ink;
   line-height: 1.6;
+  // 한글이 단어 중간에서 줄바꿈되지 않게 하고, 긴 영문·주소는 넘치지 않게 끊는다.
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 #root {
@@ -19,21 +42,71 @@ body {
 }
 
 a {
-  color: $primary-color;
+  color: inherit;
   text-decoration: none;
+  transition: color 0.2s;
 
-  &:hover {
-    color: $secondary-color;
+  @include hover {
+    color: $color-accent;
   }
 }
 
 button {
-  font-family: inherit;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
   cursor: pointer;
 }
 
 input,
 textarea,
 select {
-  font-family: inherit;
+  font: inherit;
+}
+
+// hidden 속성은 컴포넌트의 display 값보다 항상 우선한다 (펼치기·접기 목록 등)
+[hidden] {
+  display: none !important;
+}
+
+img,
+picture,
+video {
+  display: block;
+  max-width: 100%;
+}
+
+:focus-visible {
+  outline: 2px solid $color-accent;
+  outline-offset: 3px;
+}
+
+::selection {
+  background-color: $color-lilac-100;
+  color: $color-ink;
+}
+
+// 화면에는 보이지 않고 스크린리더만 읽는 글자 (예: "새 창에서 열림")
+.visually-hidden {
+  @include visually-hidden;
+}
+
+// 메뉴로 섹션에 이동할 때 제목이 헤더에 가리지 않게 한다.
+section[id] {
+  scroll-margin-top: $header-offset;
+}
+
+// 움직임 줄이기를 켜면 애니메이션·전환·부드러운 스크롤을 모두 끈다.
+@include reduced-motion {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
 }
