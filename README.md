@@ -397,6 +397,7 @@ return isCompact ? <WorkAccordion /> : <WorkTabs />
 
 - 브레이크포인트: `$breakpoint-mobile`(480px), `$breakpoint-tablet`(768px), `$breakpoint-desktop`(1024px), `$breakpoint-wide`(1280px). 값을 바꾸면 `breakpoints.ts`의 `BREAKPOINT`도 같이 고칩니다.
 - 화면 가장자리 여백은 CSS 변수 `--page-gutter`입니다(PC 40px, 1024px 미만 32px, 768px 미만 20px). `container` 믹스인이 씁니다.
+- 페이지가 옆으로 밀리지 않게 `.layout`이 화면 밖으로 넘친 부분을 자릅니다(`overflow-x: clip`, `src/components/layout/Layout.scss`). 넘침을 가리기만 하므로, 새 화면을 만들면 이 설정을 잠시 끄고 넘치는 요소가 없는지 확인합니다.
 
 ## 현재 구현 상태
 
