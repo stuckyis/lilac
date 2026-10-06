@@ -1,7 +1,7 @@
 import BlockMark from '@/components/ui/BlockMark'
 import { CHECK_COMMANDS, KEYBOARD_KEYS, TOKEN_CHIPS } from './const'
 
-// "이 화면의 구조" 카드 위쪽 그림. 설명 글이 내용을 전하므로 그림은 모두 장식이다(카드에서 aria-hidden).
+// "이 화면의 구조" 카드 그림. 설명 글이 내용을 전하므로 그림은 모두 장식이다(카드에서 aria-hidden).
 
 /** 블록 마크 + 디자인 토큰 이름 칩 */
 export const TokensVisual = () => (

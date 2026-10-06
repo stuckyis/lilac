@@ -1,14 +1,9 @@
 import { BEHIND_NOTES } from '@/data/portfolio'
-import { mockScreenWidth } from '@/test/matchMedia'
 import { render, screen, within } from '@testing-library/react'
-import { afterEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it } from 'vitest'
 import Behind from '.'
 
 describe('Behind', () => {
-  afterEach(() => {
-    vi.unstubAllGlobals()
-  })
-
   it('메뉴의 #behind로 이동할 수 있는 "이 화면의 구조" 영역이어야 합니다', () => {
     render(<Behind />)
 
@@ -26,16 +21,10 @@ describe('Behind', () => {
     expect(container.querySelectorAll('.behind__visual[aria-hidden="true"]')).toHaveLength(BEHIND_NOTES.length)
   })
 
-  it('가로로 넘겨 보는 1024px 미만에서만 카드 목록이 키보드로 포커스되어야 합니다', () => {
-    const { resize } = mockScreenWidth(390)
+  it('카드를 가로로 넘기지 않으므로 목록이 탭 키 순서에 들어가지 않아야 합니다', () => {
     render(<Behind />)
 
-    const list = screen.getByRole('list', { name: '이 화면의 구조' })
-    expect(list).toHaveAttribute('tabindex', '0')
-
-    // PC에서는 카드가 한 줄에 모두 보여서 넘길 일이 없다
-    resize(1440)
-    expect(list).not.toHaveAttribute('tabindex')
+    expect(within(screen.getByRole('region', { name: '이 화면의 구조' })).getByRole('list')).not.toHaveAttribute('tabindex')
   })
 
   it('저장소 등 바깥으로 나가는 링크는 두지 않아야 합니다', () => {

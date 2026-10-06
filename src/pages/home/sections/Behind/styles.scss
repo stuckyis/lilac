@@ -22,24 +22,10 @@
     gap: 20px;
     list-style: none;
 
-    // 1024px 미만: 카드를 가로로 넘겨 본다. 화면 끝까지 넘어가게 가장자리 여백만큼 넓히고, 카드는 콘텐츠 줄에 맞춰 멈춘다
+    // 1024px 미만: 한 줄에 3장이 들어가지 않아 1열로 쌓는다 (가로로 넘기지 않는다)
     @include tablet {
-      // 안쪽의 absolute 요소가 스크롤 영역 밖으로 빠져 페이지 폭을 넓히지 않게 기준 상자를 만든다
-      position: relative;
-      display: flex;
+      grid-template-columns: minmax(0, 1fr);
       gap: 16px;
-      margin: -6px calc(var(--page-gutter) * -1);
-      // 위아래 6px: 포커스 테두리와 카드 테두리가 스크롤 영역에 잘리지 않게 한다
-      padding: 6px var(--page-gutter);
-      overflow-x: auto;
-      overscroll-behavior-x: contain;
-      scroll-snap-type: x mandatory;
-      scroll-padding-inline: var(--page-gutter);
-
-      // 목록이 화면 끝까지 넓어서, 포커스 테두리는 안쪽에 그린다
-      &:focus-visible {
-        outline-offset: -3px;
-      }
     }
 
     @include mobile {
@@ -55,18 +41,18 @@
     border-radius: $radius-2xl;
     background-color: $color-surface;
 
+    // 768~1023px: 카드가 넓어서 그림을 왼쪽에 둔다 (위에 두면 그림 영역이 옆으로 길게 빈다)
     @include tablet {
-      flex: 0 0 320px;
-      scroll-snap-align: start;
+      flex-direction: row;
     }
 
     @include mobile {
-      flex-basis: 280px;
+      flex-direction: column;
       border-radius: 22px;
     }
   }
 
-  // 위쪽 그림 영역. 색은 카드의 tone을 따른다
+  // 그림 영역 (PC·모바일은 카드 위쪽, 태블릿은 왼쪽). 색은 카드의 tone을 따른다
   &__visual {
     display: flex;
     align-items: center;
@@ -74,8 +60,17 @@
     height: 180px;
     @include tone-modifiers;
 
+    // 글 높이에 맞춰 늘어난다
+    @include tablet {
+      flex: 0 0 300px;
+      height: auto;
+      min-height: 180px;
+    }
+
     @include mobile {
+      flex: none;
       height: 140px;
+      min-height: 0;
     }
   }
 
@@ -84,6 +79,11 @@
     flex-direction: column;
     gap: 8px;
     padding: 22px 24px 26px;
+
+    // 가로형 카드에서 그림 높이가 더 크면 글을 세로 가운데에 둔다
+    @include tablet {
+      justify-content: center;
+    }
 
     @include mobile {
       gap: 6px;
@@ -177,7 +177,7 @@
     font-size: 14px;
     color: $color-ink;
 
-    // 280px 카드 안에 자판 4개가 들어가게 줄인다
+    // 좁은 휴대폰(320px 화면이면 카드 폭 280px)에서도 자판 4개가 한 줄에 들어가게 줄인다
     @include mobile {
       min-width: 40px;
       height: 40px;
