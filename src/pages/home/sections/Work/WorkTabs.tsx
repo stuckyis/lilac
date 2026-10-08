@@ -1,5 +1,6 @@
 import { WORKS } from '@/data/portfolio'
 import { toOrderNumber } from '@/utils/helpers/helpers'
+import { reveal } from '@/utils/reveal'
 import clsx from 'clsx'
 import { useRef, type KeyboardEvent } from 'react'
 import WorkPreview from './WorkPreview'
@@ -41,7 +42,7 @@ const WorkTabs = ({ activeId, onSelect }: WorkTabsProps) => {
   }
 
   return (
-    <div className="work__main">
+    <div ref={reveal} className="work__main">
       <div className="work__tabs" role="tablist" aria-orientation="vertical" aria-labelledby="work-title" onKeyDown={handleKeyDown}>
         {WORKS.map((work, index) => {
           const isActive = work.id === activeWork.id

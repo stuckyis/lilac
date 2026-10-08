@@ -2,6 +2,7 @@ import SectionHeading from '@/components/ui/SectionHeading'
 import { BEHIND_NOTES } from '@/data/portfolio'
 import { SECTION_ID } from '@/routes/const'
 import { BEHIND_VISUAL, type BehindVisual } from '@/data/const'
+import { reveal } from '@/utils/reveal'
 import clsx from 'clsx'
 import type { ComponentType } from 'react'
 import { ChecksVisual, KeysVisual, TokensVisual } from './Visuals'
@@ -28,7 +29,7 @@ const Behind = () => {
           const Visual = VISUALS[note.visual]
 
           return (
-            <li key={note.label} className="behind__card">
+            <li key={note.label} ref={reveal} className="behind__card">
               <div className={clsx('behind__visual', `behind__visual--${note.tone}`)} aria-hidden>
                 <Visual />
               </div>

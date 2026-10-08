@@ -1,3 +1,4 @@
+import { reveal } from '@/utils/reveal'
 import './styles.scss'
 
 interface SectionHeadingProps {
@@ -18,7 +19,7 @@ interface SectionHeadingProps {
  */
 const SectionHeading = ({ id, index, label, title, note }: SectionHeadingProps) => {
   return (
-    <div className="section-heading">
+    <div ref={reveal} className="section-heading">
       <div className="section-heading__main">
         <p className="section-heading__label" aria-hidden>
           <span className="section-heading__mark" />

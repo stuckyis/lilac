@@ -151,11 +151,11 @@ src/
 │   └── useSectionStore.ts # 지금 보는 섹션 (홈이 쓰고 헤더가 읽음)
 ├── styles/                # 전역 스타일, 디자인 토큰, 글꼴
 │   ├── fonts.ts           # 글꼴 불러오기
-│   ├── global.scss        # 초기화, 기본 글꼴·색, 포커스, 움직임 줄이기
+│   ├── global.scss        # 초기화, 기본 글꼴·색, 포커스, 스크롤 등장 효과, 움직임 줄이기
 │   ├── mixins.scss        # 반복 스타일 (container, mono-label 등)
 │   └── variables.scss     # 디자인 토큰 (색, 글꼴, 모서리, 그림자, 레이아웃)
 ├── test/                  # 테스트 설정 및 모킹
-└── utils/                 # 유틸리티 함수 (helpers)
+└── utils/                 # 유틸리티 함수 (helpers), 스크롤 등장 효과(reveal.ts)
 ```
 
 ## 라우트 구조
@@ -398,6 +398,22 @@ return isCompact ? <WorkAccordion /> : <WorkTabs />
 - 브레이크포인트: `$breakpoint-mobile`(480px), `$breakpoint-tablet`(768px), `$breakpoint-desktop`(1024px), `$breakpoint-wide`(1280px). 값을 바꾸면 `breakpoints.ts`의 `BREAKPOINT`도 같이 고칩니다.
 - 화면 가장자리 여백은 CSS 변수 `--page-gutter`입니다(PC 40px, 1024px 미만 32px, 768px 미만 20px). `container` 믹스인이 씁니다.
 - 페이지가 옆으로 밀리지 않게 `.layout`이 화면 밖으로 넘친 부분을 자릅니다(`overflow-x: clip`, `src/components/layout/Layout.scss`). 넘침을 가리기만 하므로, 새 화면을 만들면 이 설정을 잠시 끄고 넘치는 요소가 없는지 확인합니다.
+
+### 스크롤 등장 효과
+
+화면에 들어올 때 32px 아래에서 흐릿하게 올라오게 하려면 요소의 `ref`에 `reveal`을 넘깁니다(`src/utils/reveal.ts`).
+
+```tsx
+import { reveal } from '@/utils/reveal'
+
+<li ref={reveal} className="way__card">...</li>
+```
+
+- 아래로 내릴 때도, 위로 올릴 때도 나옵니다. 화면 밖으로 충분히 나가면 다시 숨겼다가, 들어오면 또 올라옵니다.
+- 한 번에 여러 개가 들어오면(PC의 카드 한 줄 등) 왼쪽부터 0.09초씩 늦게 시작합니다.
+- 키보드로 포커스가 들어가면 바로 보입니다. 움직임 줄이기 설정을 켠 사용자와 인쇄에서는 처음부터 보입니다.
+- 메뉴가 가리키는 섹션(`section[id]`) 자체에는 붙이지 않고 안쪽 덩어리에 붙입니다. 섹션이 움직이면 메뉴로 이동하는 위치가 어긋납니다.
+- 첫 화면(Hero)은 자체 등장 효과가 있어서 쓰지 않습니다.
 
 ## 현재 구현 상태
 

@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from '@/components/ui/Icon'
 import { ARCHIVE } from '@/data/portfolio'
+import { reveal } from '@/utils/reveal'
 import { useState } from 'react'
 
 const LIST_ID = 'career-archive'
@@ -9,7 +10,7 @@ const Archive = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   return (
-    <div className="career-archive">
+    <div ref={reveal} className="career-archive">
       <button
         type="button"
         className="career-archive__toggle"

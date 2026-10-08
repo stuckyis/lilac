@@ -1,12 +1,13 @@
 import BlockMark from '@/components/ui/BlockMark'
 import { BLOCK_MARK_VARIANT } from '@/components/ui/BlockMark/const'
 import { STATS } from '@/data/portfolio'
+import { reveal } from '@/utils/reveal'
 import './styles.scss'
 
 /** 숫자 띠: 경력 규모를 숫자 4개로 요약한 어두운 블록 */
 const Stats = () => {
   return (
-    <section className="stats" aria-labelledby="stats-title">
+    <section ref={reveal} className="stats" aria-labelledby="stats-title">
       <h2 id="stats-title" className="visually-hidden">
         숫자로 보는 경력
       </h2>

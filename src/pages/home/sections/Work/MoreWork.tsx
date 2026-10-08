@@ -1,5 +1,6 @@
 import { MORE_WORKS } from '@/data/portfolio'
 import type { MoreWork as MoreWorkItem } from '@/data/type'
+import { reveal } from '@/utils/reveal'
 import clsx from 'clsx'
 
 const MoreWorkCard = ({ work }: { work: MoreWorkItem }) => {
@@ -32,12 +33,12 @@ const MoreWorkCard = ({ work }: { work: MoreWorkItem }) => {
 const MoreWork = () => {
   return (
     <div className="more-work">
-      <h3 className="more-work__title">
+      <h3 ref={reveal} className="more-work__title">
         <span className="more-work__mark" aria-hidden />그 밖의 작업
       </h3>
       <ul className="more-work__list" role="list">
         {MORE_WORKS.map(work => (
-          <li key={work.title}>
+          <li key={work.title} ref={reveal}>
             <MoreWorkCard work={work} />
           </li>
         ))}

@@ -1,4 +1,5 @@
 import { CAREER } from '@/data/portfolio'
+import { reveal } from '@/utils/reveal'
 import clsx from 'clsx'
 
 /** 끝난 연도가 없으면 지금 다니는 곳이라 NOW로 적는다 */
@@ -15,7 +16,7 @@ const Timeline = () => {
         const isCurrent = !item.end
 
         return (
-          <li key={`${item.company}-${item.start}`} className={clsx('career__node', isCurrent && 'career__node--current')}>
+          <li key={`${item.company}-${item.start}`} ref={reveal} className={clsx('career__node', isCurrent && 'career__node--current')}>
             <span className="career__marker-area" aria-hidden>
               <span className="career__marker" />
             </span>

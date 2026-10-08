@@ -1,5 +1,6 @@
 import { PauseIcon, PlayIcon } from '@/components/ui/Icon'
 import { PRODUCTS } from '@/data/portfolio'
+import { reveal } from '@/utils/reveal'
 import clsx from 'clsx'
 import { useState } from 'react'
 import { MARQUEE_COPIES } from './const'
@@ -29,7 +30,7 @@ const ProductMarquee = () => {
 
   return (
     <section className={clsx('product-marquee', isPaused && 'product-marquee--paused')} aria-labelledby="products-title">
-      <div className="product-marquee__head">
+      <div ref={reveal} className="product-marquee__head">
         <h2 id="products-title" className="product-marquee__title">
           <span className="product-marquee__title-mark" aria-hidden />
           출시에 참여한 제품들
@@ -40,7 +41,7 @@ const ProductMarquee = () => {
         </button>
       </div>
 
-      <div className="product-marquee__viewport">
+      <div ref={reveal} className="product-marquee__viewport">
         <div className="product-marquee__track">
           {Array.from({ length: MARQUEE_COPIES }, (_, copy) => (
             <ProductList key={copy} isCopy={copy > 0} />

@@ -1,6 +1,7 @@
 import SectionHeading from '@/components/ui/SectionHeading'
 import { STACK } from '@/data/portfolio'
 import { SECTION_ID } from '@/routes/const'
+import { reveal } from '@/utils/reveal'
 import clsx from 'clsx'
 import './styles.scss'
 
@@ -12,7 +13,7 @@ const Stack = () => {
 
       <ul className="stack__groups" role="list">
         {STACK.map(group => (
-          <li key={group.label} className="stack__card">
+          <li key={group.label} ref={reveal} className="stack__card">
             {/* 영문 라벨은 한글 제목과 같은 뜻의 장식이라 스크린리더는 제목만 읽는다 */}
             <p className="stack__label" aria-hidden>
               {group.label}

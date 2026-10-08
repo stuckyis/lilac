@@ -1,6 +1,7 @@
 import { MailIcon } from '@/components/ui/Icon'
 import { PROFILE } from '@/data/portfolio'
 import { SECTION_ID } from '@/routes/const'
+import { reveal } from '@/utils/reveal'
 import { BUILT_WITH, SOCIAL_LINKS } from './const'
 import './styles.scss'
 
@@ -12,7 +13,8 @@ const LAST_UPDATED = import.meta.env.VITE_LAST_UPDATED
 const Contact = () => {
   return (
     <section id={SECTION_ID.CONTACT} className="contact" aria-labelledby="contact-title">
-      <div className="contact__inner">
+      {/* 메뉴·지금 보는 섹션 표시의 기준인 섹션은 그대로 두고 안쪽 내용만 올라온다 */}
+      <div ref={reveal} className="contact__inner">
         <p className="contact__label" aria-hidden>
           <span className="contact__mark" />
           06 — CONTACT

@@ -1,6 +1,7 @@
 import { ChevronDownIcon } from '@/components/ui/Icon'
 import { WORKS } from '@/data/portfolio'
 import { toOrderNumber } from '@/utils/helpers/helpers'
+import { reveal } from '@/utils/reveal'
 import clsx from 'clsx'
 import { useRef } from 'react'
 import WorkDetail from './WorkDetail'
@@ -30,7 +31,7 @@ const WorkAccordion = ({ openId, onChange }: WorkAccordionProps) => {
   }
 
   return (
-    <ul className="work-accordion" role="list">
+    <ul ref={reveal} className="work-accordion" role="list">
       {WORKS.map((work, index) => {
         const isOpen = work.id === openId
 
