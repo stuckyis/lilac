@@ -1,0 +1,245 @@
+.contact {
+  // 1440 화면에서 양옆 40px만 남기는 폭(1360px). 숫자 띠와 같은 폭이다
+  @include container($content-max-width + 160px);
+  position: relative;
+  overflow: hidden;
+  margin-top: 30px;
+  margin-bottom: 40px;
+  padding: 120px 80px 48px;
+  border-radius: $radius-4xl;
+  background-color: $color-dark;
+  color: $color-on-dark;
+
+  @include tablet {
+    padding: 96px 48px 40px;
+  }
+
+  // 모바일 시안: 화면 양옆 16px만 남기는 폭 (숫자 띠와 같다)
+  @include mobile {
+    width: calc(100% - 32px);
+    margin-bottom: 16px;
+    padding: 70px 22px 30px;
+    border-radius: 30px;
+  }
+
+  // 뒤에 번지는 보라·청록 빛. 무거운 filter: blur 대신 원형 그라데이션으로 그린다
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: -180px;
+    left: -140px;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(closest-side, rgba($color-accent, 0.35) 22%, rgba($color-accent, 0));
+
+    // 좁은 블록에 맞게 줄인다 (모바일 시안의 빛 위치)
+    @include mobile {
+      top: -100px;
+      left: -180px;
+      width: 480px;
+      height: 480px;
+    }
+  }
+
+  &::after {
+    top: 0;
+    right: -160px;
+    width: 760px;
+    height: 760px;
+    background: radial-gradient(closest-side, rgba($color-mint-400, 0.3) 22%, rgba($color-mint-400, 0));
+
+    @include mobile {
+      top: 90px;
+      right: -170px;
+      width: 440px;
+      height: 440px;
+    }
+  }
+
+  // 어두운 바탕에서는 강조색 외곽선이 잘 안 보여서 라일락으로 바꾼다
+  :focus-visible {
+    outline-color: $color-lilac-200;
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+
+    @include mobile {
+      gap: 20px;
+    }
+  }
+
+  &__label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    @include mono-label(13px);
+    color: $color-lilac-200;
+
+    @include mobile {
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  &__mark {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background-color: $color-lilac-200;
+
+    @include mobile {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+  }
+
+  &__title {
+    font-family: $font-display;
+    // 1440 화면에서 112px, 1280 화면에서 96px (한 줄에 들어가는 크기)
+    font-size: clamp(96px, calc(96px + (100vw - 1280px) * 0.1), 112px);
+    font-weight: $font-weight-bold;
+    line-height: 1;
+    letter-spacing: -0.045em;
+    text-align: center;
+    text-wrap: balance;
+
+    // 1024px 미만은 두 줄("Let's build / the next one.")
+    @include tablet {
+      font-size: 72px;
+    }
+
+    // 390 화면 50px(시안). 360 화면에서는 "the next one."이 한 줄에 들어가게 46px로 줄인다
+    @include mobile {
+      font-size: clamp(44px, 12.8vw, 50px);
+      line-height: 1.02;
+    }
+  }
+
+  &__lead {
+    font-size: 22px;
+    color: $color-on-dark-soft;
+
+    @include tablet {
+      font-size: 20px;
+    }
+
+    // 두 줄로 고르게 나눈다 (시안: "다음 제품, 함께 만들어요. / 편하게 연락 주세요.")
+    @include mobile {
+      font-size: 16px;
+      line-height: 1.6;
+      text-align: center;
+      text-wrap: balance;
+    }
+  }
+
+  &__email {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 64px;
+    padding: 0 32px;
+    border-radius: 18px;
+    background-color: $color-lilac-200;
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+    color: $color-ink;
+    transition: background-color 0.2s;
+
+    @include hover {
+      background-color: $color-surface;
+      color: $color-ink;
+    }
+
+    // 블록 폭을 다 채우는 큰 버튼 (모바일 시안)
+    @include mobile {
+      align-self: stretch;
+      justify-content: center;
+      gap: 10px;
+      height: 58px;
+      padding: 0 20px;
+      border-radius: 16px;
+      font-size: 17px;
+    }
+  }
+
+  &__links {
+    display: flex;
+    gap: 10px;
+    list-style: none;
+
+    @include mobile {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+  }
+
+  &__link {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 0 22px;
+    border: 1px solid rgba($color-surface, 0.22);
+    border-radius: 14px;
+    font-size: 15px;
+    color: $color-on-dark;
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+
+    @include hover {
+      border-color: $color-lilac-200;
+      color: $color-lilac-200;
+    }
+
+    @include mobile {
+      height: 44px;
+      padding: 0 18px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+  }
+
+  &__footer {
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 64px;
+    padding-top: 36px;
+    border-top: 1px solid rgba($color-surface, 0.12);
+    font-size: 14px;
+    color: $color-on-dark-muted;
+
+    @include tablet {
+      margin-top: 48px;
+      padding-top: 28px;
+    }
+
+    // 768px 미만: 가운데 정렬로 두 줄 쌓기 (모바일 시안)
+    @include mobile {
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 16px;
+      padding-top: 24px;
+      font-size: 12px;
+      line-height: 1.6;
+      text-align: center;
+    }
+  }
+}

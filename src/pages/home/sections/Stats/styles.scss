@@ -1,0 +1,94 @@
+@use 'sass:list';
+
+// 숫자 색. 순서대로 돌아가며 쓴다
+$stats-tones: ($color-lilac-200, $color-mint-200, $color-butter-200, $color-peach-200);
+
+.stats {
+  // 1440 화면에서 양옆 40px만 남기는 폭(1360px). 안쪽 여백 80px과 합쳐 숫자가 다른 섹션의 콘텐츠 폭(1200px)과 나란하다.
+  @include container($content-max-width + 160px);
+  position: relative;
+  overflow: hidden;
+  padding: 50px 80px;
+  border-radius: $radius-3xl;
+  background-color: $color-dark;
+  color: $color-on-dark;
+
+  @include tablet {
+    padding: 40px 48px;
+  }
+
+  // 모바일 시안: 화면 양옆 16px만 남기고 다른 콘텐츠(20px)보다 조금 넓게 둔다
+  @include mobile {
+    width: calc(100% - 32px);
+    padding: 30px 24px;
+    border-radius: 28px;
+  }
+
+  &__mark {
+    position: absolute;
+    top: -40px;
+    right: -30px;
+    opacity: 0.12;
+
+    // 모바일 시안에 없고, 좁은 화면에서는 숫자 위에 겹친다
+    @include mobile {
+      display: none;
+    }
+  }
+
+  &__list {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 24px;
+    list-style: none;
+
+    // 1024 미만: 2×2. 4칸이면 768 화면에서 한 칸이 118px라 숫자가 들어가지 않는다
+    @include tablet {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 32px 24px;
+    }
+
+    @include mobile {
+      gap: 26px 16px;
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    @include mobile {
+      gap: 6px;
+    }
+  }
+
+  &__value {
+    font-family: $font-display;
+    // 1280 이상에서 68px, 1024 화면에서 56px (한 칸이 좁아져도 숫자가 두 줄로 나뉘지 않게)
+    font-size: clamp(56px, calc(56px + (100vw - 1024px) * 0.047), 68px);
+    font-weight: $font-weight-bold;
+    line-height: 1;
+    letter-spacing: -0.03em;
+
+    @include mobile {
+      font-size: 42px;
+    }
+  }
+
+  @for $index from 1 through list.length($stats-tones) {
+    &__item:nth-child(#{list.length($stats-tones)}n + #{$index}) &__value {
+      color: list.nth($stats-tones, $index);
+    }
+  }
+
+  &__label {
+    font-size: 16px;
+    color: $color-on-dark-muted;
+
+    @include mobile {
+      font-size: 13px;
+    }
+  }
+}

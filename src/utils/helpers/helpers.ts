@@ -27,3 +27,12 @@ export const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   return emailRegex.test(email)
 }
+
+/**
+ * 0부터 시작하는 순서를 두 자리 번호로 만듭니다. (0 → '01', 9 → '10')
+ * @param index 0부터 시작하는 순서
+ * @returns 두 자리 번호 문자열
+ */
+export const toOrderNumber = (index: number): string => {
+  return String(index + 1).padStart(2, '0')
+}
