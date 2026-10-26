@@ -7,7 +7,11 @@ const MoreWorkCard = ({ work }: { work: MoreWorkItem }) => {
   const content = (
     <>
       <div className={clsx('more-work__thumb', `more-work__thumb--${work.tone}`)}>
-        {work.imageUrl ? <img className="more-work__image" src={work.imageUrl} alt="" /> : <span aria-hidden>[작업 화면]</span>}
+        {work.imageUrl ? (
+          <img className="more-work__image" src={work.imageUrl} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <span aria-hidden>[작업 화면]</span>
+        )}
       </div>
       <strong className="more-work__name">{work.title}</strong>{' '}
       <span className="more-work__meta">

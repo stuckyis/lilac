@@ -21,7 +21,8 @@ const WorkDetail = ({ work, showPlace = true }: WorkDetailProps) => {
     <div className="work-detail">
       <div className={clsx('work-detail__thumb', `work-detail__thumb--${work.tone}`)}>
         {work.imageUrl ? (
-          <img className="work-detail__image" src={work.imageUrl} alt={`${work.title} 대표 화면`} />
+          // 첫 화면 아래에 있어서, 가까워질 때 불러온다
+          <img className="work-detail__image" src={work.imageUrl} alt={`${work.title} 대표 화면`} loading="lazy" decoding="async" />
         ) : (
           <div className="work-detail__placeholder" aria-hidden>
             <BlockMark size={72} variant={BLOCK_MARK_VARIANT.ON_PASTEL} />

@@ -52,7 +52,10 @@ export const PRODUCTS: Product[] = [
   { name: 'SPOTV ASIA', tone: TONE.INK },
 ]
 
-/** 대표 작업. 위에서부터 01, 02 … 순서로 번호가 붙는다. 성과 수치(metrics)·팀 규모(team)는 실제 숫자가 있을 때만 적는다 */
+/**
+ * 대표 작업. 위에서부터 01, 02 … 순서로 번호가 붙는다. 성과 수치(metrics)·팀 규모(team)는 실제 숫자가 있을 때만 적는다.
+ * 화면 캡처는 포트폴리오 PDF에서 꺼냈다(public/images/works/).
+ */
 export const WORKS: Work[] = [
   {
     id: 'ostream-ncp',
@@ -64,6 +67,7 @@ export const WORKS: Work[] = [
     tasks: ['React 기반 개발 환경 구축', '공통 컴포넌트 개발', '콘텐츠 영상 재생·클립 기능 개발'],
     tags: ['React', 'TypeScript', 'TanStack Query', 'Recoil', 'Video.js', 'SCSS', 'Vite'],
     tone: TONE.LILAC,
+    imageUrl: '/images/works/ostream-ncp.webp',
   },
   {
     id: 'cj-enm-genii',
@@ -75,6 +79,7 @@ export const WORKS: Work[] = [
     tasks: ['프론트엔드 개발 리딩', 'React 기반 개발 환경 구축', '공통 컴포넌트 개발'],
     tags: ['React', 'TypeScript', 'TanStack Query', 'Recoil', 'Video.js', 'Webpack', 'SCSS', 'Figma'],
     tone: TONE.MINT,
+    imageUrl: '/images/works/cj-enm-genii.webp',
   },
   {
     id: 'tving-backoffice',
@@ -86,6 +91,7 @@ export const WORKS: Work[] = [
     tasks: ['테이블 공통 컴포넌트 개발', '홈 편성을 위한 화면 구축', '프로젝트 전반의 화면 개발과 유지보수'],
     tags: ['React', 'TypeScript', 'TanStack Query', 'Recoil', 'Webpack', 'SCSS'],
     tone: TONE.BUTTER,
+    imageUrl: '/images/works/tving-backoffice.webp',
   },
   {
     id: 'spotv-now',
@@ -97,6 +103,7 @@ export const WORKS: Work[] = [
     tasks: ['웹 화면 추가 개발과 성능 개선', 'UX 3.2 버전 리뉴얼', '멀티플레이어 기능 개선', 'LIVE 채팅·광고 삽입 기능 개발'],
     tags: ['Vue', 'Vuex', 'Video.js', 'Webpack', 'Sendbird', 'Zeplin'],
     tone: TONE.PEACH,
+    imageUrl: '/images/works/spotv-now.webp',
   },
   {
     id: 'spotv-asia',
@@ -108,14 +115,21 @@ export const WORKS: Work[] = [
     tasks: ['Spring Boot 기반 SSR 프로젝트를 Vue 2 프로젝트로 리뉴얼', 'Storybook으로 공통 디자인과 웹 화면 구축'],
     tags: ['Vue', 'Vuex', 'Video.js', 'Webpack', 'Storybook'],
     tone: TONE.LILAC_SOFT,
+    imageUrl: '/images/works/spotv-asia.webp',
   },
 ]
 
 /** 그 밖의 작업. 3개를 기준으로 디자인했다. 주소(url)가 있으면 카드 전체가 링크가 된다 */
 export const MORE_WORKS: MoreWork[] = [
   { title: 'Ostream for Coupangplay', company: '엠브레이스', year: '2025', tone: TONE.LILAC_SOFT },
-  { title: 'LG전자 정밀금형센터 생산관제 실시간 시스템', company: '트리포스', year: '2018', tone: TONE.MINT_SOFT },
-  { title: 'KT Sat GNOC 운용지원시스템', company: '트리포스', year: '2016', tone: TONE.BUTTER_SOFT },
+  {
+    title: 'LG전자 정밀금형센터 생산관제 실시간 시스템',
+    company: '트리포스',
+    year: '2018',
+    tone: TONE.MINT_SOFT,
+    imageUrl: '/images/works/lg-mold-monitoring.webp',
+  },
+  { title: 'KT Sat GNOC 운용지원시스템', company: '트리포스', year: '2016', tone: TONE.BUTTER_SOFT, imageUrl: '/images/works/kt-sat-gnoc.webp' },
 ]
 
 /** 일하는 방식. 3개를 기준으로 디자인했다 (카드 색은 순서대로 연보라·연민트·연버터) */
@@ -157,7 +171,7 @@ export const ARCHIVE: ArchiveItem[] = [
 
 /**
  * 기술 스택. 분야 4개를 기준으로 디자인했다 (분류는 포트폴리오의 사용 기술을 따른다).
- * 사용 연수는 그 기술을 쓴 프로젝트 기간으로 계산했다(2026.10 기준, 내림). 기간을 알 수 없는 기술은 비워 둔다.
+ * 사용 연수(years)는 넣지 않는다 (사용자 결정 2026-10-26). 칸은 남아 있어서 적으면 이름 옆에 보인다.
  */
 export const STACK: StackGroup[] = [
   {
@@ -165,8 +179,8 @@ export const STACK: StackGroup[] = [
     title: '프레임워크',
     tone: TONE.LILAC,
     items: [
-      { name: 'React', short: 'Re', years: '4년' },
-      { name: 'Vue 2', short: 'Vu', years: '1년 9개월' },
+      { name: 'React', short: 'Re' },
+      { name: 'Vue 2', short: 'Vu' },
     ],
   },
   {
@@ -174,9 +188,9 @@ export const STACK: StackGroup[] = [
     title: '언어 · 스타일',
     tone: TONE.MINT,
     items: [
-      { name: 'TypeScript', short: 'TS', years: '4년' },
-      { name: 'JavaScript', short: 'JS', years: '12년' },
-      { name: 'SCSS', short: 'Sc', years: '4년' },
+      { name: 'TypeScript', short: 'TS' },
+      { name: 'JavaScript', short: 'JS' },
+      { name: 'SCSS', short: 'Sc' },
       { name: 'CSS', short: 'Cs' },
     ],
   },
@@ -185,8 +199,8 @@ export const STACK: StackGroup[] = [
     title: '상태 관리',
     tone: TONE.BUTTER,
     items: [
-      { name: 'TanStack Query', short: 'TQ', years: '4년' },
-      { name: 'Recoil', short: 'Rc', years: '4년' },
+      { name: 'TanStack Query', short: 'TQ' },
+      { name: 'Recoil', short: 'Rc' },
       { name: 'Zustand', short: 'Zu' },
     ],
   },
@@ -195,8 +209,8 @@ export const STACK: StackGroup[] = [
     title: '빌드 · 패키지',
     tone: TONE.PEACH,
     items: [
-      { name: 'Webpack', short: 'Wp', years: '4년' },
-      { name: 'Vite', short: 'Vi', years: '2년' },
+      { name: 'Webpack', short: 'Wp' },
+      { name: 'Vite', short: 'Vi' },
       { name: 'npm', short: 'np' },
       { name: 'pnpm', short: 'pn' },
     ],

@@ -95,6 +95,7 @@ pnpm preview   # 빌드 결과 미리보기
   - 이름을 바꾸면 `portfolio.ts`의 `PROFILE.name`과 `site.ts`를 함께 고칩니다.
 - **이미지**: `public/images/profile.jpg`에 넣었다면 `'/images/profile.jpg'`처럼 적습니다. 비워 두면 색 칸(`tone`)이나 자리표시 원이 대신 보입니다.
   - 프로필 사진 `PROFILE.photoUrl`, 제품 로고 `PRODUCTS[].logoUrl`, 대표 작업 캡처 `WORKS[].imageUrl`, 그 밖의 작업 `MORE_WORKS[].imageUrl`
+  - 작업 캡처는 `public/images/works/`에 WebP로 넣었습니다. 칸보다 세로로 긴 캡처는 위쪽(메뉴·제목)을 남기고 아래가 잘립니다.
 - **링크**: 케이스 스터디(`WORKS[].caseUrl`)와 그 밖의 작업(`MORE_WORKS[].url`)은 주소를 적었을 때만 버튼·링크가 됩니다.
 - **없으면 숨는 칸**: 대표 작업의 팀 규모(`team`)·맡은 일(`tasks`)·성과 수치(`metrics`)와 기술의 사용 연수(`STACK[].items[].years`)는 적었을 때만 보입니다. 모르는 숫자를 지어내 채우지 않아도 됩니다.
 - **색 칸**: `tone`에 `TONE.LILAC`처럼 색 이름을 적습니다(`src/data/const.ts`). 실제 색은 `src/styles/variables.scss`의 `$tones`에 있습니다.
@@ -419,7 +420,7 @@ import { reveal } from '@/utils/reveal'
 ## 현재 구현 상태
 
 - **홈 화면** — PC(1024px 이상)·태블릿(768~1023px)·모바일(320px까지) 화면을 완성했습니다.
-- **내용** — 이력서·포트폴리오 내용을 넣었습니다(2026.10 기준). 사진·작업 캡처 이미지는 아직 자리표시자입니다.
+- **내용** — 이력서·포트폴리오 내용과 작업 화면 캡처를 넣었습니다(2026.10 기준). 프로필 사진과 Ostream for Coupangplay 캡처는 아직 없어서 자리표시가 보입니다.
 - **잠시 숨긴 기능** — 헤더의 서울 시각·이력서 버튼, 첫 화면의 이력서 버튼은 지우지 않고 `[숨김]` 주석으로 남겨 두었습니다.
 - **API 도메인** — `vite.config.ts`의 `getApiDomain()`이 모든 mode에서 빈 문자열을 반환합니다. 서버 데이터를 쓰게 되면 실제 서버 주소 설정이 필요합니다.
 - `useExample.ts`, `useExampleStore.ts`는 참고용 예시 코드입니다.
