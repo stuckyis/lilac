@@ -1,0 +1,4 @@
+# 줄바꿈은 LF로 고정한다 (.editorconfig, Prettier와 같게).
+# Windows git의 core.autocrlf=true가 파일을 받을 때 CRLF로 바꾸면, ESLint(prettier/prettier)가 모든 줄에 "Delete ␍"를 낸다.
+# 바이너리 파일(이미지 등)은 git이 알아서 가려내 그대로 둔다.
+* text=auto eol=lf

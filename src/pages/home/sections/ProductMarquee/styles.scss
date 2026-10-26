@@ -1,0 +1,180 @@
+// 목록 한 벌이 왼쪽으로 제 폭만큼 이동하면 다음 벌이 같은 자리에 와서 끊김 없이 이어진다.
+@keyframes product-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.product-marquee {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 70px 0 20px;
+
+  // 모바일 시안
+  @include mobile {
+    gap: 16px;
+    padding: 50px 0 10px;
+  }
+
+  &__head {
+    @include container;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  &__title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: $font-weight-medium;
+    color: $color-muted;
+
+    @include mobile {
+      gap: 8px;
+      font-size: 14px;
+    }
+  }
+
+  &__title-mark {
+    display: block;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background-color: $color-accent;
+  }
+
+  // 멈춤·재생 버튼 (키보드·터치 사용자도 흐름을 멈출 수 있게)
+  &__toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid $color-line-300;
+    border-radius: 50%;
+    background-color: $color-surface;
+    color: $color-muted;
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+
+    @include hover {
+      border-color: $color-accent;
+      color: $color-accent;
+    }
+
+    // 손가락으로 누르기 쉬운 크기
+    @include tablet {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  // 양끝을 흐리게 가린다
+  &__viewport {
+    overflow: hidden;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  &__track {
+    display: flex;
+    width: max-content;
+  }
+
+  &__list {
+    display: flex;
+    list-style: none;
+    animation: product-marquee 44s linear infinite;
+
+    // 카드가 작아져 같은 시간이면 너무 느리게 보인다 (모바일 시안 34초)
+    @include mobile {
+      animation-duration: 34s;
+    }
+  }
+
+  &--paused &__list {
+    animation-play-state: paused;
+  }
+
+  // 마우스를 올리면 멈춘다 (터치 화면은 멈춤 버튼으로 멈춘다)
+  &__viewport {
+    @include hover {
+      .product-marquee__list {
+        animation-play-state: paused;
+      }
+    }
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 72px;
+    margin-right: 16px;
+    padding: 0 26px;
+    border: 1px solid $color-line-100;
+    border-radius: 20px;
+    background-color: $color-surface;
+    font-size: 18px;
+    font-weight: $font-weight-bold;
+    white-space: nowrap;
+
+    @include mobile {
+      gap: 10px;
+      height: 56px;
+      margin-right: 12px;
+      padding: 0 20px;
+      border-radius: 16px;
+      font-size: 15px;
+    }
+  }
+
+  &__logo {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    object-fit: contain;
+
+    @include tone-modifiers;
+
+    @include mobile {
+      width: 24px;
+      height: 24px;
+      border-radius: 7px;
+    }
+  }
+
+  // 움직임 줄이기: 흐르지 않고 복제본 없이 모든 제품을 여러 줄로 보여준다
+  @include reduced-motion {
+    &__toggle {
+      display: none;
+    }
+
+    &__viewport {
+      @include container;
+      mask-image: none;
+    }
+
+    &__track {
+      width: auto;
+    }
+
+    &__list {
+      flex-wrap: wrap;
+      row-gap: 12px;
+
+      &[aria-hidden] {
+        display: none;
+      }
+    }
+  }
+}
