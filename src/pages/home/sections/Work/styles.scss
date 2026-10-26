@@ -255,6 +255,45 @@
     }
   }
 
+  // 맡은 일: 연한 강조색 칸 안의 목록. 앞의 작은 블록은 사이트의 블록 마크를 따른다
+  &__tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 18px;
+    border-radius: $radius-lg;
+    background-color: $color-accent-soft;
+    list-style: none;
+
+    @include mobile {
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 14px;
+    }
+  }
+
+  &__task {
+    position: relative;
+    padding-left: 16px;
+    font-size: 15px;
+    line-height: 1.6;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0.65em;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      border-radius: 2px;
+      background-color: $color-accent;
+    }
+
+    @include mobile {
+      font-size: 14px;
+    }
+  }
+
   &__metrics {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

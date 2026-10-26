@@ -20,17 +20,17 @@ export const AppPanel = () => (
   </div>
 )
 
-/** 성능 지표 (민트): 막대그래프와 수치 */
+/** 지표 (민트): 라벨, 막대그래프와 수치 */
 export const MetricPanel = () => (
   <div className="hero-panel hero-panel--metric">
-    <span className="hero-panel__label">PERFORMANCE</span>
+    <span className="hero-panel__label">{INTRO.metric.label}</span>
     <div className="hero-panel__chart">
       <span />
       <span />
       <span />
       <span />
     </div>
-    <span className="hero-panel__metric">{INTRO.metric}</span>
+    <span className="hero-panel__metric">{INTRO.metric.value}</span>
   </div>
 )
 

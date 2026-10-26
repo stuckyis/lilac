@@ -173,6 +173,8 @@ $marker-center-y: 10px;
     font-size: 15px;
     line-height: 1.6;
     color: $color-muted;
+    // 마지막 줄에 낱말 하나만 남지 않게 한다 (지원하지 않는 브라우저는 보통 줄바꿈)
+    text-wrap: pretty;
 
     @include mobile {
       font-size: 14px;

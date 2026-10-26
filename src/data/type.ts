@@ -34,8 +34,8 @@ export interface Intro {
   highlight: string
   /** 소개 문장. 한 칸이 한 줄이다 */
   lead: string[]
-  /** 오른쪽 지표 패널(PERFORMANCE)에 보여줄 수치 */
-  metric: string
+  /** 오른쪽 지표 패널(막대그래프 카드)의 라벨과 수치 (예: { label: 'PROJECTS', value: '13' }) */
+  metric: Metric
 }
 
 /** 숫자 띠의 숫자 하나. 설명은 숫자 뒤에 이어 읽히도록 쓴다 (예: '10+' + '년 차 프론트엔드 경력') */
@@ -52,7 +52,7 @@ export interface Product {
   tone: Tone
 }
 
-/** 성과 수치 하나. 설명은 수치 뒤에 이어 읽히도록 쓴다 (예: '+32%' + '전환율 개선') */
+/** 수치 하나 (대표 작업 성과, 첫 화면 지표 패널). 설명은 수치 뒤에 이어 읽히도록 쓴다 (예: '+32%' + '전환율 개선') */
 export interface Metric {
   value: string
   label: string
@@ -66,12 +66,14 @@ export interface Work {
   company: string
   period: string
   role: string
-  /** 팀 규모 (예: '6명 팀') */
-  team: string
+  /** 팀 규모 (예: '6명 팀'). 모르면 비워 둔다 */
+  team?: string
   /** 무엇을, 누구를 위해 만들었는지 한 줄 */
   summary: string
-  /** 성과 수치 2개 */
-  metrics: [Metric, Metric]
+  /** 맡은 일 (2~4개). 요약 아래에 목록으로 보여준다 */
+  tasks?: string[]
+  /** 성과 수치 2개. 실제 숫자가 없으면 비워 둔다 (성과 칸을 그리지 않는다) */
+  metrics?: [Metric, Metric]
   /** 사용 기술 */
   tags: string[]
   /** 썸네일 바탕색 (대표 화면 캡처가 없을 때) */
@@ -125,8 +127,8 @@ export interface StackItem {
   name: string
   /** 아이콘 칸에 넣을 두 글자 (예: 'Re', 'TS') */
   short: string
-  /** 사용 연수 (예: '7년') */
-  years: string
+  /** 사용 연수 (예: '7년'). 모르면 비워 둔다 */
+  years?: string
 }
 
 /** 기술 분야 카드 */
