@@ -32,7 +32,7 @@ describe('Work', () => {
     const panel = getPanel()
     expect(panel).toHaveAttribute('aria-labelledby', tabs[0].id)
     expect(within(panel).getByText(WORKS[0].summary)).toBeInTheDocument()
-    expect(within(within(panel).getByRole('list', { name: '맡은 일' })).getAllByRole('listitem')).toHaveLength(WORKS[0].tasks?.length ?? 0)
+    WORKS[0].metrics.forEach(metric => expect(within(panel).getByText(metric.value)).toBeInTheDocument())
     expect(within(within(panel).getByRole('list', { name: '사용 기술' })).getAllByRole('listitem')).toHaveLength(WORKS[0].tags.length)
   })
 
@@ -70,15 +70,20 @@ describe('Work', () => {
     expect(getTabs()[0]).toHaveFocus()
   })
 
+  it('케이스 스터디 주소가 있으면 새 창으로 여는 링크를 보여줘야 합니다', () => {
+    render(<Work />)
+
+    const link = within(getPanel()).getByRole('link', { name: '케이스 스터디 보기 (새 창에서 열림)' })
+    expect(link).toHaveAttribute('href', WORKS[0].caseUrl)
+    expect(link).toHaveAttribute('target', '_blank')
+  })
+
   it('그 밖의 작업 카드를 보여줘야 합니다', () => {
     render(<Work />)
 
     expect(screen.getByRole('heading', { level: 3, name: '그 밖의 작업' })).toBeInTheDocument()
     MORE_WORKS.forEach(work => {
-      const title = screen.getByText(work.title)
-      // 주소가 있는 카드만 링크다
-      if (work.url) expect(title.closest('a')).toHaveAttribute('href', work.url)
-      else expect(title.closest('a')).toBeNull()
+      expect(screen.getByRole('link', { name: new RegExp(work.title.replace(/[[\]]/g, '\\$&')) })).toHaveAttribute('href', work.url)
     })
   })
 })
@@ -106,7 +111,7 @@ describe('Work (1024px 미만)', () => {
     expect(buttons[0]).toHaveAttribute('aria-controls', panel.id)
     expect(within(panel).getByText(WORKS[0].summary)).toBeInTheDocument()
     // 회사·기간은 제목 줄에 있어서 상세에서는 역할·팀만 보여준다
-    expect(within(panel).getByText([WORKS[0].role, WORKS[0].team].filter(Boolean).join(' · '))).toBeInTheDocument()
+    expect(within(panel).getByText(`${WORKS[0].role} · ${WORKS[0].team}`)).toBeInTheDocument()
   })
 
   it('다른 제목을 누르면 그 작업만 펼치고, 펼친 제목을 다시 누르면 접혀야 합니다', async () => {
