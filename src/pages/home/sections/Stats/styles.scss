@@ -39,18 +39,14 @@ $stats-tones: ($color-lilac-200, $color-mint-200, $color-butter-200, $color-peac
   &__list {
     position: relative;
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    // 3칸을 모든 폭에서 한 줄로 둔다 (768 화면에서 한 칸 186px, 390 화면에서 92px).
+    // 4칸으로 늘리면 768 화면에서 한 칸이 118px라 숫자가 들어가지 않으니 1024 미만은 2×2로 바꾼다
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 24px;
     list-style: none;
 
-    // 1024 미만: 2×2. 4칸이면 768 화면에서 한 칸이 118px라 숫자가 들어가지 않는다
-    @include tablet {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 32px 24px;
-    }
-
     @include mobile {
-      gap: 26px 16px;
+      gap: 16px;
     }
   }
 
@@ -87,8 +83,10 @@ $stats-tones: ($color-lilac-200, $color-mint-200, $color-butter-200, $color-peac
     font-size: 16px;
     color: $color-on-dark-muted;
 
+    // 좁은 칸에서 두 줄이 되면 줄 길이를 고르게 나눈다
     @include mobile {
       font-size: 13px;
+      text-wrap: balance;
     }
   }
 }

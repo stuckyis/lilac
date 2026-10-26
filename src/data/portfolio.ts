@@ -23,23 +23,21 @@ export const INTRO: Intro = {
   role: 'FRONTEND ENGINEER',
   headline: ['화면 너머의', '구조까지 설계하는', '프론트엔드 엔지니어'],
   highlight: '구조',
-  lead: [
-    `안녕하세요, 경력 12년의 프론트엔드 개발자 ${PROFILE.name}입니다.`,
-    'OTT·미디어 서비스의 웹 화면과 관리자 시스템을 React·Vue로 만들어 왔습니다.',
-  ],
+  lead: [`안녕하세요, 경력 12년의 프론트엔드 개발자 ${PROFILE.name}입니다.`, 'OTT·미디어 서비스의 웹 화면과 관리자 시스템을 만들어 왔습니다.'],
   // 참여한 프로젝트 수 (엠브레이스 4, 에이클라미디어그룹 2, 트리포스 7)
   metric: { label: 'PROJECTS', value: '13' },
 }
 
 /**
- * 숫자 띠. 4개를 기준으로 디자인했다 (색은 순서대로 라일락·민트·버터·복숭아).
- * 경력 연수는 회사별 재직 기간의 합(2026.10 기준 12년 2개월), React·TypeScript는 2022.06부터다.
+ * 숫자 띠. 3개를 기준으로 디자인했다 (색은 순서대로 라일락·민트·버터).
+ * - 웹 개발 경력: 회사별 재직 기간의 합 (2026.10 기준 12년 2개월)
+ * - Frontend 실무: 프론트엔드만 맡은 기간. 에이클라미디어그룹(2020.08~)과 엠브레이스의 합 (6년 2개월). 트리포스는 JSP·SQL까지 맡은 웹 개발이라 뺀다
+ * - 프로젝트: 엠브레이스 4, 에이클라미디어그룹 2, 트리포스 7
  */
 export const STATS: Stat[] = [
   { value: '12+', label: '년 웹 개발 경력' },
+  { value: '6+', label: '년 Frontend 실무' },
   { value: '13', label: '개 프로젝트 참여' },
-  { value: '5', label: '개 OTT·미디어 서비스' },
-  { value: '4+', label: '년 React·TypeScript 실무' },
 ]
 
 /** 참여한 제품. 로고 띠에서 이 순서대로 흐른다 */
@@ -121,7 +119,14 @@ export const WORKS: Work[] = [
 
 /** 그 밖의 작업. 3개를 기준으로 디자인했다. 주소(url)가 있으면 카드 전체가 링크가 된다 */
 export const MORE_WORKS: MoreWork[] = [
-  { title: 'Ostream for Coupangplay', company: '엠브레이스', year: '2025', tone: TONE.LILAC_SOFT },
+  {
+    title: 'Ostream for Coupangplay',
+    company: '엠브레이스',
+    year: '2025',
+    tone: TONE.LILAC_SOFT,
+    // 사용자가 보낸 채널 상세 화면. AWS 계정 번호(ARN)·배포 ID·도메인은 가렸다
+    imageUrl: '/images/works/ostream-coupangplay.webp',
+  },
   {
     title: 'LG전자 정밀금형센터 생산관제 실시간 시스템',
     company: '트리포스',
