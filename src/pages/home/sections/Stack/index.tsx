@@ -5,7 +5,7 @@ import { reveal } from '@/utils/reveal'
 import clsx from 'clsx'
 import './styles.scss'
 
-/** 기술 스택: 분야 카드 4개. 기술마다 두 글자 아이콘 칸, 이름, 사용 연수 */
+/** 기술 스택: 분야 카드 4개. 기술마다 두 글자 아이콘 칸, 이름, 사용 연수(있을 때만) */
 const Stack = () => {
   return (
     <section id={SECTION_ID.STACK} className="stack" aria-labelledby="stack-title">
@@ -27,7 +27,13 @@ const Stack = () => {
                     {item.short}
                   </span>
                   <span className="stack__text">
-                    <span className="stack__name">{item.name}</span> <span className="stack__years">{item.years}</span>
+                    <span className="stack__name">{item.name}</span>
+                    {item.years && (
+                      <>
+                        {' '}
+                        <span className="stack__years">{item.years}</span>
+                      </>
+                    )}
                   </span>
                 </li>
               ))}

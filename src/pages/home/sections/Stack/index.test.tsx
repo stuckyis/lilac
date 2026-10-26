@@ -10,7 +10,7 @@ describe('Stack', () => {
     expect(screen.getByRole('region', { name: '기술 스택' })).toHaveAttribute('id', 'stack')
   })
 
-  it('분야마다 제목(h3)과 기술 이름·사용 연수를 보여줘야 합니다', () => {
+  it('분야마다 제목(h3)과 기술 이름, 사용 연수(있을 때만)를 보여줘야 합니다', () => {
     render(<Stack />)
 
     STACK.forEach(group => {
@@ -20,8 +20,12 @@ describe('Stack', () => {
 
       expect(items).toHaveLength(group.items.length)
       items.forEach((item, index) => {
-        expect(item).toHaveTextContent(group.items[index].name)
-        expect(item).toHaveTextContent(group.items[index].years)
+        const { name, years } = group.items[index]
+        const yearsText = item.querySelector('.stack__years')
+        expect(item).toHaveTextContent(name)
+        // 연수를 모르는 기술은 빈 칸 없이 이름만 보여준다
+        if (years) expect(yearsText).toHaveTextContent(years)
+        else expect(yearsText).toBeNull()
       })
     })
   })

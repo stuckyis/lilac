@@ -10,9 +10,12 @@ interface WorkDetailProps {
   showPlace?: boolean
 }
 
-/** 대표 작업 상세: 썸네일, 회사·기간·역할·팀, 요약, 성과 수치, 기술, 케이스 스터디. 탭 패널(PC)과 아코디언(좁은 화면)이 같이 쓴다 */
+/**
+ * 대표 작업 상세: 썸네일, 회사·기간·역할·팀, 요약, 맡은 일, 성과 수치, 기술, 케이스 스터디. 탭 패널(PC)과 아코디언(좁은 화면)이 같이 쓴다.
+ * 팀·맡은 일·성과 수치·케이스 스터디는 데이터에 있을 때만 보여준다.
+ */
 const WorkDetail = ({ work, showPlace = true }: WorkDetailProps) => {
-  const meta = showPlace ? [work.company, work.period, work.role, work.team] : [work.role, work.team]
+  const meta = (showPlace ? [work.company, work.period, work.role, work.team] : [work.role, work.team]).filter(Boolean)
 
   return (
     <div className="work-detail">
@@ -31,13 +34,26 @@ const WorkDetail = ({ work, showPlace = true }: WorkDetailProps) => {
         <p className="work-detail__meta">{meta.join(' · ')}</p>
         <p className="work-detail__summary">{work.summary}</p>
 
-        <ul className="work-detail__metrics" role="list">
-          {work.metrics.map(metric => (
-            <li key={metric.label} className="work-detail__metric">
-              <strong className="work-detail__metric-value">{metric.value}</strong> <span className="work-detail__metric-label">{metric.label}</span>
-            </li>
-          ))}
-        </ul>
+        {work.tasks && (
+          <ul className="work-detail__tasks" role="list" aria-label="맡은 일">
+            {work.tasks.map(task => (
+              <li key={task} className="work-detail__task">
+                {task}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {work.metrics && (
+          <ul className="work-detail__metrics" role="list">
+            {work.metrics.map(metric => (
+              <li key={metric.label} className="work-detail__metric">
+                <strong className="work-detail__metric-value">{metric.value}</strong>{' '}
+                <span className="work-detail__metric-label">{metric.label}</span>
+              </li>
+            ))}
+          </ul>
+        )}
 
         <ul className="work-detail__tags" role="list" aria-label="사용 기술">
           {work.tags.map(tag => (

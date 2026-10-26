@@ -13,7 +13,7 @@ interface Site {
 }
 
 export const SITE: Site = {
-  title: '[이름] · 프론트엔드 엔지니어',
-  description: '화면 너머의 구조까지 설계하는 프론트엔드 엔지니어 [이름]의 포트폴리오입니다.',
+  title: '오병환 · 프론트엔드 엔지니어',
+  description: 'OTT·미디어 서비스의 웹과 관리자 화면을 만들어 온 경력 12년 프론트엔드 엔지니어 오병환의 포트폴리오입니다.',
   url: '',
 }

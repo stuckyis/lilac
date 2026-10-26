@@ -89,13 +89,14 @@ pnpm preview   # 빌드 결과 미리보기
 | 사진·로고·작업 캡처           | `public/images/`에 파일을 넣고 `portfolio.ts`에 주소를 적는다           |
 | 파비콘, 공유 미리보기 이미지  | `public/favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `og-image.png` |
 
-- **내용**: `portfolio.ts`만 고치면 화면에 반영됩니다. 지금은 `[이름]`, `[YYYY]` 같은 자리표시자가 들어 있습니다. 각 칸의 뜻과 예시는 `src/data/type.ts`의 주석에 있습니다.
+- **내용**: `portfolio.ts`만 고치면 화면에 반영됩니다. 이력서·포트폴리오 내용이 들어 있고, 일하는 방식(`PRINCIPLES`)만 아직 자리표시자(`[…]`)입니다. 각 칸의 뜻과 예시는 `src/data/type.ts`의 주석에 있습니다.
 - **사이트 정보**: `site.ts`의 제목·설명은 빌드할 때 `index.html`의 `<title>`, `description`, 공유 미리보기(Open Graph) 태그로 들어갑니다(`vite.config.ts`의 `siteMeta` 플러그인). 링크 미리보기를 만드는 크롤러는 JS를 실행하지 않아서 HTML에 미리 넣습니다.
   - `url`에 배포 주소(예: `https://example.com`)를 적으면 공유 이미지(`og-image.png`)와 주소 태그도 들어갑니다. 비워 두면 넣지 않습니다.
   - 이름을 바꾸면 `portfolio.ts`의 `PROFILE.name`과 `site.ts`를 함께 고칩니다.
 - **이미지**: `public/images/profile.jpg`에 넣었다면 `'/images/profile.jpg'`처럼 적습니다. 비워 두면 색 칸(`tone`)이나 자리표시 원이 대신 보입니다.
   - 프로필 사진 `PROFILE.photoUrl`, 제품 로고 `PRODUCTS[].logoUrl`, 대표 작업 캡처 `WORKS[].imageUrl`, 그 밖의 작업 `MORE_WORKS[].imageUrl`
 - **링크**: 케이스 스터디(`WORKS[].caseUrl`)와 그 밖의 작업(`MORE_WORKS[].url`)은 주소를 적었을 때만 버튼·링크가 됩니다.
+- **없으면 숨는 칸**: 대표 작업의 팀 규모(`team`)·맡은 일(`tasks`)·성과 수치(`metrics`)와 기술의 사용 연수(`STACK[].items[].years`)는 적었을 때만 보입니다. 모르는 숫자를 지어내 채우지 않아도 됩니다.
 - **색 칸**: `tone`에 `TONE.LILAC`처럼 색 이름을 적습니다(`src/data/const.ts`). 실제 색은 `src/styles/variables.scss`의 `$tones`에 있습니다.
 - **마지막 업데이트**: 연락 섹션 아래의 날짜는 빌드한 달(서울 기준)이 자동으로 들어갑니다.
 
@@ -125,7 +126,7 @@ src/
 ├── data/                  # 화면에 들어가는 내용
 │   ├── const.ts           # 색 이름(TONE) 등 콘텐츠에서 쓰는 상수
 │   ├── type.ts            # 콘텐츠 타입
-│   ├── portfolio.ts       # 이력·프로젝트 등 내용 (지금은 자리표시자)
+│   ├── portfolio.ts       # 이력·프로젝트 등 화면 내용
 │   └── site.ts            # 사이트 제목·설명 (빌드할 때 index.html에 들어감)
 ├── components/            # 재사용 가능한 컴포넌트
 │   ├── layout/            # Layout(본문 바로가기 + Header + Outlet), Header
@@ -418,7 +419,7 @@ import { reveal } from '@/utils/reveal'
 ## 현재 구현 상태
 
 - **홈 화면** — PC(1024px 이상)·태블릿(768~1023px)·모바일(320px까지) 화면을 완성했습니다.
-- **내용** — `src/data/portfolio.ts`와 `src/data/site.ts`의 내용은 아직 자리표시자(`[이름]` 등)입니다.
+- **내용** — 이력서·포트폴리오 내용을 넣었습니다(2026.10 기준). 일하는 방식 3개, 사진·작업 캡처 이미지는 아직 자리표시자입니다.
 - **잠시 숨긴 기능** — 헤더의 서울 시각·이력서 버튼, 첫 화면의 이력서 버튼은 지우지 않고 `[숨김]` 주석으로 남겨 두었습니다.
 - **API 도메인** — `vite.config.ts`의 `getApiDomain()`이 모든 mode에서 빈 문자열을 반환합니다. 서버 데이터를 쓰게 되면 실제 서버 주소 설정이 필요합니다.
 - `useExample.ts`, `useExampleStore.ts`는 참고용 예시 코드입니다.
