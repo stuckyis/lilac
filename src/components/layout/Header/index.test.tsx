@@ -19,7 +19,6 @@ describe('Header', () => {
 
     expect(links.map(link => [link.textContent, link.getAttribute('href')])).toEqual([
       ['작업', '#work'],
-      ['일하는 방식', '#way'],
       ['경력', '#career'],
       ['기술', '#stack'],
       ['구조', '#behind'],

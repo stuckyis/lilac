@@ -231,7 +231,7 @@
       padding-top: 28px;
     }
 
-    // 768px 미만: 가운데 정렬로 두 줄 쌓기 (모바일 시안)
+    // 768px 미만: 가운데 정렬 (모바일 시안)
     @include mobile {
       flex-direction: column;
       gap: 4px;

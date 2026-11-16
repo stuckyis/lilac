@@ -1,11 +1,12 @@
 import { BEHIND_VISUAL, TONE } from './const'
-import type { ArchiveItem, BehindNote, CareerItem, Intro, MoreWork, Principle, Product, Profile, StackGroup, Stat, Work } from './type'
+import type { ArchiveItem, BehindNote, CareerItem, Intro, MoreWork, Product, Profile, StackGroup, Stat, Work } from './type'
 
 // 화면에 들어가는 내용을 모아 둔 파일이다. 내용을 바꿀 때는 이 파일만 고친다.
 // 이력서·포트폴리오(2026.10 기준) 내용이다. 문서에 없는 숫자는 넣지 않고, 아직 받지 못한 내용은 자리표시자([…])로 둔다.
 
 export const PROFILE: Profile = {
   name: '오병환',
+  nameEn: 'OH Byeonghwan',
   since: '2013',
   current: {
     company: '엠브레이스',
@@ -154,22 +155,6 @@ export const MORE_WORKS: MoreWork[] = [
     imageUrl: '/images/works/lg-mold-monitoring.webp',
   },
   { title: 'KT Sat GNOC 운용지원시스템', company: '트리포스', year: '2016', tone: TONE.BUTTER_SOFT, imageUrl: '/images/works/kt-sat-gnoc.webp' },
-]
-
-/** 일하는 방식. 3개를 기준으로 디자인했다 (카드 색은 순서대로 연보라·연민트·연버터) */
-export const PRINCIPLES: Principle[] = [
-  {
-    title: '개발 환경부터 단단하게',
-    description: 'CJ ENM GENII와 Ostream에서 React 기반 개발 환경을 직접 구축해, 팀이 같은 규칙으로 시작할 수 있게 했어요.',
-  },
-  {
-    title: '영상 경험은 끊기지 않게',
-    description: 'SPOTV NOW의 멀티플레이어, LIVE 채팅, 광고 삽입부터 Ostream의 재생·클립 기능까지 영상 화면을 꾸준히 다뤘어요.',
-  },
-  {
-    title: '사용자가 기다리지 않게',
-    description: 'SPOTV NOW에서 화면을 추가로 개발하면서 성능 개선도 함께 챙겼어요.',
-  },
 ]
 
 /** 경력 섹션 제목. 연차가 바뀌면 함께 고친다 (회사별 재직 기간의 합, 2026.10 기준 12년 2개월) */

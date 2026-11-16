@@ -9,7 +9,7 @@ import './styles.scss'
 const Career = () => {
   return (
     <section id={SECTION_ID.CAREER} className="career" aria-labelledby="career-title">
-      <SectionHeading id="career-title" index="03" label="CAREER" title={CAREER_TITLE} note="블록이 쌓이듯, 한 단계씩" />
+      <SectionHeading id="career-title" index="02" label="CAREER" title={CAREER_TITLE} note="블록이 쌓이듯, 한 단계씩" />
       <Timeline />
       <Archive />
     </section>

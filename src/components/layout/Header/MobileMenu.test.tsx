@@ -36,10 +36,9 @@ describe('MobileMenu', () => {
         .map(link => [link.textContent, link.getAttribute('href')]),
     ).toEqual([
       ['01작업', '#work'],
-      ['02일하는 방식', '#way'],
-      ['03경력', '#career'],
-      ['04기술', '#stack'],
-      ['05구조', '#behind'],
+      ['02경력', '#career'],
+      ['03기술', '#stack'],
+      ['04구조', '#behind'],
     ])
     // 번호는 장식이라 링크 이름에는 들어가지 않는다
     expect(within(nav).getByRole('link', { name: '작업' })).toBeInTheDocument()

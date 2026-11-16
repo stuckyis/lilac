@@ -2,12 +2,10 @@ import { MailIcon } from '@/components/ui/Icon'
 import { PROFILE } from '@/data/portfolio'
 import { SECTION_ID } from '@/routes/const'
 import { reveal } from '@/utils/reveal'
-import { BUILT_WITH, SOCIAL_LINKS } from './const'
+import { SOCIAL_LINKS } from './const'
 import './styles.scss'
 
 const CURRENT_YEAR = new Date().getFullYear()
-/** 마지막으로 빌드한 달. 빌드 설정이 넣어 주고, 테스트 환경처럼 없으면 보여주지 않는다 */
-const LAST_UPDATED = import.meta.env.VITE_LAST_UPDATED
 
 /** 연락: 어두운 마무리 블록(큰 문장, 이메일, 링크)과 사이트 푸터 */
 const Contact = () => {
@@ -17,7 +15,7 @@ const Contact = () => {
       <div ref={reveal} className="contact__inner">
         <p className="contact__label" aria-hidden>
           <span className="contact__mark" />
-          06 — CONTACT
+          05 — CONTACT
         </p>
         <h2 id="contact-title" className="contact__title" lang="en">
           Let&apos;s build the next one.
@@ -40,11 +38,9 @@ const Contact = () => {
         </ul>
 
         <footer className="contact__footer">
-          <p>
-            © {CURRENT_YEAR} {PROFILE.name}
-            {LAST_UPDATED && ` · 마지막 업데이트 ${LAST_UPDATED}`}
+          <p lang="en">
+            © {CURRENT_YEAR} {PROFILE.nameEn}
           </p>
-          <p>{BUILT_WITH.join(' · ')}로 만들었어요</p>
         </footer>
       </div>
     </section>

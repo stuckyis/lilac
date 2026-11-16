@@ -9,6 +9,8 @@ export interface SocialLinks {
 /** 기본 정보. 헤더, 첫 화면, 연락 섹션에서 같이 쓴다. */
 export interface Profile {
   name: string
+  /** 영문 이름. 연락 섹션 아래 푸터에 쓴다 (예: 'HONG Gildong') */
+  nameEn: string
   /** 경력을 시작한 연도 (예: '2016') */
   since: string
   /** 지금 일하는 곳 */
@@ -93,13 +95,6 @@ export interface MoreWork {
   imageUrl?: string
   /** 자세히 볼 주소. 있으면 카드 전체가 링크가 된다 */
   url?: string
-}
-
-/** 일하는 방식: 원칙 하나 */
-export interface Principle {
-  title: string
-  /** 이 원칙이 드러난 경험 한두 문장 */
-  description: string
 }
 
 /** 경력 타임라인의 마디 하나 (회사) */

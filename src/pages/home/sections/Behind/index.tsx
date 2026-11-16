@@ -22,7 +22,13 @@ const VISUALS: Record<BehindVisual, ComponentType> = {
 const Behind = () => {
   return (
     <section id={SECTION_ID.BEHIND} className="behind" aria-labelledby="behind-title">
-      <SectionHeading id="behind-title" index="05" label="BEHIND THIS PAGE" title="이 화면의 구조" note="직접 눌러 보며 확인할 수 있어요" />
+      <SectionHeading
+        id="behind-title"
+        index="04"
+        label="BEHIND THIS PAGE"
+        title="이 화면의 구조"
+        note="디자인 토큰, 접근성, 검증 과정을 정리했어요"
+      />
 
       <ul className="behind__list" role="list">
         {BEHIND_NOTES.map(note => {

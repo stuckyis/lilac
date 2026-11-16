@@ -1,6 +1,6 @@
 # Lilac
 
-프론트엔드 엔지니어 포트폴리오 사이트입니다. 한 화면(홈)에서 작업, 일하는 방식, 경력, 기술을 짧게 볼 수 있습니다.
+프론트엔드 엔지니어 포트폴리오 사이트입니다. 한 화면(홈)에서 작업, 경력, 기술을 짧게 볼 수 있습니다.
 
 React 19 + TypeScript + Vite + pnpm 기반 SPA입니다.
 
@@ -67,11 +67,10 @@ pnpm preview   # 빌드 결과 미리보기
 | 2    | 숫자 띠        | -                     | `Stats`          | `STATS`                              |
 | 3    | 제품 로고 띠   | -                     | `ProductMarquee` | `PRODUCTS`                           |
 | 4    | 대표 작업      | 작업 (`#work`)        | `Work`           | `WORKS`, `MORE_WORKS`                |
-| 5    | 일하는 방식    | 일하는 방식 (`#way`)  | `Way`            | `PRINCIPLES`                         |
-| 6    | 경력           | 경력 (`#career`)      | `Career`         | `CAREER_TITLE`, `CAREER`, `ARCHIVE`  |
-| 7    | 기술 스택      | 기술 (`#stack`)       | `Stack`          | `STACK`                              |
-| 8    | 이 화면의 구조 | 구조 (`#behind`)      | `Behind`         | `BEHIND_NOTES`                       |
-| 9    | 연락 + 푸터    | - (`#contact`)        | `Contact`        | `PROFILE`(이메일, GitHub·LinkedIn)   |
+| 5    | 경력           | 경력 (`#career`)      | `Career`         | `CAREER_TITLE`, `CAREER`, `ARCHIVE`  |
+| 6    | 기술 스택      | 기술 (`#stack`)       | `Stack`          | `STACK`                              |
+| 7    | 이 화면의 구조 | 구조 (`#behind`)      | `Behind`         | `BEHIND_NOTES`                       |
+| 8    | 연락 + 푸터    | - (`#contact`)        | `Contact`        | `PROFILE`(이메일, GitHub·LinkedIn)   |
 
 - **헤더**: 블록 로고(누르면 맨 위로)와 섹션 메뉴. 지금 보는 섹션의 메뉴가 어두운 알약으로 표시됩니다.
 - **404**: 없는 주소로 들어오면 한 칸이 빠진 블록 마크와 "홈으로 돌아가기"를 보여줍니다.
@@ -99,7 +98,7 @@ pnpm preview   # 빌드 결과 미리보기
 - **링크**: 케이스 스터디(`WORKS[].caseUrl`)와 그 밖의 작업(`MORE_WORKS[].url`)은 주소를 적었을 때만 버튼·링크가 됩니다.
 - **없으면 숨는 칸**: 대표 작업의 팀 규모(`team`)·맡은 일(`tasks`)·성과 수치(`metrics`)와 기술의 사용 연수(`STACK[].items[].years`)는 적었을 때만 보입니다. 모르는 숫자를 지어내 채우지 않아도 됩니다.
 - **색 칸**: `tone`에 `TONE.LILAC`처럼 색 이름을 적습니다(`src/data/const.ts`). 실제 색은 `src/styles/variables.scss`의 `$tones`에 있습니다.
-- **마지막 업데이트**: 연락 섹션 아래의 날짜는 빌드한 달(서울 기준)이 자동으로 들어갑니다.
+- **푸터**: 연락 섹션 아래에 올해 연도와 영문 이름(`PROFILE.nameEn`)을 보여줍니다.
 
 ## 스크립트
 
@@ -310,7 +309,7 @@ import { LOADING_TYPE } from '@/components/loading/const'
 - **Header** — 화면 위에 고정된 헤더 (블록 로고, 섹션 메뉴). 스크롤하면 반투명 블록 모양으로 바뀝니다
 - **Main Content** — `<Outlet />`으로 렌더링되는 페이지 콘텐츠
 
-사이트 푸터(연도, 마지막 업데이트, 만든 기술)는 따로 두지 않고 홈의 연락 섹션 아래쪽에 넣었습니다.
+사이트 푸터(연도, 영문 이름)는 따로 두지 않고 홈의 연락 섹션 아래쪽에 넣었습니다.
 
 ## 스타일 가이드
 

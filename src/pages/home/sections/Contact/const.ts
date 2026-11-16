@@ -5,6 +5,3 @@ export const SOCIAL_LINKS = [
   { label: 'GitHub', href: PROFILE.links.github },
   { label: 'LinkedIn', href: PROFILE.links.linkedin },
 ] as const
-
-/** 이 사이트를 만든 기술. 실제로 쓰는 것만 적는다 (Zustand: 헤더 메뉴의 지금 보는 섹션 표시) */
-export const BUILT_WITH = ['React', 'TypeScript', 'Zustand'] as const

@@ -4,7 +4,7 @@ import { act, render } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import useActiveSection from './useActiveSection'
 
-const IDS = [SECTION_ID.WORK, SECTION_ID.WAY, SECTION_ID.CAREER] as const
+const IDS = [SECTION_ID.WORK, SECTION_ID.CAREER, SECTION_ID.STACK] as const
 
 /** jsdom에는 IntersectionObserver가 없어서, 띠에 걸치는 상황을 직접 만들 수 있는 가짜를 쓴다 */
 class FakeIntersectionObserver {
@@ -85,19 +85,19 @@ describe('useActiveSection', () => {
     observer().cross({ work: true })
     expect(activeId()).toBe('work')
 
-    observer().cross({ work: false, way: true })
-    expect(activeId()).toBe('way')
+    observer().cross({ work: false, career: true })
+    expect(activeId()).toBe('career')
 
     // 다시 첫 화면으로 올라가면 걸친 섹션이 없다
-    observer().cross({ way: false })
+    observer().cross({ career: false })
     expect(activeId()).toBeNull()
   })
 
   it('띠가 두 섹션의 경계에 걸치면 위쪽 섹션을 골라야 합니다', () => {
     render(<Sections />)
 
-    observer().cross({ career: true, way: true })
-    expect(activeId()).toBe('way')
+    observer().cross({ stack: true, career: true })
+    expect(activeId()).toBe('career')
   })
 
   it('화면을 떠나면 지켜보기를 멈추고 null로 되돌려야 합니다', () => {
