@@ -5,20 +5,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.35);
+  // 페이지 바탕색 덮개: 첫 화면을 불러오는 동안 어두운 화면이 번쩍이지 않게 한다
+  background-color: rgba($color-bg, 0.9);
 
   // ── Pulse Dots ──
   &__dots {
     display: flex;
     align-items: center;
-    gap: $spacing-sm;
+    gap: 8px;
   }
 
   &__dot {
     width: 10px;
     height: 10px;
-    border-radius: 50%;
-    background-color: $primary-color;
+    border-radius: 3px;
+    background-color: $color-accent;
     animation: loading-pulse 1.2s ease-in-out infinite;
 
     &:nth-child(2) {
@@ -34,8 +35,8 @@
   &__spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid rgba($primary-color, 0.2);
-    border-top-color: $primary-color;
+    border: 3px solid $color-lilac-100;
+    border-top-color: $color-accent;
     border-radius: 50%;
     animation: loading-spin 0.75s linear infinite;
   }

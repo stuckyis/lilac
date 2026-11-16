@@ -1,0 +1,227 @@
+.behind {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  gap: 44px;
+  padding: $section-padding-y 0 70px;
+
+  @include tablet {
+    gap: 32px;
+    padding: 72px 0 40px;
+  }
+
+  // 모바일 시안
+  @include mobile {
+    gap: 22px;
+    padding: 56px 0 30px;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    list-style: none;
+
+    // 1024px 미만: 한 줄에 3장이 들어가지 않아 1열로 쌓는다 (가로로 넘기지 않는다)
+    @include tablet {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+    }
+
+    @include mobile {
+      gap: 12px;
+    }
+  }
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid $color-line-100;
+    border-radius: $radius-2xl;
+    background-color: $color-surface;
+
+    // 768~1023px: 카드가 넓어서 그림을 왼쪽에 둔다 (위에 두면 그림 영역이 옆으로 길게 빈다)
+    @include tablet {
+      flex-direction: row;
+    }
+
+    @include mobile {
+      flex-direction: column;
+      border-radius: 22px;
+    }
+  }
+
+  // 그림 영역 (PC·모바일은 카드 위쪽, 태블릿은 왼쪽). 색은 카드의 tone을 따른다
+  &__visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    @include tone-modifiers;
+
+    // 글 높이에 맞춰 늘어난다
+    @include tablet {
+      flex: 0 0 300px;
+      height: auto;
+      min-height: 180px;
+    }
+
+    @include mobile {
+      flex: none;
+      height: 140px;
+      min-height: 0;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 22px 24px 26px;
+
+    // 가로형 카드에서 그림 높이가 더 크면 글을 세로 가운데에 둔다
+    @include tablet {
+      justify-content: center;
+    }
+
+    @include mobile {
+      gap: 6px;
+      padding: 18px 18px 20px;
+    }
+  }
+
+  &__label {
+    @include mono-label(12px, 0.06em);
+    color: $color-accent;
+
+    @include mobile {
+      font-size: 11px;
+    }
+  }
+
+  &__title {
+    font-size: 20px;
+    font-weight: $font-weight-bold;
+    line-height: 1.4;
+
+    @include mobile {
+      font-size: 17px;
+    }
+  }
+
+  &__description {
+    font-size: 15px;
+    line-height: 1.7;
+    color: $color-muted;
+
+    @include mobile {
+      font-size: 14px;
+      line-height: 1.65;
+    }
+  }
+}
+
+// 카드 위쪽 그림 (Visuals.tsx)
+.behind-visual {
+  &--tokens {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  &__chips {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    list-style: none;
+  }
+
+  &__chip {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background-color: rgba($color-surface, 0.85);
+    @include mono-label(12px, 0);
+    color: $color-ink;
+
+    @include mobile {
+      padding: 5px 10px;
+      font-size: 11px;
+    }
+  }
+
+  &--keys {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    @include mobile {
+      gap: 8px;
+    }
+  }
+
+  // 아래 테두리를 두껍게 해서 눌리는 자판처럼 보이게 한다
+  &__key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 48px;
+    height: 48px;
+    padding: 0 14px;
+    border: 1px solid $color-line-300;
+    border-bottom-width: 4px;
+    border-radius: 10px;
+    background-color: $color-surface;
+    box-shadow: $shadow-sm;
+    font-family: $font-mono;
+    font-size: 14px;
+    color: $color-ink;
+
+    // 좁은 휴대폰(320px 화면이면 카드 폭 280px)에서도 자판 4개가 한 줄에 들어가게 줄인다
+    @include mobile {
+      min-width: 40px;
+      height: 40px;
+      padding: 0 10px;
+      font-size: 13px;
+    }
+  }
+
+  &--checks {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  &__terminal {
+    width: 78%;
+    padding: 16px 18px;
+    border-radius: 14px;
+    background-color: $color-dark;
+    box-shadow: $shadow-md;
+
+    @include mobile {
+      padding: 12px 14px;
+    }
+  }
+
+  &__line {
+    display: flex;
+    gap: 8px;
+    @include mono-label(12px, 0);
+    line-height: 1.9;
+    color: $color-on-dark;
+
+    @include mobile {
+      font-size: 11px;
+    }
+  }
+
+  &__prompt {
+    color: $color-on-dark-muted;
+  }
+
+  &__ok {
+    margin-left: auto;
+    color: $color-mint-200;
+  }
+}

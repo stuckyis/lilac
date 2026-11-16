@@ -2,10 +2,13 @@
 <html lang="ko">
     <head>
         <meta charset="UTF-8" />
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Lilac</title>
+        <!-- 제목과 설명·공유 미리보기 태그는 빌드할 때 vite.config.ts가 src/data/site.ts 내용으로 넣는다 -->
+        <title>%SITE_TITLE%</title>
+        <meta name="theme-color" content="#faf7f1" />
+        <link rel="icon" href="/favicon.ico" sizes="32x32" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     </head>
     <body>
         <div id="root"></div>

@@ -1,0 +1,928 @@
+@use 'sass:list';
+
+$hero-height: 900px;
+$composition-width: 560px;
+$composition-height: 660px;
+// 768px 미만: 모바일 시안의 패널 조합 크기
+$composition-width-mobile: 350px;
+$composition-height-mobile: 420px;
+// 1024px 미만: 헤더 자리(72px) + 시안의 위 여백(36px)
+$hero-top-compact: 108px;
+
+// 레이아웃별 패널 위치: (x, y, 회전 deg). 패널 영역(560×660) 왼쪽 위 기준이다.
+// 순서를 바꾸거나 새 레이아웃을 넣으면 const.ts의 HERO_LAYOUT도 같이 고친다.
+$hero-layouts: (
+  stack: (
+    app: (
+      150,
+      90,
+      -4,
+    ),
+    metric: (
+      0,
+      380,
+      3,
+    ),
+    components: (
+      300,
+      430,
+      -2,
+    ),
+    profile: (
+      330,
+      0,
+      0,
+    ),
+    mark: (
+      40,
+      40,
+      0,
+    ),
+  ),
+  grid: (
+    app: (
+      0,
+      0,
+      0,
+    ),
+    metric: (
+      0,
+      400,
+      0,
+    ),
+    components: (
+      300,
+      420,
+      0,
+    ),
+    profile: (
+      330,
+      20,
+      0,
+    ),
+    mark: (
+      470,
+      290,
+      0,
+    ),
+  ),
+  scatter: (
+    app: (
+      200,
+      150,
+      6,
+    ),
+    metric: (
+      260,
+      0,
+      -6,
+    ),
+    components: (
+      10,
+      470,
+      5,
+    ),
+    profile: (
+      40,
+      0,
+      0,
+    ),
+    mark: (
+      430,
+      540,
+      12,
+    ),
+  ),
+);
+
+// 768px 미만(모바일 시안)의 패널 위치. 순서와 이름은 $hero-layouts와 같다.
+$hero-layouts-mobile: (
+  stack: (
+    app: (
+      100,
+      60,
+      -4,
+    ),
+    metric: (
+      0,
+      280,
+      3,
+    ),
+    components: (
+      180,
+      300,
+      -2,
+    ),
+    profile: (
+      190,
+      0,
+      0,
+    ),
+    mark: (
+      20,
+      20,
+      0,
+    ),
+  ),
+  grid: (
+    app: (
+      0,
+      0,
+      0,
+    ),
+    metric: (
+      0,
+      270,
+      0,
+    ),
+    components: (
+      180,
+      290,
+      0,
+    ),
+    profile: (
+      200,
+      10,
+      0,
+    ),
+    mark: (
+      290,
+      200,
+      0,
+    ),
+  ),
+  scatter: (
+    app: (
+      130,
+      120,
+      6,
+    ),
+    metric: (
+      170,
+      0,
+      -6,
+    ),
+    components: (
+      0,
+      300,
+      5,
+    ),
+    profile: (
+      10,
+      0,
+      0,
+    ),
+    mark: (
+      270,
+      370,
+      12,
+    ),
+  ),
+);
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes hero-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba($color-accent, 0.45);
+  }
+
+  70% {
+    box-shadow: 0 0 0 12px rgba($color-accent, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba($color-accent, 0);
+  }
+}
+
+// 아래에서 떠오르며 나타난다. 움직임 줄이기를 켜면 global.scss가 끄고 바로 보인다.
+@mixin rise($duration, $delay) {
+  animation: hero-rise $duration $ease-soft both $delay;
+}
+
+// 레이아웃 맵의 좌표로 패널 위치 클래스를 만든다 (예: .hero-composition__stage--grid .hero-composition__slot--app)
+@mixin slot-positions($layouts) {
+  @each $layout, $slots in $layouts {
+    &__stage--#{$layout} {
+      @each $slot, $position in $slots {
+        .hero-composition__slot--#{$slot} {
+          transform: translate(list.nth($position, 1) * 1px, list.nth($position, 2) * 1px) rotate(list.nth($position, 3) * 1deg);
+        }
+      }
+    }
+  }
+}
+
+// 모노 라벨 앞의 작은 강조 네모
+@mixin square-mark {
+  display: block;
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background-color: $color-accent;
+}
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  @include dot-grid;
+
+  @include mobile {
+    background-size: 22px 22px;
+  }
+
+  // 패널 영역이 콘텐츠 폭 오른쪽 밖으로 나가는 거리. 1440 화면에서 80px(시안과 같은 자리), 1280 이하에서는 0이다.
+  --hero-bleed: clamp(0px, (100vw - #{$content-max-width}) / 2 - #{$page-gutter}, 80px);
+
+  &__inner {
+    @include container;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) calc(#{$composition-width} - var(--hero-bleed));
+    min-height: $hero-height;
+
+    // 1024px 미만: 소개 → 패널 조합 → 현재 상태 줄을 한 줄로 쌓는다
+    @include tablet {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      min-height: 0;
+      padding: $hero-top-compact 0 48px;
+    }
+
+    @include mobile {
+      padding-bottom: 40px;
+    }
+  }
+
+  &__intro {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    padding-top: 190px;
+
+    @include tablet {
+      padding-top: 0;
+    }
+
+    @include mobile {
+      gap: 20px;
+    }
+  }
+
+  &__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    @include mono-label(14px);
+    color: $color-accent;
+    @include rise(0.8s, 0.1s);
+
+    @include mobile {
+      gap: 8px;
+      font-size: 12px;
+      letter-spacing: 0.06em;
+    }
+  }
+
+  &__eyebrow-mark {
+    @include square-mark;
+
+    @include mobile {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+    }
+  }
+
+  &__title {
+    // 1440 화면에서 72px, 1280 화면에서 64px. 1280보다 좁으면 같은 비율로 줄여 1024 화면에서 52px (제목이 4줄을 넘지 않게)
+    font-size: clamp(52px, calc(64px + (100vw - 1280px) * 0.05), 72px);
+    font-weight: $font-weight-heavy;
+    line-height: 1.16;
+    letter-spacing: -0.045em;
+    @include rise(0.9s, 0.2s);
+
+    // 390 화면에서 40px(모바일 시안) ~ 767 화면에서 52px(태블릿과 같은 크기)
+    @include mobile {
+      font-size: clamp(40px, calc(40px + (100vw - 390px) * 0.032), 52px);
+      line-height: 1.2;
+    }
+  }
+
+  &__highlight {
+    padding: 0 8px;
+    border-radius: $radius-md;
+    background-color: $color-lilac-50;
+    color: inherit;
+
+    @include mobile {
+      padding: 0 6px;
+      border-radius: 8px;
+    }
+  }
+
+  &__caret {
+    color: $color-accent;
+    animation: hero-blink 1.1s step-end infinite;
+  }
+
+  &__lead {
+    font-size: 20px;
+    line-height: 1.75;
+    color: $color-muted;
+    @include rise(0.9s, 0.32s);
+
+    @include mobile {
+      font-size: 16px;
+
+      // 두 문장을 한 문단으로 이어 보여준다 (줄 끝 띄어쓰기는 renderLines가 남긴다)
+      br {
+        display: none;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 6px;
+    @include rise(0.9s, 0.42s);
+
+    // 768px 미만: "대표 작업 보기"가 남은 폭을 채우고 GitHub·메일 버튼이 옆에 나란히 선다
+    @include mobile {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 54px 54px;
+      gap: 10px;
+      padding-top: 0;
+    }
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 56px;
+    padding: 0 28px;
+    border-radius: $radius-lg;
+    background-color: $color-dark;
+    font-size: 16px;
+    font-weight: $font-weight-medium;
+    color: $color-surface;
+    transition: background-color 0.2s;
+
+    @include hover {
+      background-color: $color-accent;
+      color: $color-surface;
+    }
+
+    @include mobile {
+      justify-content: center;
+      height: 54px;
+      padding: 0 20px;
+    }
+
+    // [숨김] 이력서 PDF 버튼 (흰 바탕 + 테두리). 다시 보이게 할 때 주석을 푼다.
+    // 768px 미만에서는 모바일 시안처럼 "대표 작업 보기"를 한 줄 전체로 두고, 그 아래 줄에 이력서·GitHub·메일을 놓는다.
+    // &--outline {
+    //   padding: 0 24px;
+    //   border: 1px solid $color-line-300;
+    //   background-color: $color-surface;
+    //   color: $color-ink;
+    //
+    //   @include hover {
+    //     border-color: $color-accent;
+    //     background-color: $color-surface;
+    //     color: $color-accent;
+    //   }
+    // }
+  }
+
+  &__icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border: 1px solid $color-line-300;
+    border-radius: $radius-lg;
+    background-color: $color-surface;
+    color: $color-ink;
+    transition:
+      color 0.2s,
+      border-color 0.2s;
+
+    @include hover {
+      border-color: $color-accent;
+      color: $color-accent;
+    }
+
+    @include mobile {
+      width: 54px;
+      height: 54px;
+    }
+  }
+
+  &__status {
+    position: absolute;
+    left: 0;
+    bottom: 56px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: $color-muted;
+
+    // 1024px 미만: 레이아웃 바꾸기 아래에 이어서 놓는다
+    @include tablet {
+      position: static;
+    }
+
+    @include mobile {
+      gap: 10px;
+      font-size: 14px;
+    }
+  }
+
+  &__status-mark {
+    @include square-mark;
+    animation: hero-pulse 2.4s infinite;
+
+    @include mobile {
+      width: 9px;
+      height: 9px;
+    }
+  }
+}
+
+.hero-composition {
+  position: relative;
+  width: $composition-width;
+  margin-top: 150px;
+
+  // 1024px 미만: 소개 아래에 콘텐츠 폭만큼 둔다. 패널 무대는 가운데, 레이아웃 바꾸기는 소개와 같은 왼쪽 줄
+  @include tablet {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  @include mobile {
+    margin-top: 16px;
+  }
+
+  // 패널 뒤의 은은한 라일락 빛. 무거운 filter: blur 대신 원형 그라데이션으로 그린다.
+  &__glow {
+    position: absolute;
+    top: -210px;
+    left: -280px;
+    width: 1020px;
+    height: 1020px;
+    background: radial-gradient(closest-side, rgba($color-lilac-50, 0.8) 25%, rgba($color-lilac-50, 0));
+    pointer-events: none;
+
+    @include tablet {
+      left: calc(50% - 510px);
+    }
+
+    // 작은 패널 무대의 가운데에 오게 줄인다
+    @include mobile {
+      top: -70px;
+      left: calc(50% - 280px);
+      width: 560px;
+      height: 560px;
+    }
+  }
+
+  &__stage {
+    position: relative;
+    height: $composition-height;
+
+    // 가운데 정렬. 콘텐츠 폭이 무대보다 좁으면(360 화면) 양쪽으로 똑같이 넘친다 (장식이라 화면 안에만 있으면 된다)
+    @include tablet {
+      width: $composition-width;
+      margin-inline: calc((100% - #{$composition-width}) / 2);
+    }
+
+    @include mobile {
+      width: $composition-width-mobile;
+      height: $composition-height-mobile;
+      margin-inline: calc((100% - #{$composition-width-mobile}) / 2);
+    }
+  }
+
+  &__slot {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: transform 0.8s $ease-soft;
+
+    &--mark {
+      z-index: 1;
+    }
+
+    &--app {
+      z-index: 2;
+    }
+
+    &--metric {
+      z-index: 3;
+    }
+
+    &--components {
+      z-index: 4;
+    }
+
+    &--profile {
+      z-index: 5;
+    }
+  }
+
+  @include slot-positions($hero-layouts);
+
+  @include mobile {
+    @include slot-positions($hero-layouts-mobile);
+
+    // 블록 마크(64px)를 모바일 시안 크기로
+    .block-mark {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  &__switch {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    margin-top: 2px;
+    padding: 0 18px;
+    border: 1px solid $color-line-300;
+    border-radius: $radius-md;
+    background-color: $color-surface;
+    font-size: 14px;
+    font-weight: $font-weight-medium;
+    color: $color-ink;
+    transition: border-color 0.2s;
+
+    @include hover {
+      border-color: $color-accent;
+    }
+
+    @include mobile {
+      margin-top: 20px;
+      padding: 0 16px;
+    }
+  }
+
+  &__switch-state {
+    font-family: $font-mono;
+    font-size: 12px;
+    color: $color-accent;
+
+    @include mobile {
+      font-size: 11px;
+    }
+  }
+}
+
+// 장식용 패널 (Panels.tsx). 768px 미만에서는 모바일 시안의 크기로 줄인다.
+.hero-panel {
+  display: flex;
+  flex-direction: column;
+
+  &--app {
+    gap: 14px;
+    width: 300px;
+    height: 380px;
+    padding: 22px;
+    border-radius: $radius-2xl;
+    background-color: $color-lilac-100;
+    box-shadow: $shadow-lg;
+    @include rise(1s, 0.3s);
+
+    @include mobile {
+      gap: 10px;
+      width: 200px;
+      height: 250px;
+      padding: 16px;
+      border-radius: 22px;
+      box-shadow: 0 22px 44px rgba($color-ink, 0.16);
+    }
+  }
+
+  &--metric {
+    justify-content: space-between;
+    width: 260px;
+    height: 170px;
+    padding: 20px;
+    border-radius: $radius-xl;
+    background-color: $color-mint-100;
+    box-shadow: $shadow-md;
+    @include rise(1s, 0.45s);
+
+    @include mobile {
+      width: 180px;
+      height: 120px;
+      padding: 14px;
+      border-radius: 18px;
+      box-shadow: 0 18px 36px rgba($color-ink, 0.14);
+    }
+  }
+
+  &--components {
+    justify-content: space-between;
+    width: 240px;
+    height: 150px;
+    padding: 20px;
+    border-radius: $radius-xl;
+    background-color: $color-butter-100;
+    box-shadow: $shadow-md;
+    @include rise(1s, 0.6s);
+
+    @include mobile {
+      width: 170px;
+      height: 110px;
+      padding: 14px;
+      border-radius: 18px;
+      box-shadow: 0 18px 36px rgba($color-ink, 0.14);
+    }
+  }
+
+  &--profile {
+    align-items: center;
+    justify-content: center;
+    width: 220px;
+    height: 220px;
+    overflow: hidden;
+    border: 6px solid $color-surface;
+    border-radius: 50%;
+    background: linear-gradient(145deg, $color-lilac-50, $color-peach-100);
+    box-shadow: $shadow-md;
+    font-size: 15px;
+    @include rise(1s, 0.2s);
+
+    @include mobile {
+      width: 150px;
+      height: 150px;
+      border-width: 5px;
+      font-size: 13px;
+    }
+  }
+
+  &__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    @include mobile {
+      gap: 8px;
+    }
+  }
+
+  &__avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background-color: $color-surface;
+
+    @include mobile {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+    }
+  }
+
+  &__bar {
+    width: 120px;
+    height: 10px;
+    border-radius: $radius-sm;
+    background-color: rgba($color-surface, 0.85);
+
+    @include mobile {
+      width: 80px;
+      height: 8px;
+    }
+  }
+
+  &__media {
+    height: 150px;
+    border-radius: 18px;
+    background-color: rgba($color-surface, 0.55);
+
+    @include mobile {
+      height: 96px;
+      border-radius: 14px;
+    }
+  }
+
+  &__line {
+    display: block;
+    height: 12px;
+    border-radius: $radius-sm;
+    background-color: rgba($color-ink, 0.18);
+
+    &--faint {
+      background-color: rgba($color-ink, 0.12);
+    }
+
+    @each $width in (220, 160, 90, 50) {
+      &--#{$width} {
+        width: $width * 1px;
+      }
+    }
+
+    @include mobile {
+      height: 9px;
+
+      @each $width, $mobile-width in (220: 140, 160: 100, 90: 64, 50: 36) {
+        &--#{$width} {
+          width: $mobile-width * 1px;
+        }
+      }
+    }
+  }
+
+  &__cta {
+    display: flex;
+    gap: 10px;
+    margin-top: auto;
+
+    @include mobile {
+      gap: 8px;
+    }
+  }
+
+  &__cta-main {
+    flex-grow: 1;
+    height: 44px;
+    border-radius: $radius-md;
+    background-color: $color-accent;
+
+    @include mobile {
+      height: 34px;
+      border-radius: 10px;
+    }
+  }
+
+  &__cta-side {
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-md;
+    background-color: rgba($color-surface, 0.85);
+
+    @include mobile {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+    }
+  }
+
+  &__label {
+    @include mono-label(12px, 0.06em);
+
+    @include mobile {
+      font-size: 10px;
+    }
+  }
+
+  &--metric &__label {
+    color: $color-mint-ink;
+  }
+
+  &--components &__label {
+    color: $color-butter-ink;
+  }
+
+  &__chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 56px;
+
+    span {
+      width: 22px;
+      border-radius: $radius-sm;
+      background-color: rgba($color-ink, 0.2);
+    }
+
+    @each $index, $height in (1: 22px, 2: 32px, 3: 44px, 4: 56px) {
+      span:nth-child(#{$index}) {
+        height: $height;
+      }
+    }
+
+    span:last-child {
+      background-color: $color-ink;
+    }
+
+    @include mobile {
+      gap: 6px;
+      height: 36px;
+
+      span {
+        width: 16px;
+        border-radius: 4px;
+      }
+
+      @each $index, $height in (1: 14px, 2: 22px, 3: 29px, 4: 36px) {
+        span:nth-child(#{$index}) {
+          height: $height;
+        }
+      }
+    }
+  }
+
+  &__metric {
+    font-family: $font-display;
+    font-size: 26px;
+    font-weight: $font-weight-bold;
+
+    @include mobile {
+      font-size: 20px;
+    }
+  }
+
+  &__toggle {
+    position: relative;
+    width: 46px;
+    height: 26px;
+    border-radius: $radius-pill;
+    background-color: $color-ink;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background-color: $color-butter-100;
+    }
+
+    @include mobile {
+      width: 36px;
+      height: 20px;
+
+      &::after {
+        width: 14px;
+        height: 14px;
+      }
+    }
+  }
+
+  &__chip {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background-color: rgba($color-ink, 0.14);
+
+    &--wide {
+      width: 70px;
+    }
+
+    @include mobile {
+      width: 20px;
+      height: 20px;
+      border-radius: 6px;
+
+      &--wide {
+        width: 52px;
+      }
+    }
+  }
+}

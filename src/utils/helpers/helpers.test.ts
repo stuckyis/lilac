@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { formatNumber, isValidEmail, truncateText } from './helpers'
+import { formatNumber, isValidEmail, toOrderNumber, truncateText } from './helpers'
 
 describe('formatNumber', () => {
   it('숫자를 천 단위로 구분하여 포맷팅해야 합니다', () => {
@@ -37,5 +37,13 @@ describe('isValidEmail', () => {
     expect(isValidEmail('test@')).toBe(false)
     expect(isValidEmail('@example.com')).toBe(false)
     expect(isValidEmail('test @example.com')).toBe(false)
+  })
+})
+
+describe('toOrderNumber', () => {
+  it('0부터 시작하는 순서를 두 자리 번호로 만들어야 합니다', () => {
+    expect(toOrderNumber(0)).toBe('01')
+    expect(toOrderNumber(8)).toBe('09')
+    expect(toOrderNumber(9)).toBe('10')
   })
 })
