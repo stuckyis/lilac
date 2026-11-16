@@ -1,4 +1,4 @@
-import { ArrowRightIcon, CodeIcon, MailIcon } from '@/components/ui/Icon'
+import { ArrowDownIcon, GithubIcon } from '@/components/ui/Icon'
 import { INTRO, PROFILE } from '@/data/portfolio'
 import { SECTION_ID } from '@/routes/const'
 import { Fragment, type ReactNode } from 'react'
@@ -59,20 +59,16 @@ const Hero = () => {
           <div className="hero__actions">
             <a className="hero__button" href={`#${SECTION_ID.WORK}`}>
               대표 작업 보기
-              <ArrowRightIcon size={18} />
+              <ArrowDownIcon size={18} />
             </a>
             {/* [숨김] 이력서 PDF 버튼. 다시 보이게 할 때 styles.scss·index.test.tsx의 [숨김] 주석도 함께 푼다.
             <a className="hero__button hero__button--outline" href={PROFILE.resumeUrl} target="_blank" rel="noopener noreferrer">
               이력서 PDF <span className="visually-hidden">(새 창에서 열림)</span>
             </a>
             */}
-            <a className="hero__icon-button" href={PROFILE.links.github} target="_blank" rel="noopener noreferrer">
-              <CodeIcon />
-              <span className="visually-hidden">GitHub (새 창에서 열림)</span>
-            </a>
-            <a className="hero__icon-button" href={`mailto:${PROFILE.email}`}>
-              <MailIcon />
-              <span className="visually-hidden">이메일 보내기</span>
+            <a className="hero__button hero__button--outline" href={PROFILE.links.github} target="_blank" rel="noopener noreferrer">
+              <GithubIcon />
+              GitHub <span className="visually-hidden">(새 창에서 열림)</span>
             </a>
           </div>
         </div>

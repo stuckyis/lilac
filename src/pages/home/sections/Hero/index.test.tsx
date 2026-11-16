@@ -12,7 +12,7 @@ describe('Hero', () => {
     expect(screen.getByText(INTRO.highlight).tagName).toBe('MARK')
   })
 
-  it('버튼은 대표 작업, GitHub(새 창), 이메일로 연결되어야 합니다', () => {
+  it('버튼은 대표 작업과 GitHub(새 창)로 연결되고, 메일 버튼은 없어야 합니다', () => {
     render(<Hero />)
 
     expect(screen.getByRole('link', { name: '대표 작업 보기' })).toHaveAttribute('href', '#work')
@@ -22,7 +22,7 @@ describe('Hero', () => {
     expect(github).toHaveAttribute('target', '_blank')
     expect(github).toHaveAttribute('rel', 'noopener noreferrer')
 
-    expect(screen.getByRole('link', { name: '이메일 보내기' })).toHaveAttribute('href', `mailto:${PROFILE.email}`)
+    expect(screen.queryByRole('link', { name: /메일/ })).not.toBeInTheDocument()
   })
 
   // [숨김] 이력서 PDF 버튼을 다시 보이게 하면 아래 테스트도 되살린다

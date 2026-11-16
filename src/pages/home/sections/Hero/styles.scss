@@ -376,10 +376,10 @@ $hero-layouts-mobile: (
     padding-top: 6px;
     @include rise(0.9s, 0.42s);
 
-    // 768px 미만: "대표 작업 보기"가 남은 폭을 채우고 GitHub·메일 버튼이 옆에 나란히 선다
+    // 768px 미만: "대표 작업 보기"가 남은 폭을 채우고 GitHub 버튼이 옆에 선다
     @include mobile {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 54px 54px;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 10px;
       padding-top: 0;
     }
@@ -409,44 +409,22 @@ $hero-layouts-mobile: (
       padding: 0 20px;
     }
 
-    // [숨김] 이력서 PDF 버튼 (흰 바탕 + 테두리). 다시 보이게 할 때 주석을 푼다.
-    // 768px 미만에서는 모바일 시안처럼 "대표 작업 보기"를 한 줄 전체로 두고, 그 아래 줄에 이력서·GitHub·메일을 놓는다.
-    // &--outline {
-    //   padding: 0 24px;
-    //   border: 1px solid $color-line-300;
-    //   background-color: $color-surface;
-    //   color: $color-ink;
-    //
-    //   @include hover {
-    //     border-color: $color-accent;
-    //     background-color: $color-surface;
-    //     color: $color-accent;
-    //   }
-    // }
-  }
+    // 흰 바탕 + 테두리: GitHub 버튼. 다른 곳으로 가는 링크라 "대표 작업 보기"와 모양을 나눈다
+    // [숨김] 이력서 PDF 버튼도 이 모양이다. 되살리면 768px 미만에서는 "대표 작업 보기"를 한 줄 전체로 두고 그 아래 줄에 이력서·GitHub를 놓는다.
+    &--outline {
+      padding: 0 24px;
+      border: 1px solid $color-line-300;
+      background-color: $color-surface;
+      color: $color-ink;
+      transition:
+        color 0.2s,
+        border-color 0.2s;
 
-  &__icon-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 56px;
-    height: 56px;
-    border: 1px solid $color-line-300;
-    border-radius: $radius-lg;
-    background-color: $color-surface;
-    color: $color-ink;
-    transition:
-      color 0.2s,
-      border-color 0.2s;
-
-    @include hover {
-      border-color: $color-accent;
-      color: $color-accent;
-    }
-
-    @include mobile {
-      width: 54px;
-      height: 54px;
+      @include hover {
+        border-color: $color-accent;
+        background-color: $color-surface;
+        color: $color-accent;
+      }
     }
   }
 
