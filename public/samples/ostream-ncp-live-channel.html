@@ -1,0 +1,1141 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>라이브 채널 관리 미리보기</title>
+<!--
+  포트폴리오용 정적 미리보기 (더미 데이터).
+  - 이 파일 하나로 동작한다. 글꼴(Pretendard)만 CDN에서 받고, 실패하면 시스템 글꼴로 보인다.
+  - 서비스명·로고는 가상의 이름(Stream Console)이고, 주소는 예시 전용 도메인(example.com 계열)만 쓴다.
+  - 아이콘: Phosphor Icons (MIT License)
+-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
+<style>
+:root {
+    --primary: #5d87ff; --red: #fc4646; --error: #ff4171; --navy: #2f3760; --green: #2ce09f; --yellow: #ff9142;
+    --g1: #202123; --g2: #313133; --g3: #58595b; --g4: #b0b1ba; --g5: #cbccd2; --g6: #e2e2e9; --g7: #f1f1f4; --g8: #f6f6f8;
+    --side: #111727; --bg-blue: rgba(93, 135, 255, 0.07);
+}
+* { padding: 0; margin: 0; box-sizing: border-box; }
+li { list-style: none; }
+html { font-size: 10px; background: var(--g7); }
+html, body { height: 100%; overflow: hidden; }
+body {
+    font-size: 1.3rem; color: var(--g2); -webkit-font-smoothing: antialiased;
+    font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', 'Malgun Gothic', sans-serif;
+}
+button, input, textarea, select { font-family: inherit; }
+input, textarea, select { outline: none; font-size: 1.3rem; color: var(--g2); }
+input::placeholder, textarea::placeholder { color: var(--g4); font-size: 1.2rem; }
+.ic { width: 1em; height: 1em; fill: currentColor; flex-shrink: 0; }
+.scroll::-webkit-scrollbar { width: .8rem; height: .8rem; }
+.scroll::-webkit-scrollbar-track { background: var(--g8); border-radius: 10rem; }
+.scroll::-webkit-scrollbar-thumb { background: var(--g5); border-radius: 1rem; }
+
+/* ================= 셸 ================= */
+#mainWrapper { display: flex; background: #fff; width: 100%; height: 5rem; }
+
+#headerInfo {
+    position: fixed; top: 0; right: 0; z-index: 200; height: 5rem; width: calc(100% - 24rem);
+    padding: 0 3rem; background: #fff; display: flex; justify-content: space-between; align-items: center;
+}
+#headerInfo .btn-wrap button { min-width: 0; width: auto; padding: .4rem .6rem; }
+#headerInfo .user-guide { font-size: 1.1rem; border: 1px solid var(--g6); border-radius: .4rem; color: var(--g4); min-height: 2.4rem; }
+#headerInfo .user-guide svg { font-size: 1.4rem; }
+#headerInfo .mobile-menu-btn { color: var(--g2); display: none; }
+#headerInfo .mobile-menu-btn svg { font-size: 2rem; }
+.info-wrapper { height: 100%; display: flex; align-items: center; }
+.info-box { border-left: 1px solid var(--g6); padding-left: 2rem; display: flex; align-items: center; cursor: pointer; transition: color .1s; }
+.info-box:hover { color: var(--primary); }
+.info-box svg { font-size: 2rem; }
+.info-box p { margin-left: .8rem; }
+.preview-chip { margin-right: 2rem; padding: .3rem .8rem; border-radius: 10rem; background: var(--bg-blue); color: var(--primary); font-size: 1.1rem; font-weight: 600; }
+
+#sideMenu {
+    position: relative; width: 24rem; min-width: 24rem; height: 100vh; background: var(--side);
+    display: flex; flex-flow: column; padding: 0 .4rem 0 1.4rem; z-index: 200;
+}
+#sideMenu .fold-btn {
+    position: absolute; right: -1.275rem; top: .813rem; width: 2.63rem; height: 2.63rem; border-radius: 50%;
+    background: #fff; box-shadow: 0 0 5px rgba(0,0,0,.2); cursor: pointer; display: flex; justify-content: center; align-items: center; z-index: 1;
+}
+#sideMenu .fold-btn::after {
+    content: ''; position: absolute; left: 1.1rem; width: .513rem; height: .513rem;
+    border-top: 2px solid #797979; border-right: 2px solid #797979; transform: rotate(-135deg); transition: transform .3s;
+}
+#sideMenu .fold-btn:hover { background: var(--primary); }
+#sideMenu .fold-btn:hover::after { border-color: #fff; }
+.logo-box { width: 100%; height: 6.4rem; padding: 1.8rem; border-bottom: 1px solid var(--g2); margin-bottom: 1rem; display: flex; align-items: center; }
+.logo { display: flex; align-items: center; gap: .8rem; color: #fff; font-weight: 800; font-size: 1.5rem; letter-spacing: -.02em; white-space: nowrap; }
+.logo-mark { width: 2.6rem; height: 2.6rem; border-radius: .8rem; background: linear-gradient(135deg, #5d87ff, #8548ff); display: grid; place-items: center; flex-shrink: 0; }
+.logo-mark svg { font-size: 1.4rem; color: #fff; }
+.menu-box { color: var(--g4); font-size: 1.3rem; overflow-y: auto; padding: 0 1rem 2rem 0; scrollbar-width: none; }
+.menu-box::-webkit-scrollbar { display: none; }
+.menu-list { cursor: pointer; }
+.menu-group { padding: .5rem 0; }
+.menu-group-title { position: relative; padding: .8rem .6rem; border-radius: .4rem; display: flex; align-items: center; }
+.menu-group-title > svg:first-child { font-size: 2rem; }
+.menu-group-name { margin-left: 1rem; font-size: 1.4rem; font-weight: 500; color: var(--g5); }
+.menu-group-title .icon { position: absolute; right: .6rem; font-size: 1.6rem; transition: transform .2s; }
+.menu-group-title.expanded .icon { transform: rotate(180deg); }
+.menu-group-title.active { color: #fff; background: rgba(93,135,255,.1); }
+.menu-group-title.active .menu-group-name { color: #fff; }
+.menu-group-title:hover { background: rgba(93,135,255,.1); }
+.menu-link { position: relative; padding: .85rem .625rem; border-radius: .188rem; }
+.menu-link:hover { color: #fff; }
+.menu-link::before { content: ''; width: .1rem; height: 100%; background: var(--g2); position: absolute; left: 1.4rem; top: 0; }
+.menu-link::after { content: ''; position: absolute; top: 1.54rem; left: 1.5rem; width: .75rem; border-bottom: 1px solid var(--g2); }
+.menu-link:last-child::before { height: 50%; }
+.menu-link.active::before { background: var(--primary); }
+.menu-link.active::after { border-bottom-color: var(--primary); }
+.menu-link.active .menu-name { color: var(--primary); opacity: 1; }
+.menu-name { margin-left: 2.8rem; opacity: .8; }
+
+/* LNB 접힘 */
+#sideMenu.fold { width: 8rem; min-width: 8rem; padding: 0; }
+#sideMenu.fold .fold-btn::after { left: .875rem; transform: rotate(45deg); }
+#sideMenu.fold .logo-box { justify-content: center; padding: 1.8rem 0; }
+#sideMenu.fold .logo-text { display: none; }
+#sideMenu.fold .menu-box { overflow: visible; padding: 1rem 0; }
+#sideMenu.fold .menu-group { position: relative; padding: 1rem; }
+#sideMenu.fold .menu-group-title { flex-direction: column; justify-content: center; }
+#sideMenu.fold .menu-group-title > svg:first-child { font-size: 1.6rem; }
+#sideMenu.fold .menu-group-title .icon { display: none; }
+#sideMenu.fold .menu-group-name { margin: .4rem 0 0; font-size: 1.2rem; text-align: center; }
+#sideMenu.fold .menu-sub {
+    display: none; position: absolute; z-index: 10000; transform: translateX(100%); top: 0; right: 0; background: #fff;
+    padding: 1rem 0; border-top: .3rem solid var(--side); width: 16rem; box-shadow: 0 0 5px 3px rgba(32,33,35,.1);
+}
+#sideMenu.fold .menu-group:hover .menu-sub { display: block; }
+#sideMenu.fold .menu-link { color: var(--g2); padding: .5rem 1rem; }
+#sideMenu.fold .menu-link::before, #sideMenu.fold .menu-link::after { display: none; }
+#sideMenu.fold .menu-name { margin: 0; padding: .6rem 1rem; border-radius: .5rem; opacity: 1; }
+#sideMenu.fold .menu-name:hover { color: var(--primary); background: rgba(93,135,255,.1); }
+#mainWrapper.lnb-fold #headerInfo { width: calc(100% - 8rem); }
+#mainWrapper.lnb-fold .main { width: calc(100% - 8rem); }
+
+.main { position: relative; margin-top: 5rem; width: calc(100% - 24rem); }
+#tabMenu { width: 100%; background: var(--g8); border-bottom: 1px solid var(--g6); }
+.tab-handler { border-bottom: 1px solid var(--g6); height: 2.4rem; padding: 0 1.4rem; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
+.tab-counter { display: flex; align-items: center; }
+.tab-counter svg { margin-right: .4rem; font-size: 1.2rem; }
+.tab-counter p { margin-left: .4rem; font-weight: 700; color: #2079ff; }
+.tab-close-btn { display: flex; align-items: center; }
+.tab-close-btn div { position: relative; cursor: pointer; font-weight: 600; }
+.tab-close-btn div:first-child { margin-right: 2rem; }
+.tab-close-btn div:first-child::after { content: ''; background: var(--g6); height: 100%; width: .1rem; position: absolute; margin-left: 1rem; }
+.tab-close-btn div:hover { color: var(--red); }
+.tab-wrapper { width: 100%; height: 2.6rem; padding: 0 .4rem; overflow: auto hidden; display: flex; align-items: flex-start; scrollbar-width: none; }
+.tab-box {
+    min-width: 10rem; width: 18rem; height: 2.6rem; position: relative; padding: 0 .8rem; border-left: 1px solid var(--g6);
+    font-size: 1.1rem; font-weight: 500; cursor: pointer; display: flex; align-items: center; overflow: hidden; white-space: nowrap; flex-shrink: 0;
+}
+.tab-box:first-child { border-left-color: transparent; }
+.tab-box:last-child { border-right: 1px solid var(--g6); }
+.tab-box::after { content: ''; height: 2.6rem; width: 4rem; position: absolute; right: 0; background: linear-gradient(90deg, rgba(0,0,0,0) 0%, var(--g8) 48%); }
+.tab-box > svg:first-child { font-size: 1.5rem; }
+.tab-box > .close { height: 100%; position: absolute; right: 0; color: var(--g2); padding-right: .4rem; z-index: 1; display: flex; align-items: center; font-size: 1.3rem; }
+.tab-box > .close:hover { color: var(--red); }
+.tab-box .tab-name { display: flex; align-items: center; overflow: hidden; text-overflow: ellipsis; }
+.tab-box .tab-name::before { content: ''; width: .1rem; height: 1.2rem; background: var(--g4); margin: 0 .5rem; flex-shrink: 0; }
+.tab-box.active { background: #fff; border-right: 1px solid var(--g6); border-left: 1px solid var(--g6); height: 2.7rem; }
+.tab-box.active + .tab-box { border-left-color: transparent; }
+.tab-box.active::after { background: linear-gradient(90deg, rgba(0,0,0,0) 0%, #fff 50%); }
+.tab-box.active .tab-name { color: var(--primary); font-weight: 600; }
+.tab-box.active .tab-name::before { background: rgba(93,135,255,.6); }
+.tab-box.active > svg:first-child { color: var(--primary); }
+
+.main-view { background: #fff; height: calc(100vh - 10.1rem); display: flex; flex-direction: column; }
+.page-view { position: relative; height: 100%; }
+.page-view.detail .page-body { background: var(--g7); }
+.page-body { padding: 1.6rem; height: calc(100vh - 13.6rem); overflow: auto; }
+.empty-view { height: 100%; display: grid; place-items: center; color: var(--g4); text-align: center; line-height: 1.8; }
+#pathWrapper { padding: 1rem .4rem 1rem 1.4rem; border-bottom: 1px solid #ddd; display: flex; justify-content: space-between; align-items: center; }
+#breadcrumb { display: flex; align-items: center; flex-wrap: wrap; row-gap: .4rem; }
+#breadcrumb > span { color: var(--g3); font-size: 1.2rem; display: flex; align-items: center; }
+#breadcrumb > span.title { font-weight: 600; color: var(--g1); }
+#breadcrumb .ic { margin-right: .3rem; }
+.page-close-btn { min-height: 0 !important; }
+.page-close-btn p { color: var(--g2); font-size: 1.2rem; }
+.page-close-btn p::after { content: ''; margin-left: .6rem; width: .8rem; height: .8rem; background: url("data:image/svg+xml,%3Csvg%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%2010%2010%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M8.93994%201.29395L0.939941%209.29395M0.939941%201.29395L8.93994%209.29395%22%20stroke%3D%22%23555555%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%20%3C%2Fsvg%3E") center / contain no-repeat; }
+.page-close-btn:hover p { color: var(--red); }
+
+/* ================= 버튼 ================= */
+button {
+    min-height: 3.2rem; min-width: fit-content; background: none; color: #fff; border: none; border-radius: .4rem;
+    font-size: 1.3rem; font-weight: 500; transition: all .1s; padding: 0 .8rem; gap: .4rem;
+    display: flex; justify-content: center; align-items: center; cursor: pointer;
+}
+button p { display: flex; justify-content: center; align-items: center; }
+button svg { font-size: 1.6rem; }
+button.icon { width: 3.2rem; min-width: 3.2rem; padding: 0; position: relative; }
+button.icon p { display: none; }
+button.icon:hover p {
+    display: block; position: absolute; background: #fff; border: 1px solid var(--g6); color: var(--g3); white-space: nowrap;
+    padding: .6rem; bottom: -3rem; border-radius: .5rem; z-index: 100; font-size: 1.2rem;
+}
+.btn-blue { background: var(--primary); }
+.btn-blue:hover { background: #4474ff; }
+.btn-blue.border { background: #fff; border: 1px solid var(--primary); color: var(--primary); }
+.btn-blue.border:hover { background: rgba(93,135,255,.1); }
+.btn-red { background: var(--error); }
+.btn-red.border { background: #fff; border: 1px solid var(--error); color: #ff2a5f; }
+.btn-red.border:hover { background: rgba(255,65,113,.1); }
+.btn-gray { background: var(--g4); }
+.btn-gray:hover { background: #a2a4ae; }
+.btn-gray.border { background: #fff; border: 1px solid var(--g6); color: var(--g3); }
+.btn-gray.border:hover { background: rgba(226,226,233,.2); }
+.btn-black { background: var(--g2); }
+.btn-black:hover { background: #252526; }
+.btn-black.border { background: #fff; border: 1px solid var(--g3); color: var(--g3); }
+.btn-black.border:hover { background: rgba(88,89,91,.1); }
+.btn-green.border { background: #fff; border: 1px solid var(--green); color: #1fdc96; }
+.btn-green.border:hover { background: rgba(44,224,159,.1); }
+.btn-yellow.border { background: #fff; border: 1px solid var(--yellow); color: #ff8a35; }
+.btn-yellow.border:hover { background: rgba(255,145,66,.1); }
+button.short { min-width: 7.2rem; }
+button:disabled { opacity: .3; pointer-events: none; }
+button.small, button.border.small { min-height: auto; height: 2.1rem; padding: .4rem; border: none; font-size: 1.2rem; min-width: 0; width: auto; background: none; }
+button.small svg { font-size: 1.3rem; }
+button.toggle { background: var(--g5); border-radius: 10rem; position: relative; min-width: 3.6rem; height: 1.8rem; min-height: 0; padding: 0; }
+button.toggle::before { content: ''; width: 1.4rem; height: 1.4rem; border-radius: 10rem; background: #fff; position: absolute; left: .2rem; top: 50%; transform: translateY(-50%); transition: all .1s; }
+button.toggle.active { background: var(--green); }
+button.toggle.active::before { transform: translate(1.8rem, -50%); }
+.btn-wrap { gap: .8rem; display: flex; justify-content: flex-end; align-items: center; }
+.btn-wrap.bottom { margin-bottom: 2rem; justify-content: center; }
+.btn-wrap.gap-2 { gap: .2rem; }
+
+/* ================= 입력 ================= */
+input:not([type='radio']):not([type='checkbox']) { width: 100%; height: 3.2rem; border: 1px solid var(--g6); border-radius: .4rem; padding: 0 .8rem; background: #fff; }
+input:focus { border-color: var(--primary) !important; }
+input:disabled { background: #fbfbfc !important; border: 1px solid rgba(226,226,233,.6) !important; color: var(--g3); }
+input[type='date'] { min-width: 12.8rem; width: 12.8rem !important; }
+.selectBox {
+    width: 100%; min-width: 12rem; height: 3.2rem; padding: 0 2.6rem 0 .8rem; border-radius: .4rem; border: 1px solid var(--g6);
+    background: #fff url("data:image/svg+xml,%3Csvg%20width%3D%2210%22%20height%3D%225%22%20viewBox%3D%220%200%2010%205%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M9.50879%201.10664L5.12246%204.30664L0.73614%201.10664%22%20stroke%3D%22%238E8E8E%22%20stroke-width%3D%220.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%20%3C%2Fsvg%3E") right .8rem center / 1.2rem .7rem no-repeat; font-size: 1.3rem; cursor: pointer;
+    appearance: none; -webkit-appearance: none;
+}
+.selectBox:focus { border-color: var(--primary); }
+textarea { width: 100%; min-height: 9rem; padding: 1rem; border: 1px solid var(--g6); border-radius: .4rem; resize: none; word-break: break-all; }
+textarea:focus { border-color: var(--primary); }
+textarea:read-only { color: var(--g3); background: #fbfbfc; }
+.radio-button { flex-flow: wrap; height: 3rem; gap: 1.2rem; display: flex; align-items: center; }
+.radio-button li { min-width: 3rem; display: flex; align-items: center; }
+.radio-button label { font-size: 1.2rem; cursor: pointer; gap: .4rem; display: flex; align-items: center; }
+.radio-button input { width: 1.2rem; height: 1.2rem; cursor: pointer; accent-color: var(--primary); }
+.check-box { display: flex; }
+.check-box input { display: none; }
+.check-box label { width: 1.4rem; height: 1.4rem; cursor: pointer; display: flex; justify-content: center; align-items: center; }
+.check-box svg { font-size: 1.4rem; border: 1px solid var(--g6); border-radius: .2rem; background: #fff; color: #fff; }
+.check-box input:checked + label svg { background: rgba(93,135,255,.3); border-color: rgba(93,135,255,.5); color: var(--primary); }
+
+.label-box { margin-bottom: .2rem; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.label-box:last-child { margin-bottom: 0; }
+.label-box.divider-box { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+.label-form { width: 100%; position: relative; min-width: 0; }
+.label-form.divider { width: calc(50% - 1rem); }
+.label-form > p { position: relative; margin-bottom: .5rem; display: flex; align-items: center; }
+.label-form > p span { margin-left: .2rem; }
+.label-form > p .title { font-size: 1.2rem; word-break: break-all; font-weight: 500; color: var(--g3); }
+.label-form > div { gap: .4rem; display: flex; align-items: center; }
+.label-form .hyphen { margin: .4rem; }
+.w25 { width: 25% !important; }
+.w75 { width: 75% !important; }
+
+/* ================= 검색 ================= */
+.search-wrap { margin-bottom: 2rem; background: #f8f8f9; border-radius: .5rem; border: 1px solid var(--g6); }
+.search-form { padding: 2rem; }
+.input-box { flex-wrap: wrap; gap: 2rem; display: flex; align-items: center; }
+.input-box .label-form { width: auto; }
+.input-box.sub .label-form { display: none; }
+.search-wrap.active .input-box.sub { margin-top: 2rem; }
+.search-wrap.active .input-box.sub .label-form { display: block; }
+.search-header { padding: 1rem 2rem; position: relative; flex-wrap: wrap; gap: .8rem; display: flex; justify-content: space-between; align-items: center; }
+.search-header::before { content: ''; width: calc(100% - 4rem); height: .1rem; background: var(--g6); position: absolute; top: 0; }
+.search-title { font-size: 1.2rem; cursor: pointer; display: flex; align-items: center; }
+.search-title::after { content: ''; margin-left: 1rem; width: 1rem; height: .5rem; background: url("data:image/svg+xml,%3Csvg%20width%3D%2210%22%20height%3D%225%22%20viewBox%3D%220%200%2010%205%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M1%200.5L5%204L9%200.5%22%20stroke%3D%22%23202123%22%20stroke-width%3D%220.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%20%3C%2Fsvg%3E") center / contain no-repeat; }
+.search-wrap.active .search-title::after { background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2210%22%20height%3D%225%22%20viewBox%3D%220%200%2010%205%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M1%204.5L5%201L9%204.5%22%20stroke%3D%22%23202123%22%20stroke-width%3D%220.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%20%3C%2Fsvg%3E"); }
+
+/* ================= 테이블 ================= */
+#tableArea { position: relative; min-height: 25rem; }
+.table-area-header { margin-bottom: 1rem; font-size: 1.2rem; flex-wrap: wrap; gap: .8rem; min-height: 3rem; display: flex; justify-content: space-between; align-items: center; }
+.table-area-header .total { white-space: nowrap; }
+.table-tab-list { display: flex; align-items: center; flex-wrap: wrap; gap: .8rem; }
+.table-tab-list li { display: flex; justify-content: center; align-items: center; }
+.table-tab-list button { gap: .6rem; min-height: fit-content; padding: .6rem 1.2rem; border-radius: 1.4rem; color: var(--g1); font-weight: 500; font-size: 1.4rem; border: 1px solid transparent; background: var(--g8); }
+.table-tab-list button .tab-count { font-weight: 600; }
+.table-tab-list button.active { background: var(--bg-blue); color: var(--primary); border-color: var(--primary); }
+.table-tab-list li:not(:last-child)::after { content: ''; display: inline-block; height: 2rem; width: .1rem; background: var(--g6); margin-left: .8rem; }
+#tanstackTable { overflow-x: auto; }
+#tanstackTable table { border-collapse: collapse; width: 100%; min-width: 120rem; text-align: left; table-layout: fixed; }
+#tanstackTable tr { display: flex; align-items: center; }
+#tanstackTable th, #tanstackTable td { flex: 1; padding: 0 1rem; display: flex; align-items: center; min-width: 0; }
+#tanstackTable td > div { padding: 1rem 0; min-width: 0; }
+#tanstackTable tbody tr { border-bottom: 1px solid var(--g6); }
+#tanstackTable tbody tr:hover { background: #fbfbfc; transition: all .2s; }
+#tanstackTable tbody tr:not(.table-nodata) td div,
+#tanstackTable tbody tr:not(.table-nodata) td p { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#tanstackTable thead tr { align-items: stretch; }
+#tanstackTable th { background: var(--g7); min-height: 3.8rem; padding: .2rem 1rem; font-weight: 600; }
+#tanstackTable .checkbox-area { justify-content: center; }
+#tanstackTable .table-nodata { height: 25rem; justify-content: center; }
+#tanstackTable .table-nodata td { justify-content: center; color: var(--g4); }
+#tanstackTable td:has(button) > div { min-width: fit-content; }
+.operate-btn { gap: .5rem; justify-content: flex-start; }
+.operate-btn button { min-height: 0; min-width: 2rem; height: 2rem; width: 2rem; padding: .3rem; }
+.operate-btn button svg { font-size: 1.4rem; }
+#tanstackTable td button:not(.toggle):not(.operate) { min-height: auto; height: 2.4rem; padding: .3rem .6rem; }
+.selectable { font-weight: bold; text-decoration: underline; cursor: pointer; transition: color .1s; position: relative; padding-left: 1.5rem; }
+.selectable::before { content: ''; position: absolute; top: 50%; left: 0; transform: translateY(-50%); width: 1.1rem; height: 1.1rem; background: url("data:image/svg+xml,%3Csvg%20width%3D%2213%22%20height%3D%2213%22%20viewBox%3D%220%200%2013%2013%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M6.11818%201.97266H3.04126C1.93669%201.97266%201.04126%202.86809%201.04126%203.97266V10.1265C1.04126%2011.2311%201.93669%2012.1265%203.04126%2012.1265H9.1951C10.2997%2012.1265%2011.1951%2011.2311%2011.1951%2010.1265V7.04958%22%20stroke%3D%22%23BBBBBB%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M6.11816%207.05003L12.0412%201.12695M12.0412%201.12695H8.65663M12.0412%201.12695V4.51157%22%20stroke%3D%22%23BBBBBB%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%20%3C%2Fsvg%3E") center / contain no-repeat; }
+.selectable:hover { color: var(--primary); }
+.vertical > span { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vertical > span:first-child { padding-bottom: .275rem; }
+.vertical .small { font-size: 1.2rem; }
+.vertical .large { font-size: 1.5rem; }
+.badge-reception { background: var(--g5); display: inline-block; color: #fff; padding: .2rem .5rem; border-radius: .3rem; font-size: 1.1rem; margin-right: .2rem; }
+#tablePagination { min-height: 2.6rem; margin: 1.6rem 0 1rem; gap: .8rem; display: flex; justify-content: center; align-items: center; }
+#tablePagination ul { display: flex; align-items: center; }
+#tablePagination li { cursor: pointer; margin: .3rem; padding: .2rem .5rem; color: var(--g4); transition: color .1s; }
+#tablePagination li.active { color: var(--navy); font-size: 1.4rem; font-weight: bold; }
+#tablePagination li:hover { color: var(--g3); }
+
+/* 라이브 채널 목록 컬럼 비율 (원본 화면과 동일) */
+#liveChannel th:nth-child(1), #liveChannel td:nth-child(1) { flex: .03; }
+#liveChannel th:nth-child(2), #liveChannel td:nth-child(2) { flex: .05; }
+#liveChannel th:nth-child(3), #liveChannel td:nth-child(3) { flex: .28; }
+#liveChannel th:nth-child(4), #liveChannel td:nth-child(4),
+#liveChannel th:nth-child(5), #liveChannel td:nth-child(5) { flex: .07; }
+#liveChannel th:nth-child(6), #liveChannel td:nth-child(6),
+#liveChannel th:nth-child(7), #liveChannel td:nth-child(7) { flex: .08; }
+#liveChannel th:nth-child(8), #liveChannel td:nth-child(8) { flex: .1; justify-content: center; }
+#liveChannel td:nth-child(8) > div { text-align: center; gap: .4rem; display: flex; flex-direction: column; align-items: center; }
+#liveChannel th:nth-child(9), #liveChannel td:nth-child(9),
+#liveChannel th:nth-child(10), #liveChannel td:nth-child(10) { flex: .06; }
+#liveChannel th:nth-child(11), #liveChannel td:nth-child(11) { flex: .18; }
+
+/* ================= 상태 배지 ================= */
+.status { padding: .2rem .8rem; border-radius: 10rem; font-weight: 400; font-size: 1.2rem; width: fit-content; height: 2rem; word-break: keep-all; display: flex !important; justify-content: center; align-items: center; margin-top: .4rem; }
+.status::after { content: ''; width: 1.2rem; height: 1.2rem; min-width: 1.2rem; margin-left: .3rem; opacity: .8; background: center / contain no-repeat; }
+.status-publish { background: rgba(201,60,251,.1); color: #c93cfb; }
+.status-publish::after { background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2215%22%20height%3D%2211%22%20viewBox%3D%220%200%2015%2011%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Ccircle%20cx%3D%227.49996%22%20cy%3D%225.21633%22%20r%3D%221.60201%22%20stroke%3D%22%23C93CFB%22%2F%3E%20%3Cpath%20d%3D%22M10.5394%202.70697C11.3386%203.12133%2011.8992%204.08912%2011.8992%205.21692C11.8992%206.34471%2011.3386%207.3125%2010.5394%207.72686%22%20stroke%3D%22%23C93CFB%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M11.5485%200.692261C12.9894%201.43923%2014%203.18387%2014%205.21694C14%207.25001%2012.9894%208.99465%2011.5485%209.74162%22%20stroke%3D%22%23C93CFB%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M4.46063%202.70697C3.66137%203.12133%203.10076%204.08912%203.10076%205.21692C3.10076%206.34471%203.66137%207.3125%204.46063%207.72686%22%20stroke%3D%22%23C93CFB%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M3.45142%200.692261C2.01059%201.43923%200.999976%203.18387%200.999976%205.21694C0.999976%207.25001%202.01059%208.99465%203.45142%209.74162%22%20stroke%3D%22%23C93CFB%22%20stroke-linecap%3D%22round%22%2F%3E%20%3C%2Fsvg%3E"); }
+.status-idle { background: rgba(151,129,119,.1); color: #978177; }
+.status-idle::after { background-image: url("data:image/svg+xml,%3Csvg%20width%3D%228%22%20height%3D%229%22%20viewBox%3D%220%200%208%209%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M6.69139%207.24606L4.10958%204.91473C3.88118%204.70849%203.53376%204.70849%203.30536%204.91473L0.723552%207.24606C0.315784%207.61427%200.576263%208.29138%201.12566%208.29138H6.28927C6.83868%208.29138%207.09915%207.61427%206.69139%207.24606Z%22%20stroke%3D%22%23978077%22%2F%3E%20%3Cpath%20d%3D%22M6.69139%202.2121L4.10958%204.54343C3.88118%204.74967%203.53376%204.74967%203.30536%204.54343L0.723552%202.2121C0.315784%201.84389%200.576263%201.16678%201.12566%201.16678H6.28927C6.83868%201.16678%207.09915%201.84389%206.69139%202.2121Z%22%20stroke%3D%22%23978077%22%2F%3E%20%3Cpath%20d%3D%22M1.57941%202.8703H5.86715%22%20stroke%3D%22%23978077%22%2F%3E%20%3Cpath%20d%3D%22M3.70752%204.7514V6.97365%22%20stroke%3D%22%23978077%22%2F%3E%20%3C%2Fsvg%3E"); }
+.status-stop { background: rgba(255,145,66,.15); color: var(--yellow); }
+.status-stop::after { background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2221%22%20viewBox%3D%220%200%2020%2021%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M10%2020.6252C15.5228%2020.6252%2020%2016.1481%2020%2010.6252C20%205.1024%2015.5228%200.625244%2010%200.625244C4.47715%200.625244%200%205.1024%200%2010.6252C0%2016.1481%204.47715%2020.6252%2010%2020.6252ZM5%209.62524C4.44772%209.62524%204%2010.073%204%2010.6252C4%2011.1775%204.44772%2011.6252%205%2011.6252H15C15.5523%2011.6252%2016%2011.1775%2016%2010.6252C16%2010.073%2015.5523%209.62524%2015%209.62524H5Z%22%20fill%3D%22%23ff9142%22%2F%3E%20%3C%2Fsvg%3E"); }
+.status-failed { background: rgba(255,65,113,.1); color: var(--error); }
+.status-failed::after { background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2222%22%20height%3D%2222%22%20viewBox%3D%220%200%2022%2022%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Ccircle%20cx%3D%2211%22%20cy%3D%2211.0076%22%20r%3D%2210%22%20stroke%3D%22%23ff4171%22%20stroke-width%3D%222%22%2F%3E%20%3Crect%20x%3D%229.5%22%20y%3D%223.50757%22%20width%3D%223%22%20height%3D%2211%22%20rx%3D%221.5%22%20fill%3D%22%23ff4171%22%2F%3E%20%3Ccircle%20cx%3D%2211%22%20cy%3D%2217.0076%22%20r%3D%221.5%22%20fill%3D%22%23ff4171%22%2F%3E%20%3C%2Fsvg%3E"); }
+.status-ready { background: rgba(251,199,14,.1); color: #fbc70e; }
+.status-ready::after { background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2210%22%20height%3D%2210%22%20viewBox%3D%220%200%2010%2010%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20d%3D%22M5.38281%201V2.6%22%20stroke%3D%22%23FBC70E%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M5.38281%207.40002V9.00002%22%20stroke%3D%22%23FBC70E%22%20stroke-opacity%3D%220.6%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M9.38281%205L7.78281%205%22%20stroke%3D%22%23FBC70E%22%20stroke-opacity%3D%220.8%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M2.98279%205L1.38279%205%22%20stroke%3D%22%23FBC70E%22%20stroke-opacity%3D%220.4%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M8.21118%202.17163L7.07981%203.303%22%20stroke%3D%22%23FBC70E%22%20stroke-opacity%3D%220.9%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M3.68579%206.69702L2.55442%207.82839%22%20stroke%3D%22%23FBC70E%22%20stroke-opacity%3D%220.5%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M8.21118%207.82837L7.07981%206.697%22%20stroke%3D%22%23FBC70E%22%20stroke-opacity%3D%220.7%22%20stroke-linecap%3D%22round%22%2F%3E%20%3Cpath%20d%3D%22M3.68579%203.30298L2.55442%202.17161%22%20stroke%3D%22%23FBC70E%22%20stroke-opacity%3D%220.3%22%20stroke-linecap%3D%22round%22%2F%3E%20%3C%2Fsvg%3E"); }
+.status-reserved { background: rgba(148,111,252,.1); color: #946ffc; }
+.status-reserved::after { background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2210%22%20height%3D%2211%22%20viewBox%3D%220%200%2010%2011%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Ccircle%20cx%3D%225%22%20cy%3D%225.21692%22%20r%3D%224.5%22%20stroke%3D%22%23946FFC%22%2F%3E%20%3Cpath%20d%3D%22M5%202.71692V5.21692H7.5%22%20stroke%3D%22%23946FFC%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%20%3C%2Fsvg%3E"); }
+.status-running { background: var(--bg-blue); color: var(--primary); }
+.status-running::after { background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2221%22%20viewBox%3D%220%200%2020%2021%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M10%2020.6252C15.5228%2020.6252%2020%2016.1481%2020%2010.6252C20%205.1024%2015.5228%200.625244%2010%200.625244C4.47715%200.625244%200%205.1024%200%2010.6252C0%2016.1481%204.47715%2020.6252%2010%2020.6252ZM8.25%2015.3884L15%2011.4913C15.6667%2011.1064%2015.6667%2010.1441%2015%209.75922L8.25%205.8621C7.58333%205.4772%206.75%205.95833%206.75%206.72813L6.75%2014.5224C6.75%2015.2922%207.58333%2015.7733%208.25%2015.3884Z%22%20fill%3D%22%235d87ff%22%2F%3E%20%3C%2Fsvg%3E"); }
+.status-complete { background: rgba(44,224,159,.15); color: #23b37f; }
+.status-complete::after { background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2220%22%20height%3D%2221%22%20viewBox%3D%220%200%2020%2021%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%20%3Cpath%20fill-rule%3D%22evenodd%22%20clip-rule%3D%22evenodd%22%20d%3D%22M10%2020.7324C15.5228%2020.7324%2020%2016.2553%2020%2010.7324C20%205.20957%2015.5228%200.732422%2010%200.732422C4.47715%200.732422%200%205.20957%200%2010.7324C0%2016.2553%204.47715%2020.7324%2010%2020.7324ZM16.2071%207.93953C16.5976%207.549%2016.5976%206.91584%2016.2071%206.52532C15.8166%206.13479%2015.1834%206.13479%2014.7929%206.52532L8.46713%2012.8511L5.17267%209.85612C4.76402%209.48461%204.13157%209.51473%203.76006%209.92339C3.38855%2010.332%203.41867%2010.9645%203.82733%2011.336L7.82733%2014.9724C8.2223%2015.3314%208.82966%2015.317%209.20711%2014.9395L16.2071%207.93953Z%22%20fill%3D%22%232CE09F%22%2F%3E%20%3C%2Fsvg%3E"); }
+.status-use, .status-disuse { background: transparent; height: auto; padding: .2rem 0; font-weight: 500; margin: 0; }
+.status-use { color: var(--green); }
+.status-disuse { color: var(--g4); }
+.status-use::after, .status-disuse::after { display: none; }
+.status-use::before, .status-disuse::before { content: ''; width: .4rem; height: .4rem; border-radius: 1rem; margin-right: .4rem; background: currentColor; }
+
+/* ================= 상세 ================= */
+.detail-container { display: flex; width: 100%; min-height: 60rem; }
+.detail-wrapper { width: 100%; flex: 1; display: flex; }
+.detail-wrapper.column { flex-direction: column; }
+.detail-area { background: #fff; border-radius: .4rem; border: 1px solid var(--g6); flex-direction: column; position: relative; }
+.detail-area:first-child { margin-right: 1.2rem; width: 30%; min-width: 33rem; }
+.detail-area:last-child { width: 70%; display: flex; margin-right: 0; }
+.detail-box { width: 100%; padding: 1.6rem 1.6rem 2rem; position: relative; }
+.detail-box::after { content: ''; width: 100%; height: .1rem; background: var(--g6); position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); }
+.detail-wrapper.column .detail-box::after { width: calc(100% - 4rem); }
+.detail-box:last-child::after { display: none; }
+.detail-box-header { margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; display: flex; justify-content: space-between; align-items: center; }
+.detail-box-header .title { font-weight: 600; font-size: 1.7rem; }
+.group-wrapper.info { flex-wrap: wrap; gap: 1.6rem; display: flex; justify-content: space-between; }
+.group-wrapper.info .label-form:has(.toggle) { display: flex; justify-content: flex-start; align-items: center; }
+.group-wrapper.info .label-form:has(.toggle) > p { margin: 0 .625rem 0 0; }
+.menu-box-protocol { width: 100%; height: 3rem; border: 1px solid rgba(226,226,233,.6); border-radius: .4rem; padding: .4rem .6rem; background: #fbfbfc; display: flex; align-items: center; }
+.content-tab { height: auto; max-width: 6.8rem; background: #f8f8f9; border: 1px solid var(--g6); border-right: 0; border-radius: .4rem 0 0 .4rem; }
+.content-tab + .detail-area { border-radius: 0 .4rem .4rem 0; max-width: calc(100% - 41.8rem); }
+.content-tab ul { padding: .3rem .6rem; width: 100%; }
+.content-tab li { min-width: 5.5rem; min-height: 5.5rem; margin: .5rem 0; color: var(--g3); font-size: 1.3rem; border-radius: .4rem; cursor: pointer; transition: all .1s; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+.content-tab li svg { margin-bottom: .5rem; font-size: 1.7rem; }
+.content-tab li span { white-space: pre-line; text-align: center; }
+.content-tab li span.small { font-size: 1.2rem; }
+.content-tab li:hover { color: rgba(93,135,255,.8); }
+.content-tab li.active { background: #fff; color: var(--primary); font-weight: 600; }
+.content-tab li.non-active { cursor: default; color: var(--g4); }
+.setting-info, .drm-info { width: 100%; display: flex; justify-content: space-between; }
+.drm-info, .cdn-info { border-top: 1px solid var(--g6); }
+.drm-info { position: relative; flex: 1; }
+.drm-info-notice { color: var(--red); font-size: 1.2rem; margin-bottom: 2rem; display: flex; align-items: center; }
+.drm-info-notice svg { margin-right: .2rem; }
+.nodata { min-height: 15.5rem; display: flex; justify-content: center; align-items: center; color: var(--g4); font-weight: 600; font-size: 1.4rem; }
+.record-table #tanstackTable table, .log-table #tanstackTable table, .platform-table #tanstackTable table { min-width: 0; }
+.record-table th, .record-table td { flex: .3 !important; }
+.record-table th:first-child, .record-table td:first-child { flex: .1 !important; }
+.record-table th:nth-child(3), .record-table td:nth-child(3) { flex: 1.3 !important; }
+.record-table th:nth-child(5), .record-table td:nth-child(5) { flex: .4 !important; }
+.log-table th, .log-table td { flex: .3 !important; }
+.log-table th:nth-child(3), .log-table td:nth-child(3) { flex: 1.5 !important; }
+.log-table th:nth-child(4), .log-table td:nth-child(4) { flex: .5 !important; }
+.log-table th:nth-child(5), .log-table td:nth-child(5) { flex: .7 !important; }
+.log-table td > div { padding: .5rem 0 !important; }
+.log-table + .detail-box { padding-bottom: 4rem; }
+.log-table + .detail-box .label-box { display: flex; width: 100%; }
+.platform-table th, .platform-table td { flex: .4 !important; }
+.platform-table th:nth-child(2), .platform-table td:nth-child(2) { flex: 1 !important; }
+.platform-table th:nth-child(3), .platform-table td:nth-child(3) { flex: .7 !important; }
+
+/* ================= 알림·토스트 ================= */
+#confirm { display: none; }
+#confirm.active {
+    position: fixed; inset: 0; background: rgba(0,0,0,.3); z-index: 100000; padding: 0 11%;
+    display: flex; align-items: center; animation: fade .2s;
+}
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+.confirm-box {
+    background: #fff; max-width: 40rem; width: calc(100% - 4rem); min-height: 19.6rem; border-radius: 5px; box-shadow: 0 0 5px rgba(104,110,129,.2);
+    padding: 1.8rem 2.6rem 1.5rem; margin: auto; white-space: pre-line; font-size: 1.6rem; display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+}
+.confirm-box .title { color: var(--primary); font-size: 2rem; font-weight: 600; }
+.confirm-box .text-container { margin: 1rem 0 2.4rem; min-height: 5rem; text-align: center; padding: 1.2rem 0 0; display: flex; align-items: center; }
+.confirm-box .button-container { width: 100%; padding: 0 1.2rem; display: flex; justify-content: space-between; }
+.confirm-box .button-container.single { justify-content: center; }
+.confirm-box .button-container button { height: 3.6rem; max-width: 15rem; width: 100%; margin-left: 1rem; }
+.confirm-box .button-container button:first-child { margin-left: 0; }
+#toast {
+    display: none; position: fixed; bottom: 2rem; right: 1.6rem; margin-left: 1.6rem; z-index: 10000; border-radius: 1rem; padding: 2rem;
+    background: rgba(230,236,255,.8); backdrop-filter: blur(.6rem); border: 1px solid var(--primary); max-width: 64rem; word-break: break-all; align-items: center;
+}
+#toast.active { display: flex; animation: slide .25s; }
+@keyframes slide { from { transform: translateX(2rem); opacity: 0; } to { transform: none; opacity: 1; } }
+#toast p { font-weight: 600; display: flex; align-items: center; }
+#toast svg { color: var(--primary); font-size: 3rem; margin-right: 1rem; }
+
+/* ================= 반응형 (원본과 같은 구간) ================= */
+@media (max-width: 1200px) {
+    .detail-container { flex-direction: column; }
+    .detail-area, .detail-area:first-child, .detail-area:last-child { width: 100%; min-width: auto; margin-right: 0; }
+    .detail-area:first-child { margin-bottom: 2rem; }
+    .content-tab { width: 100%; max-width: none; border-right: 1px solid var(--g6); border-bottom: 0; border-radius: .4rem .4rem 0 0; }
+    .content-tab ul { display: flex; flex-flow: row wrap; padding: .6rem; }
+    .content-tab li { margin: 0 1rem; }
+    .content-tab + .detail-area { max-width: none; border-radius: 0 0 .4rem .4rem; }
+}
+@media (max-width: 768px) {
+    #headerInfo { padding: 0 2rem; }
+    #headerInfo .user-guide p, .info-box p, .preview-chip { display: none; }
+}
+@media (max-width: 425px) {
+    html { font-size: 2.4vw; }
+    #sideMenu { display: none; }
+    #mainWrapper.mob-open #sideMenu { display: flex; position: fixed; top: 0; left: 0; }
+    #mainWrapper.mob-open #sideMenu .fold-btn { display: none; }
+    #headerInfo, #mainWrapper.lnb-fold #headerInfo { width: 100%; }
+    .main, #mainWrapper.lnb-fold .main { width: 100%; }
+    #headerInfo .mobile-menu-btn { display: flex; }
+}
+</style>
+</head>
+<body>
+<div id="mainWrapper">
+    <div id="headerInfo">
+        <div class="btn-wrap">
+            <button class="mobile-menu-btn" data-act="mob-menu" aria-label="메뉴"><svg class="ic" viewBox="0 0 256 256"><path d="M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z"></path></svg></button>
+            <button class="user-guide" data-act="preview-only"><svg class="ic" viewBox="0 0 256 256"><path d="M232,50H160a38,38,0,0,0-32,17.55A38,38,0,0,0,96,50H24a6,6,0,0,0-6,6V200a6,6,0,0,0,6,6H96a26,26,0,0,1,26,26,6,6,0,0,0,12,0,26,26,0,0,1,26-26h72a6,6,0,0,0,6-6V56A6,6,0,0,0,232,50ZM96,194H30V62H96a26,26,0,0,1,26,26V204.31A37.86,37.86,0,0,0,96,194Zm130,0H160a37.87,37.87,0,0,0-26,10.32V88a26,26,0,0,1,26-26h66ZM160,90h40a6,6,0,0,1,0,12H160a6,6,0,0,1,0-12Zm46,38a6,6,0,0,1-6,6H160a6,6,0,0,1,0-12h40A6,6,0,0,1,206,128Zm0,32a6,6,0,0,1-6,6H160a6,6,0,0,1,0-12h40A6,6,0,0,1,206,160Z"></path></svg><p>사용 가이드</p></button>
+        </div>
+        <div class="info-wrapper">
+            <span class="preview-chip">PREVIEW · 더미 데이터</span>
+            <div class="info-box"><svg class="ic" viewBox="0 0 256 256"><path d="M192,96a64,64,0,1,1-64-64A64,64,0,0,1,192,96Z" opacity="0.2"></path><path d="M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z"></path></svg><p>운영자 데모</p></div>
+        </div>
+    </div>
+    <div id="sideMenu"></div>
+    <div class="main">
+        <div id="tabMenu"></div>
+        <div class="main-view" id="mainView"></div>
+    </div>
+</div>
+
+<div id="confirm">
+    <div class="confirm-box">
+        <p class="title">알림</p>
+        <div class="text-container"><p class="message" id="confirmMessage"></p></div>
+        <div class="button-container" id="confirmButtons">
+            <button class="btn-blue" data-act="modal-ok"><p>확인</p></button>
+            <button class="btn-gray" data-act="modal-cancel"><p>취소</p></button>
+        </div>
+    </div>
+</div>
+<div id="toast"><p class="icon"><svg class="ic" viewBox="0 0 256 256"><path d="M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Z" opacity="0.2"></path><path d="M144,176a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176Zm88-48A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128ZM124,96a12,12,0,1,0-12-12A12,12,0,0,0,124,96Z"></path></svg></p><p id="toastMessage"></p></div>
+
+<script>
+/* ================= 아이콘 (Phosphor Icons, MIT) ================= */
+const ICONS = {"PiList":"<path d=\"M224,128a8,8,0,0,1-8,8H40a8,8,0,0,1,0-16H216A8,8,0,0,1,224,128ZM40,72H216a8,8,0,0,0,0-16H40a8,8,0,0,0,0,16ZM216,184H40a8,8,0,0,0,0,16H216a8,8,0,0,0,0-16Z\"></path>","PiBookOpenTextLight":"<path d=\"M232,50H160a38,38,0,0,0-32,17.55A38,38,0,0,0,96,50H24a6,6,0,0,0-6,6V200a6,6,0,0,0,6,6H96a26,26,0,0,1,26,26,6,6,0,0,0,12,0,26,26,0,0,1,26-26h72a6,6,0,0,0,6-6V56A6,6,0,0,0,232,50ZM96,194H30V62H96a26,26,0,0,1,26,26V204.31A37.86,37.86,0,0,0,96,194Zm130,0H160a37.87,37.87,0,0,0-26,10.32V88a26,26,0,0,1,26-26h66ZM160,90h40a6,6,0,0,1,0,12H160a6,6,0,0,1,0-12Zm46,38a6,6,0,0,1-6,6H160a6,6,0,0,1,0-12h40A6,6,0,0,1,206,128Zm0,32a6,6,0,0,1-6,6H160a6,6,0,0,1,0-12h40A6,6,0,0,1,206,160Z\"></path>","PiUserDuotone":"<path d=\"M192,96a64,64,0,1,1-64-64A64,64,0,0,1,192,96Z\" opacity=\"0.2\"></path><path d=\"M230.92,212c-15.23-26.33-38.7-45.21-66.09-54.16a72,72,0,1,0-73.66,0C63.78,166.78,40.31,185.66,25.08,212a8,8,0,1,0,13.85,8c18.84-32.56,52.14-52,89.07-52s70.23,19.44,89.07,52a8,8,0,1,0,13.85-8ZM72,96a56,56,0,1,1,56,56A56.06,56.06,0,0,1,72,96Z\"></path>","PiInfoDuotone":"<path d=\"M224,128a96,96,0,1,1-96-96A96,96,0,0,1,224,128Z\" opacity=\"0.2\"></path><path d=\"M144,176a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176Zm88-48A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128ZM124,96a12,12,0,1,0-12-12A12,12,0,0,0,124,96Z\"></path>","PiCopySimpleDuotone":"<path d=\"M184,72V216H40V72Z\" opacity=\"0.2\"></path><path d=\"M184,64H40a8,8,0,0,0-8,8V216a8,8,0,0,0,8,8H184a8,8,0,0,0,8-8V72A8,8,0,0,0,184,64Zm-8,144H48V80H176ZM224,40V184a8,8,0,0,1-16,0V48H72a8,8,0,0,1,0-16H216A8,8,0,0,1,224,40Z\"></path>","PiCheckBold":"<path d=\"M232.49,80.49l-128,128a12,12,0,0,1-17,0l-56-56a12,12,0,1,1,17-17L96,183,215.51,63.51a12,12,0,0,1,17,17Z\"></path>","PiBroadcast":"<path d=\"M128,88a40,40,0,1,0,40,40A40,40,0,0,0,128,88Zm0,64a24,24,0,1,1,24-24A24,24,0,0,1,128,152Zm73.71,7.14a80,80,0,0,1-14.08,22.2,8,8,0,0,1-11.92-10.67,63.95,63.95,0,0,0,0-85.33,8,8,0,1,1,11.92-10.67,80.08,80.08,0,0,1,14.08,84.47ZM69,103.09a64,64,0,0,0,11.26,67.58,8,8,0,0,1-11.92,10.67,79.93,79.93,0,0,1,0-106.67A8,8,0,1,1,80.29,85.34,63.77,63.77,0,0,0,69,103.09ZM248,128a119.58,119.58,0,0,1-34.29,84,8,8,0,1,1-11.42-11.2,103.9,103.9,0,0,0,0-145.56A8,8,0,1,1,213.71,44,119.58,119.58,0,0,1,248,128ZM53.71,200.78A8,8,0,1,1,42.29,212a119.87,119.87,0,0,1,0-168,8,8,0,1,1,11.42,11.2,103.9,103.9,0,0,0,0,145.56Z\"></path>","PiVideo":"<path d=\"M164.44,105.34l-48-32A8,8,0,0,0,104,80v64a8,8,0,0,0,12.44,6.66l48-32a8,8,0,0,0,0-13.32ZM120,129.05V95l25.58,17ZM216,40H40A16,16,0,0,0,24,56V168a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40Zm0,128H40V56H216V168Zm16,40a8,8,0,0,1-8,8H32a8,8,0,0,1,0-16H224A8,8,0,0,1,232,208Z\"></path>","PiWrench":"<path d=\"M226.76,69a8,8,0,0,0-12.84-2.88l-40.3,37.19-17.23-3.7-3.7-17.23,37.19-40.3A8,8,0,0,0,187,29.24,72,72,0,0,0,88,96,72.34,72.34,0,0,0,94,124.94L33.79,177c-.15.12-.29.26-.43.39a32,32,0,0,0,45.26,45.26c.13-.13.27-.28.39-.42L131.06,162A72,72,0,0,0,232,96,71.56,71.56,0,0,0,226.76,69ZM160,152a56.14,56.14,0,0,1-27.07-7,8,8,0,0,0-9.92,1.77L67.11,211.51a16,16,0,0,1-22.62-22.62L109.18,133a8,8,0,0,0,1.77-9.93,56,56,0,0,1,58.36-82.31l-31.2,33.81a8,8,0,0,0-1.94,7.1L141.83,108a8,8,0,0,0,6.14,6.14l26.35,5.66a8,8,0,0,0,7.1-1.94l33.81-31.2A56.06,56.06,0,0,1,160,152Z\"></path>","PiPlayDuotone":"<path d=\"M228.23,134.69,84.15,222.81A8,8,0,0,1,72,216.12V39.88a8,8,0,0,1,12.15-6.69l144.08,88.12A7.82,7.82,0,0,1,228.23,134.69Z\" opacity=\"0.2\"></path><path d=\"M232.4,114.49,88.32,26.35a16,16,0,0,0-16.2-.3A15.86,15.86,0,0,0,64,39.87V216.13A15.94,15.94,0,0,0,80,232a16.07,16.07,0,0,0,8.36-2.35L232.4,141.51a15.81,15.81,0,0,0,0-27ZM80,215.94V40l143.83,88Z\"></path>","PiCaretDownLight":"<path d=\"M212.24,100.24l-80,80a6,6,0,0,1-8.48,0l-80-80a6,6,0,0,1,8.48-8.48L128,167.51l75.76-75.75a6,6,0,0,1,8.48,8.48Z\"></path>","PiStackDuotone":"<path d=\"M224,80l-96,56L32,80l96-56Z\" opacity=\"0.2\"></path><path d=\"M230.91,172A8,8,0,0,1,228,182.91l-96,56a8,8,0,0,1-8.06,0l-96-56A8,8,0,0,1,36,169.09l92,53.65,92-53.65A8,8,0,0,1,230.91,172ZM220,121.09l-92,53.65L36,121.09A8,8,0,0,0,28,134.91l96,56a8,8,0,0,0,8.06,0l96-56A8,8,0,1,0,220,121.09ZM24,80a8,8,0,0,1,4-6.91l96-56a8,8,0,0,1,8.06,0l96,56a8,8,0,0,1,0,13.82l-96,56a8,8,0,0,1-8.06,0l-96-56A8,8,0,0,1,24,80Zm23.88,0L128,126.74,208.12,80,128,33.26Z\"></path>","PiXLight":"<path d=\"M204.24,195.76a6,6,0,1,1-8.48,8.48L128,136.49,60.24,204.24a6,6,0,0,1-8.48-8.48L119.51,128,51.76,60.24a6,6,0,0,1,8.48-8.48L128,119.51l67.76-67.75a6,6,0,0,1,8.48,8.48L136.49,128Z\"></path>","PiCalendarBlankDuotone":"<path d=\"M216,48V88H40V48a8,8,0,0,1,8-8H208A8,8,0,0,1,216,48Z\" opacity=\"0.2\"></path><path d=\"M208,32H184V24a8,8,0,0,0-16,0v8H88V24a8,8,0,0,0-16,0v8H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V48A16,16,0,0,0,208,32ZM72,48v8a8,8,0,0,0,16,0V48h80v8a8,8,0,0,0,16,0V48h24V80H48V48ZM208,208H48V96H208V208Z\"></path>","PiFilmStripDuotone":"<path d=\"M32,176H224v24a8,8,0,0,1-8,8H40a8,8,0,0,1-8-8ZM216,48H40a8,8,0,0,0-8,8V80H224V56A8,8,0,0,0,216,48Z\" opacity=\"0.2\"></path><path d=\"M216,40H40A16,16,0,0,0,24,56V200a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A16,16,0,0,0,216,40ZM40,88h80v80H40Zm96-16V56h32V72Zm-16,0H88V56h32Zm0,112v16H88V184Zm16,0h32v16H136Zm0-16V88h80v80Zm80-96H184V56h32ZM72,56V72H40V56ZM40,184H72v16H40Zm176,16H184V184h32v16Z\"></path>","PiStopDuotone":"<path d=\"M208,56V200a8,8,0,0,1-8,8H56a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8H200A8,8,0,0,1,208,56Z\" opacity=\"0.2\"></path><path d=\"M200,40H56A16,16,0,0,0,40,56V200a16,16,0,0,0,16,16H200a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm0,160H56V56H200V200Z\"></path>","PiArrowCounterClockwise":"<path d=\"M224,128a96,96,0,0,1-94.71,96H128A95.38,95.38,0,0,1,62.1,197.8a8,8,0,0,1,11-11.63A80,80,0,1,0,71.43,71.39a3.07,3.07,0,0,1-.26.25L44.59,96H72a8,8,0,0,1,0,16H24a8,8,0,0,1-8-8V56a8,8,0,0,1,16,0V85.8L60.25,60A96,96,0,0,1,224,128Z\"></path>","PiMagnifyingGlassLight":"<path d=\"M228.24,219.76l-51.38-51.38a86.15,86.15,0,1,0-8.48,8.48l51.38,51.38a6,6,0,0,0,8.48-8.48ZM38,112a74,74,0,1,1,74,74A74.09,74.09,0,0,1,38,112Z\"></path>","PiPlus":"<path d=\"M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z\"></path>","PiTrash":"<path d=\"M216,48H176V40a24,24,0,0,0-24-24H104A24,24,0,0,0,80,40v8H40a8,8,0,0,0,0,16h8V208a16,16,0,0,0,16,16H192a16,16,0,0,0,16-16V64h8a8,8,0,0,0,0-16ZM96,40a8,8,0,0,1,8-8h48a8,8,0,0,1,8,8v8H96Zm96,168H64V64H192ZM112,104v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Zm48,0v64a8,8,0,0,1-16,0V104a8,8,0,0,1,16,0Z\"></path>","PiMonitorDuotone":"<path d=\"M224,64V176a16,16,0,0,1-16,16H48a16,16,0,0,1-16-16V64A16,16,0,0,1,48,48H208A16,16,0,0,1,224,64Z\" opacity=\"0.2\"></path><path d=\"M208,40H48A24,24,0,0,0,24,64V176a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V64A24,24,0,0,0,208,40Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V64a8,8,0,0,1,8-8H208a8,8,0,0,1,8,8Zm-48,48a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,224Z\"></path>","PiLinkDuotone":"<path d=\"M218.34,119.6,183.6,154.34a46.58,46.58,0,0,1-44.31,12.26c-.31.34-.62.67-.95,1L103.6,202.34A46.63,46.63,0,1,1,37.66,136.4L72.4,101.66A46.6,46.6,0,0,1,116.71,89.4c.31-.34.62-.67,1-1L152.4,53.66a46.63,46.63,0,0,1,65.94,65.94Z\" opacity=\"0.2\"></path><path d=\"M240,88.23a54.43,54.43,0,0,1-16,37L189.25,160a54.27,54.27,0,0,1-38.63,16h-.05A54.63,54.63,0,0,1,96,119.84a8,8,0,0,1,16,.45A38.62,38.62,0,0,0,150.58,160h0a38.39,38.39,0,0,0,27.31-11.31l34.75-34.75a38.63,38.63,0,0,0-54.63-54.63l-11,11A8,8,0,0,1,135.7,59l11-11A54.65,54.65,0,0,1,224,48,54.86,54.86,0,0,1,240,88.23ZM109,185.66l-11,11A38.41,38.41,0,0,1,70.6,208h0a38.63,38.63,0,0,1-27.29-65.94L78,107.31A38.63,38.63,0,0,1,144,135.71a8,8,0,0,0,7.78,8.22H152a8,8,0,0,0,8-7.78A54.86,54.86,0,0,0,144,96a54.65,54.65,0,0,0-77.27,0L32,130.75A54.62,54.62,0,0,0,70.56,224h0a54.28,54.28,0,0,0,38.64-16l11-11A8,8,0,0,0,109,185.66Z\"></path>","PiFilmReelDuotone":"<path d=\"M128,32a96,96,0,1,0,96,96A96,96,0,0,0,128,32ZM80,144a16,16,0,1,1,16-16A16,16,0,0,1,80,144Zm48,48a16,16,0,1,1,16-16A16,16,0,0,1,128,192Zm0-96a16,16,0,1,1,16-16A16,16,0,0,1,128,96Zm48,48a16,16,0,1,1,16-16A16,16,0,0,1,176,144Z\" opacity=\"0.2\"></path><path d=\"M232,216H183.36A103.95,103.95,0,1,0,128,232H232a8,8,0,0,0,0-16ZM40,128a88,88,0,1,1,88,88A88.1,88.1,0,0,1,40,128Zm88-24a24,24,0,1,0-24-24A24,24,0,0,0,128,104Zm0-32a8,8,0,1,1-8,8A8,8,0,0,1,128,72Zm24,104a24,24,0,1,0-24,24A24,24,0,0,0,152,176Zm-32,0a8,8,0,1,1,8,8A8,8,0,0,1,120,176Zm56-24a24,24,0,1,0-24-24A24,24,0,0,0,176,152Zm0-32a8,8,0,1,1-8,8A8,8,0,0,1,176,120ZM80,104a24,24,0,1,0,24,24A24,24,0,0,0,80,104Zm0,32a8,8,0,1,1,8-8A8,8,0,0,1,80,136Z\"></path>","PiGearSixDuotone":"<path d=\"M230.1,108.76,198.25,90.62c-.64-1.16-1.31-2.29-2-3.41l-.12-36A104.61,104.61,0,0,0,162,32L130,49.89c-1.34,0-2.69,0-4,0L94,32A104.58,104.58,0,0,0,59.89,51.25l-.16,36c-.7,1.12-1.37,2.26-2,3.41l-31.84,18.1a99.15,99.15,0,0,0,0,38.46l31.85,18.14c.64,1.16,1.31,2.29,2,3.41l.12,36A104.61,104.61,0,0,0,94,224l32-17.87c1.34,0,2.69,0,4,0L162,224a104.58,104.58,0,0,0,34.08-19.25l.16-36c.7-1.12,1.37-2.26,2-3.41l31.84-18.1A99.15,99.15,0,0,0,230.1,108.76ZM128,168a40,40,0,1,1,40-40A40,40,0,0,1,128,168Z\" opacity=\"0.2\"></path><path d=\"M128,80a48,48,0,1,0,48,48A48.05,48.05,0,0,0,128,80Zm0,80a32,32,0,1,1,32-32A32,32,0,0,1,128,160Zm109.94-52.79a8,8,0,0,0-3.89-5.4l-29.83-17-.12-33.62a8,8,0,0,0-2.83-6.08,111.91,111.91,0,0,0-36.72-20.67,8,8,0,0,0-6.46.59L128,41.85,97.88,25a8,8,0,0,0-6.47-.6A111.92,111.92,0,0,0,54.73,45.15a8,8,0,0,0-2.83,6.07l-.15,33.65-29.83,17a8,8,0,0,0-3.89,5.4,106.47,106.47,0,0,0,0,41.56,8,8,0,0,0,3.89,5.4l29.83,17,.12,33.63a8,8,0,0,0,2.83,6.08,111.91,111.91,0,0,0,36.72,20.67,8,8,0,0,0,6.46-.59L128,214.15,158.12,231a7.91,7.91,0,0,0,3.9,1,8.09,8.09,0,0,0,2.57-.42,112.1,112.1,0,0,0,36.68-20.73,8,8,0,0,0,2.83-6.07l.15-33.65,29.83-17a8,8,0,0,0,3.89-5.4A106.47,106.47,0,0,0,237.94,107.21Zm-15,34.91-28.57,16.25a8,8,0,0,0-3,3c-.58,1-1.19,2.06-1.81,3.06a7.94,7.94,0,0,0-1.22,4.21l-.15,32.25a95.89,95.89,0,0,1-25.37,14.3L134,199.13a8,8,0,0,0-3.91-1h-.19c-1.21,0-2.43,0-3.64,0a8.1,8.1,0,0,0-4.1,1l-28.84,16.1A96,96,0,0,1,67.88,201l-.11-32.2a8,8,0,0,0-1.22-4.22c-.62-1-1.23-2-1.8-3.06a8.09,8.09,0,0,0-3-3.06l-28.6-16.29a90.49,90.49,0,0,1,0-28.26L61.67,97.63a8,8,0,0,0,3-3c.58-1,1.19-2.06,1.81-3.06a7.94,7.94,0,0,0,1.22-4.21l.15-32.25a95.89,95.89,0,0,1,25.37-14.3L122,56.87a8,8,0,0,0,4.1,1c1.21,0,2.43,0,3.64,0a8,8,0,0,0,4.1-1l28.84-16.1A96,96,0,0,1,188.12,55l.11,32.2a8,8,0,0,0,1.22,4.22c.62,1,1.23,2,1.8,3.06a8.09,8.09,0,0,0,3,3.06l28.6,16.29A90.49,90.49,0,0,1,222.9,142.12Z\"></path>","PiClockClockwiseDuotone":"<path d=\"M216,128a88,88,0,1,1-88-88A88,88,0,0,1,216,128Z\" opacity=\"0.2\"></path><path d=\"M136,80v43.47l36.12,21.67a8,8,0,0,1-8.24,13.72l-40-24A8,8,0,0,1,120,128V80a8,8,0,0,1,16,0Zm88-24a8,8,0,0,0-8,8V82c-6.35-7.36-12.83-14.45-20.12-21.83a96,96,0,1,0-2,137.7,8,8,0,0,0-11-11.64A80,80,0,1,1,184.54,71.4C192.68,79.64,199.81,87.58,207,96H184a8,8,0,0,0,0,16h40a8,8,0,0,0,8-8V64A8,8,0,0,0,224,56Z\"></path>","PiAsterisk":"<path d=\"M214.86,180.12a8,8,0,0,1-11,2.74L136,142.13V216a8,8,0,0,1-16,0V142.13L52.12,182.86a8,8,0,1,1-8.23-13.72L112.45,128,43.89,86.86a8,8,0,1,1,8.23-13.72L120,113.87V40a8,8,0,0,1,16,0v73.87l67.88-40.73a8,8,0,1,1,8.23,13.72L143.55,128l68.56,41.14A8,8,0,0,1,214.86,180.12Z\"></path>","PiNotePencilLight":"<path d=\"M228.24,59.76l-32-32a6,6,0,0,0-8.48,0l-96,96A6,6,0,0,0,90,128v32a6,6,0,0,0,6,6h32a6,6,0,0,0,4.24-1.76l96-96A6,6,0,0,0,228.24,59.76ZM125.51,154H102V130.49l66-66L191.51,88ZM200,79.51,176.49,56,192,40.49,215.51,64ZM222,128v80a14,14,0,0,1-14,14H48a14,14,0,0,1-14-14V48A14,14,0,0,1,48,34h80a6,6,0,0,1,0,12H48a2,2,0,0,0-2,2V208a2,2,0,0,0,2,2H208a2,2,0,0,0,2-2V128a6,6,0,0,1,12,0Z\"></path>","PiCaretRight":"<path d=\"M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z\"></path>"}
+const icon = (name, cls = '') => `<svg class="ic ${cls}" viewBox="0 0 256 256">${ICONS[name]}</svg>`
+
+/* ================= 더미 데이터 ================= */
+// 상태 코드 → 이름·배지 (원본 화면의 상태 배지 매핑과 같다)
+const STATUS = {
+    LCC: { name: '생성중', badge: 'ready' },
+    LCW: { name: '대기', badge: 'idle' },
+    LCR: { name: '송출중', badge: 'publish' },
+    LCS: { name: '정지', badge: 'stop' },
+    LCF: { name: '생성 실패', badge: 'failed' },
+    LCB: { name: '예약 송출', badge: 'reserved' },
+}
+const TYPES = { LIVE: 'Live', VODTOLIVE: 'VODToLive', RESTREAM: 'Re-Stream' }
+const CATEGORIES = ['뉴스', '스포츠', '교육', '예능', '쇼핑']
+const YN = { Y: '사용', N: '미사용' }
+const NAMES = [
+    ['morning_news', '아침 뉴스 라이브'], ['baseball_main', '프로야구 메인 중계'], ['math_live', '수학 실시간 강의'],
+    ['prime_shopping', '프라임 쇼핑 라이브'], ['music_stage', '주말 음악 무대'], ['esports_final', 'e스포츠 결승전'],
+    ['weather_now', '실시간 날씨'], ['kids_story', '어린이 동화 채널'], ['cooking_class', '오늘의 쿠킹 클래스'],
+    ['tech_talk', '테크 토크 세미나'], ['concert_replay', '콘서트 다시보기 편성'], ['movie_night', '심야 영화 편성'],
+    ['game_simulcast', '게임 동시 송출'], ['global_news_relay', '글로벌 뉴스 동시 송출'], ['quiz_show', '실시간 퀴즈쇼'],
+]
+const STATUS_CYCLE = ['LCR', 'LCR', 'LCS', 'LCW', 'LCR', 'LCF', 'LCS', 'LCC', 'LCR', 'LCS', 'LCR', 'LCW']
+const pad = n => String(n).padStart(2, '0')
+
+let channels = NAMES.map(([name, view], i) => {
+    const type = [10, 11].includes(i) ? 'VODTOLIVE' : [12, 13].includes(i) ? 'RESTREAM' : 'LIVE'
+    return {
+        idx: i + 1,
+        id: `lc-${(0x3a1f + i * 7919).toString(16)}`,
+        name, view, type,
+        status: type === 'VODTOLIVE' ? ['LCB', 'LCR', 'LCS'][i % 3] : STATUS_CYCLE[i % STATUS_CYCLE.length],
+        protocol: type === 'RESTREAM' ? ['RTMP'] : i % 4 === 0 ? ['HLS', 'LL-HLS'] : ['HLS', 'DASH'],
+        category: i % 6 === 5 ? '' : CATEGORIES[i % 5],
+        bucket: `demo-live-${'abc'[i % 3]}`,
+        dvr: i % 3 !== 2 ? 'Y' : 'N',
+        rec: i % 2 === 0 ? 'Y' : 'N',
+        drm: i % 4 === 1 ? 'Y' : 'N',
+        clip: i % 3 === 0 ? 'N' : 'Y',
+        global: i % 5 === 0 ? 'Y' : 'N',
+        emergency: i % 7 === 0 ? 'Y' : 'N',
+        prism: 'N',
+        template: i % 4 === 2 ? 'Y' : 'N',
+        segDuration: '4',
+        segCount: '5',
+        updater: ['admin01', 'operator02', 'manager03'][i % 3],
+        update: `2026-11-${pad(18 - Math.floor(i / 3))} ${pad(9 + (i % 9))}:${pad((i * 17) % 60)}:${pad((i * 29) % 60)}`,
+        created: `2026-10-${pad(28 - (i % 20))} 10:${pad((i * 13) % 60)}:00`,
+        desc: `${view} 채널입니다. (더미 설명)`,
+    }
+})
+
+/* ================= 상태 ================= */
+const MAX_TAB = 20
+const PAGE_SIZE = 10
+const EMPTY_COND = { type: 'id', keyword: '', start: '', end: '', status: '', category: '', dvr: '', rec: '', drm: '' }
+const LIST_TAB = { key: 'list', name: '채널 관리', path: ['LIVE', '채널 관리'] }
+const state = {
+    tabs: [{ ...LIST_TAB }],
+    active: 'list',
+    cond: { ...EMPTY_COND },
+    applied: { ...EMPTY_COND },
+    searchOpen: false,
+    typeTab: '',
+    page: 1,
+    checked: new Set(),
+    detail: {},
+    expanded: new Set(['live']),
+    fold: false,
+}
+const findChannel = id => channels.find(ch => ch.id === id)
+const activeDetailId = () => (state.active.startsWith('detail:') ? state.active.slice(7) : null)
+
+/* ================= 공통 마크업 ================= */
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]))
+const options = (items, selected) => items.map(([value, label]) => `<option value="${esc(value)}"${value === selected ? ' selected' : ''}>${esc(label)}</option>`).join('')
+const statusBadge = code => `<div class="status status-${STATUS[code].badge}">${STATUS[code].name}</div>`
+const ynBadge = v => `<div class="status status-${v === 'Y' ? 'use' : 'disuse'}">${YN[v]}</div>`
+const labelForm = (title, control, cls = '') => `<div class="label-form ${cls}">${title === null ? '' : `<p><span class="title">${title}</span></p>`}<div>${control}</div></div>`
+const labelBox = (inner, cls = 'divider-box') => `<div class="label-box ${cls}">${inner}</div>`
+const readonly = value => `<input value="${esc(value)}" disabled>`
+const copyBtn = value => `<button class="btn-gray border icon" data-act="copy" data-text="${esc(value)}">${icon('PiCopySimpleDuotone')}<p>복사</p></button>`
+const copyable = value => readonly(value) + copyBtn(value)
+const checkbox = (id, checked, act) => `<div class="check-box"><input type="checkbox" id="cb_${id}" data-act="${act}" data-id="${id}"${checked ? ' checked' : ''}><label for="cb_${id}">${icon('PiCheckBold')}</label></div>`
+
+function table(headers, rows, emptyMessage) {
+    return `<div id="tanstackTable" class="scroll"><table>
+        <thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead>
+        <tbody>${rows.length
+            ? rows.map(cells => `<tr>${cells.map(cell => `<td><div>${cell}</div></td>`).join('')}</tr>`).join('')
+            : `<tr class="table-nodata"><td>${emptyMessage}</td></tr>`}</tbody>
+    </table></div>`
+}
+const pagination = (page, totalPage) => totalPage < 1 ? '' : `<div id="tablePagination"><ul>${Array.from({ length: totalPage }, (_, i) =>
+    `<li data-act="page" data-page="${i + 1}" class="${page === i + 1 ? 'active' : ''}">${i + 1}</li>`).join('')}</ul></div>`
+
+/* ================= 알림·토스트 ================= */
+let toastTimer
+function toast(message) {
+    document.getElementById('toastMessage').textContent = message
+    const el = document.getElementById('toast')
+    el.classList.add('active')
+    clearTimeout(toastTimer)
+    toastTimer = setTimeout(() => el.classList.remove('active'), 2500)
+}
+const notInPreview = () => toast('미리보기에서는 제공하지 않는 화면입니다.')
+
+let modalConfirm = null
+function showConfirm(message, onConfirm) {
+    document.getElementById('confirmMessage').textContent = message
+    // 확인만 있는 알림(onConfirm 없음)은 취소 버튼을 숨긴다.
+    document.querySelector('[data-act="modal-cancel"]').style.display = onConfirm ? '' : 'none'
+    document.getElementById('confirmButtons').classList.toggle('single', !onConfirm)
+    modalConfirm = onConfirm
+    document.getElementById('confirm').classList.add('active')
+}
+const showAlert = message => showConfirm(message, null)
+function closeModal(ok) {
+    document.getElementById('confirm').classList.remove('active')
+    const fn = modalConfirm
+    modalConfirm = null
+    if (ok && fn) fn()
+}
+function copyText(text) {
+    const done = () => toast(`${text} 문구가 복사되었습니다.`)
+    navigator.clipboard?.writeText(text).then(done, done) ?? done()
+}
+
+/* ================= LNB ================= */
+const MENU = [
+    { id: 'live', name: 'LIVE', icon: 'PiBroadcast', items: ['채널 관리', '스케줄 관리', '편성 관리', '모니터링'] },
+    { id: 'vod', name: 'VOD', icon: 'PiVideo', items: ['콘텐츠 관리', '채널 관리', '프로필 관리'] },
+    { id: 'settings', name: '관리자', icon: 'PiWrench', items: ['계정 관리', '그룹 관리', '스토리지 관리'] },
+]
+
+function renderLnb() {
+    const liveActive = state.tabs.some(tab => tab.key === state.active)
+    const isListActive = state.active === 'list'
+    const lnb = document.getElementById('sideMenu')
+    lnb.classList.toggle('fold', state.fold)
+    document.getElementById('mainWrapper').classList.toggle('lnb-fold', state.fold)
+    lnb.innerHTML = `
+        <div class="fold-btn" data-act="fold"></div>
+        <div class="logo-box">
+            <div class="logo"><span class="logo-mark">${icon('PiPlayDuotone')}</span><span class="logo-text">Stream Console</span></div>
+        </div>
+        <div class="menu-box">
+            <div class="menu-list">
+            ${MENU.map(group => {
+                const expanded = state.expanded.has(group.id)
+                const groupActive = group.id === 'live' && liveActive
+                return `<div class="menu-group">
+                    <div class="menu-group-title${expanded ? ' expanded' : ''}${groupActive ? ' active' : ''}" data-act="group" data-group="${group.id}">
+                        ${icon(group.icon)}<div class="menu-group-name">${group.name}</div>${icon('PiCaretDownLight', 'icon')}
+                    </div>
+                    <div class="menu-sub">
+                        ${expanded || state.fold ? group.items.map(item => {
+                            const isLiveChannel = group.id === 'live' && item === '채널 관리'
+                            return `<div class="menu-link${isLiveChannel && isListActive ? ' active' : ''}" data-act="${isLiveChannel ? 'menu-live-channel' : 'menu-other'}">
+                                <div class="menu-name">${item}</div></div>`
+                        }).join('') : ''}
+                    </div>
+                </div>`
+            }).join('')}
+            </div>
+        </div>`
+}
+
+/* ================= 탭 ================= */
+function renderTabs() {
+    const el = document.getElementById('tabMenu')
+    if (!state.tabs.length) {
+        el.innerHTML = ''
+        return
+    }
+    el.innerHTML = `
+        <div class="tab-handler">
+            <div class="tab-counter">${icon('PiStackDuotone')}현재 열린 탭<p>${state.tabs.length}</p>/${MAX_TAB}</div>
+            <div class="tab-close-btn"><div data-act="close-others">다른 탭 닫기</div><div data-act="close-all">모두 닫기</div></div>
+        </div>
+        <div class="tab-wrapper">
+            ${state.tabs.map(tab => `
+                <div class="tab-box${tab.key === state.active ? ' active' : ''}" data-act="tab" data-key="${esc(tab.key)}" title="${esc(tab.name)}">
+                    ${icon('PiBroadcast')}<span class="tab-name">${esc(tab.name)}</span>
+                    <span class="close" data-act="tab-close" data-key="${esc(tab.key)}">${icon('PiXLight')}</span>
+                </div>`).join('')}
+        </div>`
+}
+
+function openTab(tab) {
+    if (!state.tabs.some(t => t.key === tab.key)) state.tabs.push(tab)
+    state.active = tab.key
+    document.getElementById('mainWrapper').classList.remove('mob-open')
+    render()
+}
+
+function closeTab(key) {
+    const index = state.tabs.findIndex(tab => tab.key === key)
+    if (index < 0) return
+    state.tabs.splice(index, 1)
+    if (state.active === key) state.active = state.tabs[Math.min(index, state.tabs.length - 1)]?.key ?? ''
+    if (key.startsWith('detail:')) delete state.detail[key.slice(7)]
+    render()
+}
+
+function openDetail(id) {
+    const ch = findChannel(id)
+    if (!ch) return
+    state.detail[id] ??= { tab: 'config', draft: { ...ch }, log: null, quality: '1080p' }
+    openTab({ key: `detail:${id}`, name: `채널 상세 - ${ch.view}`, path: ['LIVE', '채널 관리', '채널 상세'] })
+}
+
+/* ================= 목록 화면 ================= */
+function filteredByCondition() {
+    const c = state.applied
+    const keyword = c.keyword.trim().toLowerCase()
+    return channels.filter(ch => {
+        if (keyword) {
+            const target = { id: ch.id, name: `${ch.name} ${ch.view}`, bucket: ch.bucket, updater: ch.updater }[c.type]
+            if (!target.toLowerCase().includes(keyword)) return false
+        }
+        const day = ch.update.slice(0, 10)
+        if (c.start && day < c.start) return false
+        if (c.end && day > c.end) return false
+        if (c.status && ch.status !== c.status) return false
+        if (c.category === '0' ? ch.category !== '' : c.category && ch.category !== c.category) return false
+        return ['dvr', 'rec', 'drm'].every(key => !c[key] || ch[key] === c[key])
+    })
+}
+
+const radios = key => `<ul class="radio-button">${[['', '전체'], ['Y', '사용'], ['N', '미사용']].map(([value, label]) =>
+    `<li><label><input type="radio" name="${key}" value="${value}" data-cond="${key}"${state.cond[key] === value ? ' checked' : ''}><p>${label}</p></label></li>`).join('')}</ul>`
+
+function listRow(ch, no) {
+    const isVodToLive = ch.type === 'VODTOLIVE'
+    const stoppable = isVodToLive ? ['LCR', 'LCB'] : ['LCW', 'LCR']
+    const service = isVodToLive
+        ? `<button class="btn-blue border icon operate" title="편성" data-act="preview-only"${['LCC', 'LCS'].includes(ch.status) ? ' disabled' : ''}>${icon('PiCalendarBlankDuotone')}</button>`
+        : `<button class="btn-yellow border icon operate" title="클립" data-act="preview-only"${ch.status !== 'LCR' || ch.clip === 'N' ? ' disabled' : ''}>${icon('PiFilmStripDuotone')}</button>`
+    return `<tr>
+        <td class="checkbox-area">${checkbox(ch.id, state.checked.has(ch.id), 'check')}</td>
+        <td><div>${no}</div></td>
+        <td><div class="vertical"><span class="small">${ch.id}</span><span class="selectable large" data-act="open" data-id="${ch.id}">${esc(ch.view)}</span></div></td>
+        <td><div class="btn-wrap operate-btn">
+            <button class="btn-green border icon operate" title="시작" data-act="start" data-id="${ch.id}"${ch.status !== 'LCS' ? ' disabled' : ''}>${icon('PiPlayDuotone')}</button>
+            <button class="btn-black border icon operate" title="정지" data-act="stop" data-id="${ch.id}"${!stoppable.includes(ch.status) || ch.type === 'RESTREAM' ? ' disabled' : ''}>${icon('PiStopDuotone')}</button>
+        </div></td>
+        <td><div class="btn-wrap operate-btn">${service}</div></td>
+        <td><div><span>${TYPES[ch.type]}</span>${statusBadge(ch.status)}</div></td>
+        <td><div><span>${ch.category || '미할당'}</span></div></td>
+        <td><div><span>${ch.bucket}</span><div>${ch.protocol.map(p => `<span class="badge-reception">${p}</span>`).join('')}</div></div></td>
+        <td><div>${ynBadge(ch.dvr)}</div></td>
+        <td><div>${ynBadge(ch.rec)}</div></td>
+        <td><div>${ch.update}(${ch.updater})</div></td>
+    </tr>`
+}
+
+function listView() {
+    const c = state.cond
+    const base = filteredByCondition()
+    const rows = state.typeTab ? base.filter(ch => ch.type === state.typeTab) : base
+    const totalPage = Math.ceil(rows.length / PAGE_SIZE)
+    state.page = Math.max(1, Math.min(state.page, totalPage))
+    const offset = (state.page - 1) * PAGE_SIZE
+    const pageRows = rows.slice(offset, offset + PAGE_SIZE)
+    const allChecked = pageRows.length > 0 && pageRows.every(ch => state.checked.has(ch.id))
+    const typeTabs = [['', '전체'], ...Object.entries(TYPES)]
+
+    return `<div id="liveChannel">
+        <div class="search-wrap${state.searchOpen ? ' active' : ''}">
+            <div class="search-form">
+                <div class="input-box">
+                    ${labelForm('검색 타입 선택', `<select class="selectBox" data-cond="type" style="width:12rem">${options([['id', '채널 ID'], ['name', '채널명'], ['bucket', '버킷명'], ['updater', '수정자 ID']], c.type)}</select>
+                        <input data-cond="keyword" placeholder="검색어를 입력하세요" value="${esc(c.keyword)}" style="width:20rem">`)}
+                    ${labelForm('수정 일시', `<input type="date" data-cond="start" value="${c.start}"><p class="hyphen">-</p><input type="date" data-cond="end" value="${c.end}">`)}
+                    ${labelForm('채널 상태', `<select class="selectBox" data-cond="status">${options([['', '전체'], ...Object.entries(STATUS).map(([k, v]) => [k, v.name])], c.status)}</select>`)}
+                    ${labelForm('카테고리', `<select class="selectBox" data-cond="category">${options([['', '전체'], ['0', '미할당'], ...CATEGORIES.map(n => [n, n])], c.category)}</select>`)}
+                </div>
+                <div class="input-box sub">
+                    ${labelForm('DVR', radios('dvr'))}
+                    ${labelForm('녹화', radios('rec'))}
+                    ${labelForm('DRM', radios('drm'))}
+                </div>
+            </div>
+            <div class="search-header">
+                <p class="search-title" data-act="search-fold">상세 검색</p>
+                <div class="btn-wrap">
+                    <button class="btn-gray border short" data-act="search-reset">${icon('PiArrowCounterClockwise')}<p>초기화</p></button>
+                    <button class="btn-black short" data-act="search">${icon('PiMagnifyingGlassLight')}<p>검색</p></button>
+                </div>
+            </div>
+        </div>
+        <div class="live-channel-list">
+            <div id="tableArea">
+                <div class="table-area-header">
+                    <ul class="table-tab-list">
+                        ${typeTabs.map(([value, label]) => `<li><button data-act="type-tab" data-type="${value}" class="${state.typeTab === value ? 'active' : ''}">${label}<span class="tab-count">${value ? base.filter(ch => ch.type === value).length : base.length}</span></button></li>`).join('')}
+                    </ul>
+                    <div class="btn-wrap">
+                        <button class="btn-blue short" data-act="preview-only">${icon('PiPlus')}<p>채널 생성</p></button>
+                        <button class="${state.checked.size ? 'btn-red' : 'btn-gray'} border short" data-act="delete-checked"${state.checked.size ? '' : ' disabled'}>${icon('PiTrash')}<p>선택 삭제</p></button>
+                    </div>
+                </div>
+                <div id="tanstackTable" class="scroll">
+                    <table>
+                        <thead><tr>
+                            <th class="checkbox-area">${checkbox('all', allChecked, 'check-all')}</th>
+                            <th>번호</th><th>채널 ID/명</th><th>재생/정지</th><th>서비스 운영</th><th>채널 타입/상태</th>
+                            <th>카테고리명</th><th>버킷명/프로토콜</th><th>DVR 설정</th><th>녹화 설정</th><th>수정 일시(ID)</th>
+                        </tr></thead>
+                        <tbody>${pageRows.length
+                            ? pageRows.map((ch, i) => listRow(ch, rows.length - offset - i)).join('')
+                            : '<tr class="table-nodata"><td>검색 결과가 없습니다.</td></tr>'}</tbody>
+                    </table>
+                </div>
+                ${pagination(state.page, totalPage)}
+            </div>
+        </div>
+    </div>`
+}
+
+/* ================= 상세 화면 ================= */
+function detailTabs(ch) {
+    const middle = ch.type === 'RESTREAM'
+        ? [['platform', '플랫폼 정보', 'PiBroadcast']]
+        : [['quality', '화질 정보', 'PiMonitorDuotone'], ['url', 'URL 정보', 'PiLinkDuotone'], ['record', '녹화 정보', 'PiFilmReelDuotone']]
+    return [['config', '설정 정보', 'PiGearSixDuotone'], ...middle, ['history', '히스토리', 'PiClockClockwiseDuotone']]
+}
+
+function isTabDisabled(ch, tabId) {
+    const creatingOrFail = ch.status === 'LCC' || ch.status === 'LCF'
+    if (tabId === 'url') return creatingOrFail
+    if (tabId === 'record') return ch.type !== 'LIVE' || creatingOrFail || ch.rec === 'N'
+    return false
+}
+
+const QUALITIES = {
+    '1080p': ['1920×1080', '6,000 kbps', '30 fps'],
+    '720p': ['1280×720', '3,000 kbps', '30 fps'],
+    '480p': ['854×480', '1,200 kbps', '30 fps'],
+}
+
+function urlSection(cls, titles, rows, emptyMessage, notice = '') {
+    return `<div class="${cls}"><div class="detail-box">
+        ${notice}
+        ${rows.length ? labelBox(labelForm(titles[0], '', 'w25') + labelForm(titles[1], '', 'w75')) : `<div class="nodata">${emptyMessage}</div>`}
+        <div class="group-wrapper info">
+            ${rows.map(([name, url]) => labelBox(labelForm(null, readonly(name), 'w25') + labelForm(null, copyable(url), 'w75'))).join('')}
+        </div>
+    </div></div>`
+}
+
+function tabContent(ch, detail) {
+    switch (detail.tab) {
+        case 'config':
+            return `<div class="detail-wrapper column"><div class="detail-box"><div class="group-wrapper info">
+                ${labelForm('기본 송출 URL', copyable('rtmp://ingest.example.com/live'))}
+                ${labelForm('Global 송출 URL', copyable(ch.global === 'Y' ? 'rtmp://global-ingest.example.com/live' : '-'))}
+                ${labelBox(labelForm('송출 이중화', readonly(YN[ch.idx % 2 ? 'Y' : 'N']), 'divider') + labelForm('DVR 설정', readonly(YN[ch.dvr]), 'divider')
+                    + labelForm('녹화 설정', readonly(YN[ch.rec]), 'divider') + labelForm('레이아웃', readonly(ch.type === 'RESTREAM' ? '-' : '가로형'), 'divider'))}
+                ${labelBox(labelForm('Main 스트림 키', copyable(`sk-main-${ch.id}-demo`), 'divider') + labelForm('Backup 스트림 키', copyable(`sk-backup-${ch.id}-demo`), 'divider'))}
+                ${labelBox(labelForm('채널 생성 시간', readonly(ch.created), 'divider'))}
+            </div></div></div>`
+        case 'quality': {
+            const [resolution, bitrate, fps] = QUALITIES[detail.quality]
+            return `<div class="detail-box"><div class="group-wrapper info">
+                    ${labelBox(labelForm('화질 설정명', readonly('Adaptive 3단계'), 'divider')
+                        + labelForm('화질명', `<select class="selectBox" data-detail="quality">${options(Object.keys(QUALITIES).map(q => [q, q]), detail.quality)}</select>`, 'divider'))}
+                </div></div>
+                <div class="detail-box">
+                    <div class="detail-box-header"><p class="title">출력 정보</p></div>
+                    <div class="group-wrapper info">
+                        ${labelBox(labelForm('해상도', readonly(resolution)) + labelForm('비디오 비트레이트', readonly(bitrate)) + labelForm('프레임레이트', readonly(fps)) + labelForm('비디오 코덱', readonly('H.264')))}
+                        ${labelBox(labelForm('오디오 코덱', readonly('AAC')) + labelForm('오디오 비트레이트', readonly('128 kbps')) + labelForm('샘플레이트', readonly('48 kHz')) + labelForm('채널', readonly('Stereo')))}
+                    </div>
+                </div>`
+        }
+        case 'url': {
+            const recording = ch.rec === 'Y' && ch.status === 'LCR'
+            return urlSection('setting-info', ['서비스 화질명', '서비스 URL'],
+                    Object.keys(QUALITIES).map(q => [q, `https://play.example.com/live/${ch.name}/${q}/index.m3u8`]), '서비스 화질 및 URL 정보가 없습니다')
+                + urlSection('cdn-info', ['Thumbnail 사이즈', 'Thumbnail URL'],
+                    [['640×360', `https://thumb.example.com/live/${ch.name}/640x360.jpg`], ['320×180', `https://thumb.example.com/live/${ch.name}/320x180.jpg`]], 'Thumbnail 사이즈 및 URL 정보가 없습니다')
+                + urlSection('drm-info', ['타임머신 사이즈', '타임머신 URL'],
+                    recording ? [['1080p', `https://play.example.com/timemachine/${ch.name}/index.m3u8`]] : [], '타임머신 URL 정보가 없습니다',
+                    `<p class="drm-info-notice">${icon('PiAsterisk')}타임머신 URL은 레코딩 중일 때만 획득 가능합니다.</p>`)
+        }
+        case 'record': {
+            const files = [4, 3, 2, 1].map(n => [n, '1080p', `${ch.name}_2026111${n}.mp4`, `0${n}:1${n}:2${n}`, `2026-11-1${n} 21:00:00`,
+                n === 4 ? '<div class="status status-running">변환중</div>' : '<div class="status status-complete">완료</div>'])
+            return `<div class="detail-box"><div class="group-wrapper info">
+                    ${labelBox(labelForm('DVR', readonly(YN[ch.dvr])) + labelForm('저장 설정', readonly('자동 저장')) + labelForm('녹화 설정', readonly('즉시 녹화'))
+                        + labelForm('파일 타입', readonly('MP4')) + labelForm('DRM 여부', readonly(YN[ch.drm])))}
+                    ${labelBox(labelForm('버킷명', readonly(ch.bucket)))}
+                    ${labelForm('경로', readonly(`/record/${ch.name}/`))}
+                </div></div>
+                <div class="detail-box record-table"><div id="tableArea">
+                    <div class="table-area-header"><div><div class="total">＊ 총 ${files.length}개</div></div></div>
+                    ${table(['번호', '화질 설정', '파일명', '재생 시간', '생성 일시', '파일 상태'], files, '녹화 파일이 없습니다.')}
+                    ${pagination(1, 1)}
+                </div></div>`
+        }
+        case 'platform': {
+            const platforms = [
+                [2, 'rtmp://relay-a.example.net/app', '외부 플랫폼 A', '<div class="status status-publish">Re-Stream 진행중</div>'],
+                [1, 'rtmp://relay-b.example.net/app', '외부 플랫폼 B', '<div class="status status-idle">연결 대기중</div>'],
+            ]
+            return `<div class="detail-box platform-table"><div id="tableArea">
+                <div class="table-area-header"><div><div class="total">＊ 총 ${platforms.length}개</div></div></div>
+                ${table(['번호', '송출 URL', '플랫폼명', '상태'], platforms, '등록된 플랫폼이 없습니다.')}
+            </div></div>`
+        }
+        case 'history': {
+            const logs = [
+                ['수정', '설정 변경', ch.updater, ch.update, '설명과 카테고리를 수정했습니다.'],
+                ['정지', '채널 제어', 'operator02', '2026-11-12 18:40:12', '채널 송출을 정지했습니다.'],
+                ['시작', '채널 제어', 'operator02', '2026-11-12 09:00:03', '채널 송출을 시작했습니다.'],
+                ['생성', '채널 생성', 'admin01', ch.created, '채널을 생성했습니다.'],
+            ]
+            const log = detail.log === null ? ['', '', '', '', ''] : logs[detail.log]
+            return `<div class="detail-box log-table"><div id="tableArea">
+                    <div class="table-area-header"><div><div class="total">＊ 총 ${logs.length}개</div></div></div>
+                    ${table(['번호', '상태', '타입', '작업자ID', '작업 일시', '상세'],
+                        logs.map((l, i) => [logs.length - i, l[0], l[1], l[2], l[3], `<button class="btn-gray border" data-act="log" data-log="${i}">${icon('PiMagnifyingGlassLight')}<p>보기</p></button>`]),
+                        '히스토리가 없습니다.')}
+                    ${pagination(1, 1)}
+                </div></div>
+                <div class="detail-box">
+                    <div class="detail-box-header"><p class="title">상세 내역 확인</p></div>
+                    <div class="group-wrapper info">
+                        ${labelBox(labelForm('상태', readonly(log[0])) + labelForm('타입', readonly(log[1])) + labelForm('작업자 ID', readonly(log[2])) + labelForm('작업 일시', readonly(log[3])), '')}
+                        ${labelBox(labelForm('작업 내용', `<textarea readonly>${esc(log[4])}</textarea>`), '')}
+                    </div>
+                </div>`
+        }
+    }
+    return ''
+}
+
+function basicInfo(ch, d) {
+    const isLive = ch.type === 'LIVE'
+    const isRestream = ch.type === 'RESTREAM'
+    const isVodToLive = ch.type === 'VODTOLIVE'
+    const stoppable = (isVodToLive ? ['LCR'] : ['LCW', 'LCR']).includes(ch.status) && !isRestream
+    const removable = (isVodToLive ? ['LCW', 'LCF'] : ['LCW', 'LCS', 'LCF']).includes(ch.status)
+    const lowLatency = ch.protocol.includes('LL-HLS')
+
+    const fields = [
+        labelForm('채널명', copyable(ch.name)),
+        labelForm('노출 채널명', copyable(ch.view)),
+        labelForm('채널 ID', copyable(ch.id)),
+        labelForm('카테고리명', `<select class="selectBox" data-draft="category">${options([['', '미할당'], ...CATEGORIES.map(n => [n, n])], d.category)}</select>`),
+        labelBox(labelForm('채널 상태', readonly(STATUS[ch.status].name), 'divider')
+            + labelForm('채널 타입', readonly(TYPES[ch.type])
+                + (isLive && ch.status === 'LCR' ? `<button class="btn-blue border" data-act="preview-only">${icon('PiMonitorDuotone')}<p>모니터링</p></button>` : ''), 'divider')),
+    ]
+    if (!isRestream) {
+        fields.push(labelBox(
+            (isLive ? labelForm('클립 설정', readonly(YN[ch.clip])
+                + (ch.status === 'LCR' && ch.clip === 'Y' ? `<button class="btn-yellow border" data-act="preview-only">${icon('PiFilmStripDuotone')}<p>클립</p></button>` : ''), 'divider') : '')
+            + labelForm('프로토콜', `<div class="menu-box-protocol">${ch.protocol.map(p => `<span class="badge-reception">${p}</span>`).join('')}</div>`, 'divider')))
+        fields.push(lowLatency
+            ? labelBox(labelForm('Target delay', readonly('3'), 'divider'))
+            : labelBox(
+                labelForm('HLS Segment Duration', `<select class="selectBox" data-draft="segDuration">${options(['2', '4', '6', '8', '10'].map(v => [v, v]), d.segDuration)}</select>`, 'divider')
+                + labelForm('HLS Segment Count', `<select class="selectBox" data-draft="segCount">${options(['2', '3', '4', '5', '6', '8', '10'].map(v => [v, v]), d.segCount)}</select>`, 'divider')))
+    }
+    if (isLive) fields.push(labelBox(labelForm('글로벌 여부', readonly(YN[ch.global]), 'divider') + labelForm('긴급 채널 여부', readonly(YN[ch.emergency]), 'divider') + labelForm('프리즘 채널 여부', readonly(YN[ch.prism]), 'divider')))
+    if (isVodToLive) fields.push(labelBox(labelForm('프리즘 채널 여부', readonly(YN[ch.prism]), 'divider')))
+    fields.push(labelBox(labelForm('수정 일시', readonly(ch.update))))
+    if (isLive) fields.push(labelBox(labelForm('템플릿 사용', `<button class="short toggle${ch.template === 'Y' ? ' active' : ''}" data-act="template" data-id="${ch.id}" aria-label="템플릿 사용"></button>`)))
+
+    return `<div class="detail-area">
+        <div class="detail-wrapper column">
+            <div class="detail-box">
+                <div class="detail-box-header">
+                    <p class="title">기본 정보</p>
+                    <div class="btn-wrap gap-2">
+                        ${ch.status === 'LCS' ? `<button class="btn-green border small" data-act="start" data-id="${ch.id}">${icon('PiPlayDuotone')}<p>시작</p></button>` : ''}
+                        ${stoppable ? `<button class="btn-black border small" data-act="stop" data-id="${ch.id}">${icon('PiStopDuotone')}<p>정지</p></button>` : ''}
+                        ${removable ? `<button class="btn-red border small" data-act="delete-one" data-id="${ch.id}">${icon('PiTrash')}<p>삭제</p></button>` : ''}
+                    </div>
+                </div>
+                <div class="group-wrapper info">${fields.join('')}</div>
+            </div>
+            <div class="detail-box"><div class="group-wrapper info">
+                ${labelForm('설명', `<textarea data-draft="desc" placeholder="설명을 입력하세요">${esc(d.desc)}</textarea>`)}
+            </div></div>
+        </div>
+        <div class="btn-wrap bottom">
+            <button class="btn-blue short" data-act="update" data-id="${ch.id}">${icon('PiNotePencilLight')}<p>수정</p></button>
+            <button class="border btn-gray short" data-act="reset" data-id="${ch.id}">${icon('PiArrowCounterClockwise')}<p>초기화</p></button>
+        </div>
+    </div>`
+}
+
+function detailView(id) {
+    const ch = findChannel(id)
+    const detail = state.detail[id]
+    if (!ch || !detail) return '<div class="empty-view">채널 정보를 찾을 수 없습니다.</div>'
+    const tabs = detailTabs(ch)
+    if (!tabs.some(([tabId]) => tabId === detail.tab) || isTabDisabled(ch, detail.tab)) detail.tab = 'config'
+
+    return `<div class="live-channel-detail"><div class="detail-container">
+        ${basicInfo(ch, detail.draft)}
+        <div class="content-tab"><ul>
+            ${tabs.map(([tabId, title, iconName]) => `<li data-act="ctab" data-tab="${tabId}" class="${detail.tab === tabId ? 'active' : ''}${isTabDisabled(ch, tabId) ? ' non-active' : ''}">
+                ${icon(iconName)}<span class="${tabId === 'platform' ? 'small' : ''}">${title}</span></li>`).join('')}
+        </ul></div>
+        <div class="detail-area">${tabContent(ch, detail)}</div>
+    </div></div>`
+}
+
+/* ================= 렌더 ================= */
+function render() {
+    renderLnb()
+    renderTabs()
+    const view = document.getElementById('mainView')
+    const tab = state.tabs.find(t => t.key === state.active)
+    if (!tab) {
+        view.innerHTML = '<div class="empty-view"><p>열린 화면이 없습니다.<br>좌측 메뉴에서 <b>LIVE › 채널</b>을 선택하세요.</p></div>'
+        return
+    }
+    const isDetail = tab.key.startsWith('detail:')
+    view.innerHTML = `<div class="page-view ${isDetail ? 'detail' : 'list'}">
+        <div id="pathWrapper">
+            <div id="breadcrumb">${tab.path.map((name, i) => i === tab.path.length - 1
+                ? `<span class="title">${esc(name)}</span>`
+                : `<span>${esc(name)}${icon('PiCaretRight')}</span>`).join('')}</div>
+            <button class="page-close-btn" data-act="tab-close" data-key="${esc(tab.key)}"><p>닫기</p></button>
+        </div>
+        <div class="page-body scroll">${isDetail ? detailView(tab.key.slice(7)) : listView()}</div>
+    </div>`
+}
+
+/* ================= 동작 ================= */
+function setStatus(id, status) {
+    findChannel(id).status = status
+    render()
+    showAlert('완료되었습니다.')
+}
+
+function removeChannels(ids) {
+    channels = channels.filter(ch => !ids.includes(ch.id))
+    ids.forEach(id => {
+        state.checked.delete(id)
+        const key = `detail:${id}`
+        state.tabs = state.tabs.filter(tab => tab.key !== key)
+        delete state.detail[id]
+        if (state.active === key) state.active = 'list'
+    })
+    render()
+    showAlert('삭제되었습니다.')
+}
+
+function applySearch() {
+    state.applied = { ...state.cond }
+    state.page = 1
+    render()
+}
+
+const actions = {
+    fold: () => { state.fold = !state.fold; render() },
+    'mob-menu': () => document.getElementById('mainWrapper').classList.toggle('mob-open'),
+    group: el => {
+        if (state.fold) return
+        const id = el.dataset.group
+        state.expanded.has(id) ? state.expanded.delete(id) : state.expanded.add(id)
+        renderLnb()
+    },
+    'menu-live-channel': () => openTab({ ...LIST_TAB }),
+    'menu-other': () => toast('미리보기에서는 LIVE › 채널 메뉴만 볼 수 있습니다.'),
+    tab: el => { state.active = el.dataset.key; render() },
+    'tab-close': el => closeTab(el.dataset.key),
+    'close-others': () => {
+        state.tabs = state.tabs.filter(tab => tab.key === state.active)
+        Object.keys(state.detail).forEach(id => { if (`detail:${id}` !== state.active) delete state.detail[id] })
+        render()
+    },
+    'close-all': () => { state.tabs = []; state.detail = {}; state.active = ''; render() },
+    'preview-only': notInPreview,
+    open: el => openDetail(el.dataset.id),
+    search: applySearch,
+    'search-reset': () => { state.cond = { ...EMPTY_COND }; render() },
+    'search-fold': () => { state.searchOpen = !state.searchOpen; render() },
+    'type-tab': el => { state.typeTab = el.dataset.type; state.page = 1; render() },
+    page: el => { state.page = Number(el.dataset.page); render() },
+    check: el => { el.checked ? state.checked.add(el.dataset.id) : state.checked.delete(el.dataset.id); render() },
+    'check-all': el => {
+        document.querySelectorAll('input[data-act="check"]').forEach(box => el.checked ? state.checked.add(box.dataset.id) : state.checked.delete(box.dataset.id))
+        render()
+    },
+    'delete-checked': () => {
+        const targets = channels.filter(ch => state.checked.has(ch.id))
+        const allowed = targets.every(ch => (ch.type === 'VODTOLIVE' ? ['LCW', 'LCF'] : ['LCW', 'LCS', 'LCF']).includes(ch.status))
+        if (!allowed) return showAlert('준비, 생성 실패, 정지(VODToLive 제외)인\n채널 상태만 삭제 가능합니다.')
+        showConfirm(`선택한 채널${targets.length > 1 ? ` ${targets.length}개를` : '을'} 삭제하시겠습니까?`, () => removeChannels(targets.map(ch => ch.id)))
+    },
+    'delete-one': el => showConfirm('채널을 삭제하시겠습니까?', () => removeChannels([el.dataset.id])),
+    start: el => showConfirm('채널을 시작합니다.', () => setStatus(el.dataset.id, 'LCR')),
+    stop: el => showConfirm('채널을 정지합니다.', () => setStatus(el.dataset.id, 'LCS')),
+    copy: el => copyText(el.dataset.text),
+    template: el => {
+        const ch = findChannel(el.dataset.id)
+        showConfirm(ch.template === 'Y' ? '템플릿 미사용으로 설정하시겠습니까?' : '템플릿 사용으로 설정하시겠습니까?', () => {
+            ch.template = ch.template === 'Y' ? 'N' : 'Y'
+            render()
+        })
+    },
+    update: el => showConfirm('수정하시겠습니까?', () => {
+        const ch = findChannel(el.dataset.id)
+        const { category, segDuration, segCount, desc } = state.detail[ch.id].draft
+        const now = new Date()
+        Object.assign(ch, {
+            category, segDuration, segCount, desc, updater: 'demo_user',
+            update: `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`,
+        })
+        render()
+        showAlert('수정되었습니다.')
+    }),
+    reset: el => { state.detail[el.dataset.id].draft = { ...findChannel(el.dataset.id) }; render() },
+    ctab: el => {
+        if (el.classList.contains('non-active')) return
+        const detail = state.detail[activeDetailId()]
+        detail.tab = el.dataset.tab
+        detail.log = null
+        render()
+    },
+    log: el => { state.detail[activeDetailId()].log = Number(el.dataset.log); render() },
+    'modal-ok': () => closeModal(true),
+    'modal-cancel': () => closeModal(false),
+}
+
+document.addEventListener('click', event => {
+    const el = event.target.closest('[data-act]')
+    if (!el || el.disabled) return
+    // 체크박스는 label 클릭이 input 클릭을 한 번 더 만들므로 input에서만 처리한다.
+    if (el.matches('input[type="checkbox"]') !== (event.target.tagName === 'INPUT')) return
+    actions[el.dataset.act]?.(el)
+})
+
+// 입력값은 다시 그리지 않고 상태에만 담는다(입력 중 포커스 유지).
+const onInput = event => {
+    const el = event.target
+    if (el.dataset.cond) state.cond[el.dataset.cond] = el.value
+    if (el.dataset.draft) state.detail[activeDetailId()].draft[el.dataset.draft] = el.value
+}
+document.addEventListener('input', onInput)
+document.addEventListener('change', event => {
+    onInput(event)
+    if (event.target.dataset.detail === 'quality') {
+        state.detail[activeDetailId()].quality = event.target.value
+        render()
+    }
+})
+document.addEventListener('keydown', event => {
+    if (event.key === 'Enter' && event.target.dataset?.cond === 'keyword') applySearch()
+    if (event.key === 'Escape') closeModal(false)
+})
+
+// 좁은 화면(태블릿 폭)에서는 원본처럼 LNB를 접어서 시작한다.
+state.fold = window.innerWidth <= 768 && window.innerWidth > 425
+render()
+</script>
+</body>
+</html>

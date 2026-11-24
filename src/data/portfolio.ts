@@ -25,20 +25,20 @@ export const INTRO: Intro = {
   headline: ['화면 너머의', '구조까지 설계하는', '프론트엔드 엔지니어'],
   highlight: '구조',
   lead: [`안녕하세요, 경력 12년의 프론트엔드 개발자 ${PROFILE.name}입니다.`, 'OTT·미디어 서비스의 웹 화면과 관리자 시스템을 만들어 왔습니다.'],
-  // 참여한 프로젝트 수 (엠브레이스 5, 에이클라미디어그룹 2, 트리포스 7)
-  metric: { label: 'PROJECTS', value: '14' },
+  // 참여한 프로젝트 수 (엠브레이스 6, 에이클라미디어그룹 2, 트리포스 7)
+  metric: { label: 'PROJECTS', value: '15' },
 }
 
 /**
  * 숫자 띠. 3개를 기준으로 디자인했다 (색은 순서대로 라일락·민트·버터).
  * - 웹 개발 경력: 회사별 재직 기간의 합 (2026.10 기준 12년 2개월)
  * - Frontend 실무: 프론트엔드만 맡은 기간. 에이클라미디어그룹(2020.08~)과 엠브레이스의 합 (6년 2개월). 트리포스는 JSP·SQL까지 맡은 웹 개발이라 뺀다
- * - 프로젝트: 엠브레이스 5, 에이클라미디어그룹 2, 트리포스 7
+ * - 프로젝트: 엠브레이스 6, 에이클라미디어그룹 2, 트리포스 7
  */
 export const STATS: Stat[] = [
   { value: '12+', label: '년 웹 개발 경력' },
   { value: '6+', label: '년 Frontend 실무' },
-  { value: '14', label: '개 프로젝트 참여' },
+  { value: '15', label: '개 프로젝트 참여' },
 ]
 
 /** 참여한 제품. 로고 띠에서 이 순서대로 흐른다 */
@@ -56,8 +56,22 @@ export const PRODUCTS: Product[] = [
  * 대표 작업. 위에서부터 01, 02 … 순서로 번호가 붙는다. 성과 수치(metrics)·팀 규모(team)는 실제 숫자가 있을 때만 적는다.
  * 화면 캡처는 포트폴리오 PDF에서 꺼냈다(public/images/works/).
  * CJ ENM AICBP 캡처는 숏츠 제작 화면을 개발 서버로 띄워 찍었다. 사내 API에 접속할 수 없어 데이터(방송·영상)는 샘플이다.
+ * 샘플 화면(sampleUrl)은 사용자가 만든 더미 데이터 HTML이다(public/samples/). 캡처도 그 화면을 찍었다.
  */
 export const WORKS: Work[] = [
+  {
+    id: 'visang',
+    title: '비상교육',
+    company: '엠브레이스',
+    period: '2026.08 – 2026.10',
+    role: '프론트엔드 화면 개발',
+    // 한 줄 설명과 사용 기술은 사용자에게 받으면 채운다
+    summary: '[한 줄 설명]',
+    tags: [],
+    tone: TONE.MINT,
+    imageUrl: '/images/works/visang-live.webp',
+    sampleUrl: '/samples/visang-live-viewer.html',
+  },
   {
     id: 'cj-enm-aicbp',
     title: 'CJ ENM AICBP',
@@ -86,6 +100,7 @@ export const WORKS: Work[] = [
     tags: ['React', 'TypeScript', 'TanStack Query', 'Recoil', 'Video.js', 'SCSS', 'Vite'],
     tone: TONE.LILAC,
     imageUrl: '/images/works/ostream-ncp.webp',
+    sampleUrl: '/samples/ostream-ncp-live-channel.html',
   },
   {
     id: 'cj-enm-genii',
@@ -164,7 +179,7 @@ export const CAREER_TITLE = '12년의 경력'
 export const CAREER: CareerItem[] = [
   { start: '2013', end: '2019', company: '트리포스', role: '웹 개발', summary: 'B2B 웹 서비스와 실시간 관제 시스템 개발·유지보수' },
   { start: '2020', end: '2022', company: '에이클라미디어그룹', role: '웹 프론트엔드', summary: '스포츠 OTT SPOTV NOW·SPOTV ASIA 웹 개발' },
-  { start: '2022', company: '엠브레이스', role: '프론트엔드', summary: 'TVING 백오피스, CJ ENM GENII·AICBP, Ostream 웹 서비스 개발' },
+  { start: '2022', company: '엠브레이스', role: '프론트엔드', summary: 'TVING 백오피스, CJ ENM GENII·AICBP, 비상교육, Ostream 웹 서비스 개발' },
 ]
 
 /** 초기 경력 아카이브(트리포스 프로젝트). 최근 것부터 적는다. 펼치면 2열로 보인다 */

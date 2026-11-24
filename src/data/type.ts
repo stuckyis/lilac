@@ -76,7 +76,7 @@ export interface Work {
   tasks?: string[]
   /** 성과 수치 2개. 실제 숫자가 없으면 비워 둔다 (성과 칸을 그리지 않는다) */
   metrics?: [Metric, Metric]
-  /** 사용 기술 */
+  /** 사용 기술. 비어 있으면 목록을 그리지 않는다 */
   tags: string[]
   /** 썸네일 바탕색 (대표 화면 캡처가 없을 때) */
   tone: Tone
@@ -84,6 +84,8 @@ export interface Work {
   imageUrl?: string
   /** 케이스 스터디 주소. 있을 때만 버튼을 보여준다 */
   caseUrl?: string
+  /** 직접 눌러 볼 수 있는 샘플 화면 주소(public/samples/). 있을 때만 "샘플 화면 보기" 버튼을 보여준다 */
+  sampleUrl?: string
 }
 
 /** 그 밖의 작업 (카드) */
