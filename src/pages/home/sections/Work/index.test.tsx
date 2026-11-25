@@ -32,8 +32,13 @@ describe('Work', () => {
     const panel = getPanel()
     expect(panel).toHaveAttribute('aria-labelledby', tabs[0].id)
     expect(within(panel).getByText(WORKS[0].summary)).toBeInTheDocument()
-    expect(within(within(panel).getByRole('list', { name: '맡은 일' })).getAllByRole('listitem')).toHaveLength(WORKS[0].tasks?.length ?? 0)
-    expect(within(within(panel).getByRole('list', { name: '사용 기술' })).getAllByRole('listitem')).toHaveLength(WORKS[0].tags.length)
+    // 맡은 일·기술 목록은 내용이 있을 때만 있다 (아직 받지 못한 작업은 비어 있을 수 있다)
+    const countItems = (name: string) => {
+      const list = within(panel).queryByRole('list', { name })
+      return list ? within(list).getAllByRole('listitem').length : 0
+    }
+    expect(countItems('맡은 일')).toBe(WORKS[0].tasks?.length ?? 0)
+    expect(countItems('사용 기술')).toBe(WORKS[0].tags.length)
   })
 
   it('제목에 마우스를 올리면 그 작업이 미리보기에 보여야 합니다', async () => {

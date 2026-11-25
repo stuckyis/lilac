@@ -11,8 +11,8 @@ interface WorkDetailProps {
 }
 
 /**
- * 대표 작업 상세: 썸네일, 회사·기간·역할·팀, 요약, 맡은 일, 성과 수치, 기술, 케이스 스터디. 탭 패널(PC)과 아코디언(좁은 화면)이 같이 쓴다.
- * 팀·맡은 일·성과 수치·케이스 스터디는 데이터에 있을 때만 보여준다.
+ * 대표 작업 상세: 썸네일, 회사·기간·역할·팀, 요약, 맡은 일, 성과 수치, 기술, 샘플 화면·케이스 스터디. 탭 패널(PC)과 아코디언(좁은 화면)이 같이 쓴다.
+ * 팀·맡은 일·성과 수치·기술·샘플 화면·케이스 스터디는 데이터에 있을 때만 보여준다.
  */
 const WorkDetail = ({ work, showPlace = true }: WorkDetailProps) => {
   const meta = (showPlace ? [work.company, work.period, work.role, work.team] : [work.role, work.team]).filter(Boolean)
@@ -56,13 +56,22 @@ const WorkDetail = ({ work, showPlace = true }: WorkDetailProps) => {
           </ul>
         )}
 
-        <ul className="work-detail__tags" role="list" aria-label="사용 기술">
-          {work.tags.map(tag => (
-            <li key={tag} className="work-detail__tag">
-              {tag}
-            </li>
-          ))}
-        </ul>
+        {work.tags.length > 0 && (
+          <ul className="work-detail__tags" role="list" aria-label="사용 기술">
+            {work.tags.map(tag => (
+              <li key={tag} className="work-detail__tag">
+                {tag}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {work.sampleUrl && (
+          <a className="work-detail__link" href={work.sampleUrl} target="_blank" rel="noopener noreferrer">
+            샘플 화면 보기 <span className="visually-hidden">(새 창에서 열림)</span>
+            <ArrowRightIcon size={18} />
+          </a>
+        )}
 
         {work.caseUrl && (
           <a className="work-detail__link" href={work.caseUrl} target="_blank" rel="noopener noreferrer">

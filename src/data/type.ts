@@ -9,6 +9,8 @@ export interface SocialLinks {
 /** 기본 정보. 헤더, 첫 화면, 연락 섹션에서 같이 쓴다. */
 export interface Profile {
   name: string
+  /** 영문 이름. 연락 섹션 아래 푸터에 쓴다 (예: 'HONG Gildong') */
+  nameEn: string
   /** 경력을 시작한 연도 (예: '2016') */
   since: string
   /** 지금 일하는 곳 */
@@ -74,7 +76,7 @@ export interface Work {
   tasks?: string[]
   /** 성과 수치 2개. 실제 숫자가 없으면 비워 둔다 (성과 칸을 그리지 않는다) */
   metrics?: [Metric, Metric]
-  /** 사용 기술 */
+  /** 사용 기술. 비어 있으면 목록을 그리지 않는다 */
   tags: string[]
   /** 썸네일 바탕색 (대표 화면 캡처가 없을 때) */
   tone: Tone
@@ -82,6 +84,8 @@ export interface Work {
   imageUrl?: string
   /** 케이스 스터디 주소. 있을 때만 버튼을 보여준다 */
   caseUrl?: string
+  /** 직접 눌러 볼 수 있는 샘플 화면 주소(public/samples/). 있을 때만 "샘플 화면 보기" 버튼을 보여준다 */
+  sampleUrl?: string
 }
 
 /** 그 밖의 작업 (카드) */
@@ -93,13 +97,6 @@ export interface MoreWork {
   imageUrl?: string
   /** 자세히 볼 주소. 있으면 카드 전체가 링크가 된다 */
   url?: string
-}
-
-/** 일하는 방식: 원칙 하나 */
-export interface Principle {
-  title: string
-  /** 이 원칙이 드러난 경험 한두 문장 */
-  description: string
 }
 
 /** 경력 타임라인의 마디 하나 (회사) */

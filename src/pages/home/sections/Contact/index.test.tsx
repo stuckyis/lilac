@@ -34,9 +34,9 @@ describe('Contact', () => {
     expect(within(getSection()).queryByRole('link', { name: /블로그/ })).not.toBeInTheDocument()
   })
 
-  it('푸터에 올해 연도와 이름을 보여줘야 합니다', () => {
+  it('푸터에는 올해 연도와 영문 이름만 보여줘야 합니다', () => {
     const { container } = render(<Contact />)
 
-    expect(container.querySelector('.contact__footer')).toHaveTextContent(`© ${new Date().getFullYear()} ${PROFILE.name}`)
+    expect(container.querySelector('.contact__footer')).toHaveTextContent(new RegExp(`^© ${new Date().getFullYear()} ${PROFILE.nameEn}$`))
   })
 })

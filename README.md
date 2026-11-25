@@ -1,6 +1,6 @@
 # Lilac
 
-프론트엔드 엔지니어 포트폴리오 사이트입니다. 한 화면(홈)에서 작업, 일하는 방식, 경력, 기술을 짧게 볼 수 있습니다.
+프론트엔드 엔지니어 포트폴리오 사이트입니다. 한 화면(홈)에서 작업, 경력, 기술을 짧게 볼 수 있습니다.
 
 React 19 + TypeScript + Vite + pnpm 기반 SPA입니다.
 
@@ -67,11 +67,10 @@ pnpm preview   # 빌드 결과 미리보기
 | 2    | 숫자 띠        | -                     | `Stats`          | `STATS`                              |
 | 3    | 제품 로고 띠   | -                     | `ProductMarquee` | `PRODUCTS`                           |
 | 4    | 대표 작업      | 작업 (`#work`)        | `Work`           | `WORKS`, `MORE_WORKS`                |
-| 5    | 일하는 방식    | 일하는 방식 (`#way`)  | `Way`            | `PRINCIPLES`                         |
-| 6    | 경력           | 경력 (`#career`)      | `Career`         | `CAREER_TITLE`, `CAREER`, `ARCHIVE`  |
-| 7    | 기술 스택      | 기술 (`#stack`)       | `Stack`          | `STACK`                              |
-| 8    | 이 화면의 구조 | 구조 (`#behind`)      | `Behind`         | `BEHIND_NOTES`                       |
-| 9    | 연락 + 푸터    | - (`#contact`)        | `Contact`        | `PROFILE`(이메일, GitHub·LinkedIn)   |
+| 5    | 경력           | 경력 (`#career`)      | `Career`         | `CAREER_TITLE`, `CAREER`, `ARCHIVE`  |
+| 6    | 기술 스택      | 기술 (`#stack`)       | `Stack`          | `STACK`                              |
+| 7    | 이 화면의 구조 | 구조 (`#behind`)      | `Behind`         | `BEHIND_NOTES`                       |
+| 8    | 연락 + 푸터    | - (`#contact`)        | `Contact`        | `PROFILE`(이메일, GitHub·LinkedIn)   |
 
 - **헤더**: 블록 로고(누르면 맨 위로)와 섹션 메뉴. 지금 보는 섹션의 메뉴가 어두운 알약으로 표시됩니다.
 - **404**: 없는 주소로 들어오면 한 칸이 빠진 블록 마크와 "홈으로 돌아가기"를 보여줍니다.
@@ -97,9 +96,10 @@ pnpm preview   # 빌드 결과 미리보기
   - 프로필 사진 `PROFILE.photoUrl`, 제품 로고 `PRODUCTS[].logoUrl`, 대표 작업 캡처 `WORKS[].imageUrl`, 그 밖의 작업 `MORE_WORKS[].imageUrl`
   - 작업 캡처는 `public/images/works/`에 WebP로 넣었습니다. 칸보다 세로로 긴 캡처는 위쪽(메뉴·제목)을 남기고 아래가 잘립니다.
 - **링크**: 케이스 스터디(`WORKS[].caseUrl`)와 그 밖의 작업(`MORE_WORKS[].url`)은 주소를 적었을 때만 버튼·링크가 됩니다.
+- **샘플 화면**: 직접 눌러 볼 수 있는 HTML 샘플은 `public/samples/`에 그대로 넣고, `WORKS[].sampleUrl`에 주소(예: `'/samples/visang-live-viewer.html'`)를 적으면 상세에 "샘플 화면 보기" 버튼(새 탭)이 생깁니다. 지금 샘플은 Ostream for NCP와 비상교육 두 개이고, 더미 데이터만 씁니다.
 - **없으면 숨는 칸**: 대표 작업의 팀 규모(`team`)·맡은 일(`tasks`)·성과 수치(`metrics`)와 기술의 사용 연수(`STACK[].items[].years`)는 적었을 때만 보입니다. 모르는 숫자를 지어내 채우지 않아도 됩니다.
 - **색 칸**: `tone`에 `TONE.LILAC`처럼 색 이름을 적습니다(`src/data/const.ts`). 실제 색은 `src/styles/variables.scss`의 `$tones`에 있습니다.
-- **마지막 업데이트**: 연락 섹션 아래의 날짜는 빌드한 달(서울 기준)이 자동으로 들어갑니다.
+- **푸터**: 연락 섹션 아래에 올해 연도와 영문 이름(`PROFILE.nameEn`)을 보여줍니다.
 
 ## 스크립트
 
@@ -310,7 +310,7 @@ import { LOADING_TYPE } from '@/components/loading/const'
 - **Header** — 화면 위에 고정된 헤더 (블록 로고, 섹션 메뉴). 스크롤하면 반투명 블록 모양으로 바뀝니다
 - **Main Content** — `<Outlet />`으로 렌더링되는 페이지 콘텐츠
 
-사이트 푸터(연도, 마지막 업데이트, 만든 기술)는 따로 두지 않고 홈의 연락 섹션 아래쪽에 넣었습니다.
+사이트 푸터(연도, 영문 이름)는 따로 두지 않고 홈의 연락 섹션 아래쪽에 넣었습니다.
 
 ## 스타일 가이드
 
@@ -420,7 +420,8 @@ import { reveal } from '@/utils/reveal'
 ## 현재 구현 상태
 
 - **홈 화면** — PC(1024px 이상)·태블릿(768~1023px)·모바일(320px까지) 화면을 완성했습니다.
-- **내용** — 이력서·포트폴리오 내용과 작업 화면 캡처를 넣었습니다(2026.10 기준). 프로필 사진과 Ostream for Coupangplay 캡처는 아직 없어서 자리표시가 보입니다.
+- **내용** — 이력서·포트폴리오 내용과 작업 화면 캡처를 넣었습니다(2026.10 기준, CJ ENM AICBP는 2026.11에 추가). 프로필 사진은 아직 없어서 자리표시가 보입니다.
+  - CJ ENM AICBP 캡처는 숏츠 제작 화면을 개발 서버로 띄워 찍었고, 방송·영상 데이터는 샘플입니다.
 - **잠시 숨긴 기능** — 헤더의 서울 시각·이력서 버튼, 첫 화면의 이력서 버튼은 지우지 않고 `[숨김]` 주석으로 남겨 두었습니다.
 - **API 도메인** — `vite.config.ts`의 `getApiDomain()`이 모든 mode에서 빈 문자열을 반환합니다. 서버 데이터를 쓰게 되면 실제 서버 주소 설정이 필요합니다.
 - `useExample.ts`, `useExampleStore.ts`는 참고용 예시 코드입니다.

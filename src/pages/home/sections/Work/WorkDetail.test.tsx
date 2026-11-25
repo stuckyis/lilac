@@ -21,6 +21,7 @@ const FULL_WORK: Work = {
   tags: ['React', 'TypeScript'],
   tone: TONE.LILAC,
   caseUrl: 'https://example.com/case',
+  sampleUrl: '/samples/full.html',
 }
 
 /** 선택 항목을 모두 비운 작업 */
@@ -51,6 +52,21 @@ describe('WorkDetail', () => {
     const link = screen.getByRole('link', { name: '케이스 스터디 보기 (새 창에서 열림)' })
     expect(link).toHaveAttribute('href', FULL_WORK.caseUrl)
     expect(link).toHaveAttribute('target', '_blank')
+  })
+
+  it('샘플 화면 주소가 있으면 새 창으로 여는 "샘플 화면 보기" 링크를 보여줘야 합니다', () => {
+    render(<WorkDetail work={FULL_WORK} />)
+
+    const sample = screen.getByRole('link', { name: '샘플 화면 보기 (새 창에서 열림)' })
+    expect(sample).toHaveAttribute('href', FULL_WORK.sampleUrl)
+    expect(sample).toHaveAttribute('target', '_blank')
+    expect(sample).toHaveAttribute('rel', 'noopener noreferrer')
+  })
+
+  it('사용 기술이 비어 있으면 기술 목록을 그리지 않아야 합니다', () => {
+    render(<WorkDetail work={{ ...MINIMAL_WORK, tags: [] }} />)
+
+    expect(screen.queryByRole('list', { name: '사용 기술' })).not.toBeInTheDocument()
   })
 
   it('없는 항목은 빈 칸 없이 숨겨야 합니다 (지어낸 숫자를 넣지 않아도 되게)', () => {

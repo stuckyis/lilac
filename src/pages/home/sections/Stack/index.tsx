@@ -9,7 +9,7 @@ import './styles.scss'
 const Stack = () => {
   return (
     <section id={SECTION_ID.STACK} className="stack" aria-labelledby="stack-title">
-      <SectionHeading id="stack-title" index="04" label="STACK" title="기술 스택" />
+      <SectionHeading id="stack-title" index="03" label="STACK" title="기술 스택" />
 
       <ul className="stack__groups" role="list">
         {STACK.map(group => (
