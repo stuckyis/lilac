@@ -14,6 +14,7 @@ export const PROFILE: Profile = {
   },
   email: 'away8909@gmail.com',
   resumeUrl: '#',
+  photoUrl: '/images/profile.webp',
   links: {
     github: 'https://github.com/stuckyis',
     linkedin: 'https://www.linkedin.com/in/byeonghwan-oh-874b8b438',
