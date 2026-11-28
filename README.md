@@ -57,6 +57,19 @@ pnpm build     # tsc -b 후 vite build
 pnpm preview   # 빌드 결과 미리보기
 ```
 
+### 배포
+
+[Cloudflare Pages](https://pages.cloudflare.com/)에 GitHub 저장소를 연결해 두어서, `main`에 병합하면 자동으로 빌드·배포됩니다. 주소는 <https://lilac-2r9.pages.dev>입니다. 다른 브랜치에 푸시하면 미리보기 주소에 따로 배포됩니다.
+
+| 설정                   | 값                                            |
+| ---------------------- | --------------------------------------------- |
+| Production branch      | `main`                                        |
+| Build command          | `pnpm build`                                  |
+| Build output directory | `dist`                                        |
+| 환경 변수              | `NODE_VERSION=26.13.1`, `PNPM_VERSION=12.6.0` |
+
+Cloudflare 빌드 서버는 `package.json`의 `packageManager`나 `engines`를 읽지 않습니다. Node·pnpm 버전을 올리면 Cloudflare 대시보드의 환경 변수도 함께 고쳐야 합니다. 배포 주소가 바뀌면 `src/data/site.ts`의 `url`도 고칩니다.
+
 ## 화면 구성
 
 홈(`/`)은 위에서 아래로 다음 섹션을 차례로 보여줍니다. 섹션 코드는 `src/pages/home/sections/<폴더>/`에, 내용은 `src/data/portfolio.ts`에 있습니다.
