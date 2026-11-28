@@ -63,7 +63,7 @@ const WorkAccordion = ({ openId, onChange }: WorkAccordionProps) => {
             </h3>
 
             <div id={toPanelId(work.id)} className="work-accordion__panel" role="region" aria-labelledby={toButtonId(work.id)} hidden={!isOpen}>
-              <WorkDetail work={work} showPlace={false} />
+              <WorkDetail work={work} showPlace={false} showSample={false} />
             </div>
           </li>
         )

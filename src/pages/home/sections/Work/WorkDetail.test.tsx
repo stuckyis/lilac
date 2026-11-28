@@ -63,6 +63,14 @@ describe('WorkDetail', () => {
     expect(sample).toHaveAttribute('rel', 'noopener noreferrer')
   })
 
+  it('showSample이 false면 샘플 화면 주소가 있어도 "샘플 화면 보기" 링크를 그리지 않아야 합니다', () => {
+    render(<WorkDetail work={FULL_WORK} showSample={false} />)
+
+    expect(screen.queryByRole('link', { name: '샘플 화면 보기 (새 창에서 열림)' })).not.toBeInTheDocument()
+    // 케이스 스터디처럼 다른 링크는 그대로 둔다
+    expect(screen.getByRole('link', { name: '케이스 스터디 보기 (새 창에서 열림)' })).toBeInTheDocument()
+  })
+
   it('사용 기술이 비어 있으면 기술 목록을 그리지 않아야 합니다', () => {
     render(<WorkDetail work={{ ...MINIMAL_WORK, tags: [] }} />)
 
