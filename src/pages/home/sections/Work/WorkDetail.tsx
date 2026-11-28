@@ -8,13 +8,15 @@ interface WorkDetailProps {
   work: Work
   /** 회사·기간을 보여줄지. 아코디언은 제목 줄에 이미 있어서 뺀다 */
   showPlace?: boolean
+  /** "샘플 화면 보기"를 보여줄지. 샘플은 PC 화면으로 만든 작업이라 아코디언(좁은 화면)에서는 뺀다 */
+  showSample?: boolean
 }
 
 /**
  * 대표 작업 상세: 썸네일, 회사·기간·역할·팀, 요약, 맡은 일, 성과 수치, 기술, 샘플 화면·케이스 스터디. 탭 패널(PC)과 아코디언(좁은 화면)이 같이 쓴다.
  * 팀·맡은 일·성과 수치·기술·샘플 화면·케이스 스터디는 데이터에 있을 때만 보여준다.
  */
-const WorkDetail = ({ work, showPlace = true }: WorkDetailProps) => {
+const WorkDetail = ({ work, showPlace = true, showSample = true }: WorkDetailProps) => {
   const meta = (showPlace ? [work.company, work.period, work.role, work.team] : [work.role, work.team]).filter(Boolean)
 
   return (
@@ -66,7 +68,7 @@ const WorkDetail = ({ work, showPlace = true }: WorkDetailProps) => {
           </ul>
         )}
 
-        {work.sampleUrl && (
+        {showSample && work.sampleUrl && (
           <a className="work-detail__link" href={work.sampleUrl} target="_blank" rel="noopener noreferrer">
             샘플 화면 보기 <span className="visually-hidden">(새 창에서 열림)</span>
             <ArrowRightIcon size={18} />

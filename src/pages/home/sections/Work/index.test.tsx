@@ -41,6 +41,16 @@ describe('Work', () => {
     expect(countItems('사용 기술')).toBe(WORKS[0].tags.length)
   })
 
+  it('PC 화면(탭)에서는 샘플 화면이 있는 작업에 "샘플 화면 보기" 링크를 보여줘야 합니다', async () => {
+    const user = userEvent.setup()
+    render(<Work />)
+    const index = WORKS.findIndex(work => work.sampleUrl)
+
+    await user.hover(getTabs()[index])
+
+    expect(within(getPanel()).getByRole('link', { name: '샘플 화면 보기 (새 창에서 열림)' })).toHaveAttribute('href', WORKS[index].sampleUrl)
+  })
+
   it('제목에 마우스를 올리면 그 작업이 미리보기에 보여야 합니다', async () => {
     const user = userEvent.setup()
     render(<Work />)
@@ -112,6 +122,19 @@ describe('Work (1024px 미만)', () => {
     expect(within(panel).getByText(WORKS[0].summary)).toBeInTheDocument()
     // 회사·기간은 제목 줄에 있어서 상세에서는 역할·팀만 보여준다
     expect(within(panel).getByText([WORKS[0].role, WORKS[0].team].filter(Boolean).join(' · '))).toBeInTheDocument()
+  })
+
+  it('샘플 화면은 PC용이라, 샘플이 있는 작업을 펼쳐도 "샘플 화면 보기" 링크가 없어야 합니다', async () => {
+    const user = userEvent.setup()
+    mockScreenWidth(390)
+    render(<Work />)
+    const index = WORKS.findIndex(work => work.sampleUrl)
+
+    if (getAccordionButtons()[index].getAttribute('aria-expanded') !== 'true') await user.click(getAccordionButtons()[index])
+
+    const [panel] = getOpenPanels()
+    expect(within(panel).getByText(WORKS[index].summary)).toBeInTheDocument()
+    expect(within(panel).queryByRole('link', { name: '샘플 화면 보기 (새 창에서 열림)' })).not.toBeInTheDocument()
   })
 
   it('다른 제목을 누르면 그 작업만 펼치고, 펼친 제목을 다시 누르면 접혀야 합니다', async () => {

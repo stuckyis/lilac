@@ -101,9 +101,9 @@ export interface MoreWork {
 
 /** 경력 타임라인의 마디 하나 (회사) */
 export interface CareerItem {
-  /** 시작 연도 */
+  /** 입사한 달 ('YYYY.MM') */
   start: string
-  /** 끝난 연도. 없으면 지금 다니는 곳이다 (타임라인에서 강조하고 기간 끝에 NOW를 붙인다) */
+  /** 퇴사한 달 ('YYYY.MM'). 없으면 지금 다니는 곳이다 (타임라인에서 강조하고 기간 끝에 NOW를 붙인다) */
   end?: string
   company: string
   role: string
