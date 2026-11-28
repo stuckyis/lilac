@@ -59,7 +59,13 @@ pnpm preview   # 빌드 결과 미리보기
 
 ### 배포
 
-[Cloudflare Pages](https://pages.cloudflare.com/)에 GitHub 저장소를 연결해 두어서, `main`에 병합하면 자동으로 빌드·배포됩니다. 주소는 <https://lilac-2r9.pages.dev>입니다. 다른 브랜치에 푸시하면 미리보기 주소에 따로 배포됩니다.
+[Cloudflare Pages](https://pages.cloudflare.com/)에 GitHub 저장소를 연결해 두어서, `main`에 병합하면 자동으로 빌드·배포됩니다. 주소는 <https://lilac-2r9.pages.dev>입니다.
+
+작업 흐름은 다음과 같습니다.
+
+1. `develop`에서 작업하고 푸시합니다. 이때는 미리보기 주소(<https://develop.lilac-2r9.pages.dev>)에만 배포되고, 실제 사이트는 바뀌지 않습니다.
+2. `develop` → `main` PR을 엽니다. PR에 Cloudflare Pages 빌드 검사가 붙어서, 병합 전에 빌드가 되는지 알 수 있습니다.
+3. PR을 병합하면 `main`이 자동으로 빌드·배포되어 1분 안팎에 실제 사이트에 반영됩니다.
 
 | 설정                   | 값                                            |
 | ---------------------- | --------------------------------------------- |
@@ -68,7 +74,11 @@ pnpm preview   # 빌드 결과 미리보기
 | Build output directory | `dist`                                        |
 | 환경 변수              | `NODE_VERSION=26.13.1`, `PNPM_VERSION=12.6.0` |
 
-Cloudflare 빌드 서버는 `package.json`의 `packageManager`나 `engines`를 읽지 않습니다. Node·pnpm 버전을 올리면 Cloudflare 대시보드의 환경 변수도 함께 고쳐야 합니다. 배포 주소가 바뀌면 `src/data/site.ts`의 `url`도 고칩니다.
+- **빌드가 실패하면** 실제 사이트는 마지막으로 성공한 배포를 그대로 보여 줍니다. 원인은 Cloudflare 대시보드(Compute → Workers & Pages → `lilac`)의 빌드 로그에서 봅니다.
+- **Node·pnpm 버전**: Cloudflare 빌드 서버는 `package.json`의 `packageManager`나 `engines`를 읽지 않습니다. 버전을 올리면 대시보드의 환경 변수도 함께 고쳐야 합니다.
+- **환경 변수만 바꾸면** 자동으로 다시 배포되지 않습니다. 다음 커밋을 넣거나, 대시보드에서 마지막 배포를 다시 실행(Retry deployment)합니다.
+- **미리보기 주소**도 링크를 아는 사람은 누구나 열 수 있습니다.
+- **배포 주소가 바뀌면** `src/data/site.ts`의 `url`도 고칩니다.
 
 ## 화면 구성
 
