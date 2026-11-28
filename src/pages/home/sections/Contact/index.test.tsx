@@ -3,7 +3,7 @@ import { render, screen, within } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 import Contact from '.'
 
-const getSection = () => screen.getByRole('region', { name: "Let's build the next one." })
+const getSection = () => screen.getByRole('region', { name: 'Thanks for stopping by.' })
 
 describe('Contact', () => {
   it('#contact 영역이고, 영어 제목은 영어로 읽히도록 lang="en"이어야 합니다', () => {
