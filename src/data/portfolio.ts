@@ -25,7 +25,7 @@ export const INTRO: Intro = {
   role: 'FRONTEND ENGINEER',
   headline: ['화면 너머의', '구조까지 설계하는', '프론트엔드 엔지니어'],
   highlight: '구조',
-  lead: [`안녕하세요, 경력 12년의 프론트엔드 개발자 ${PROFILE.name}입니다.`, 'OTT·미디어 서비스의 웹 화면과 관리자 시스템을 만들어 왔습니다.'],
+  lead: [`안녕하세요~! 경력 12년의 프론트엔드 개발자 ${PROFILE.name}이에요.`, 'OTT·미디어 서비스의 웹 화면과 관리자 시스템을 만들어 왔어요.'],
   // 참여한 프로젝트 수 (엠브레이스 6, 에이클라미디어그룹 2, 트리포스 7)
   metric: { label: 'PROJECTS', value: '15' },
 }
@@ -217,6 +217,7 @@ export const STACK: StackGroup[] = [
     tone: TONE.LILAC,
     items: [
       { name: 'React', short: 'Re' },
+      { name: 'Next.js', short: 'Nj' },
       { name: 'Vue 2', short: 'Vu' },
     ],
   },
@@ -228,6 +229,7 @@ export const STACK: StackGroup[] = [
       { name: 'TypeScript', short: 'TS' },
       { name: 'JavaScript', short: 'JS' },
       { name: 'SCSS', short: 'Sc' },
+      { name: 'Tailwind CSS', short: 'Tw' },
       { name: 'CSS', short: 'Cs' },
     ],
   },

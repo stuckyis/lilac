@@ -18,9 +18,9 @@ const Contact = () => {
           05 — CONTACT
         </p>
         <h2 id="contact-title" className="contact__title" lang="en">
-          Let&apos;s build the next one.
+          Thanks for stopping by.
         </h2>
-        <p className="contact__lead">다음 제품, 함께 만들어요. 편하게 연락 주세요.</p>
+        <p className="contact__lead">제 포트폴리오를 끝까지 봐 주셔서 감사해요.</p>
 
         <a className="contact__email" href={`mailto:${PROFILE.email}`}>
           <MailIcon size={22} />
