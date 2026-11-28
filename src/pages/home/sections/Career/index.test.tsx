@@ -3,6 +3,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import Career from '.'
+import { formatTenure, getTenureMonths } from './tenure'
 
 describe('Career', () => {
   it('메뉴의 #career로 이동할 수 있는 경력 영역이어야 합니다', () => {
@@ -21,6 +22,17 @@ describe('Career', () => {
     items.forEach((item, index) => {
       expect(within(item).getByRole('heading', { level: 3, name: CAREER[index].company })).toBeInTheDocument()
     })
+  })
+
+  it('회사마다 재직 기간을 보여주고, 칸 폭은 재직 개월 수에 비례해야 합니다', () => {
+    const { container } = render(<Career />)
+
+    const timeline = container.querySelector('.career__timeline') as HTMLElement
+    const months = CAREER.map(item => getTenureMonths(item.start, item.end))
+    within(timeline)
+      .getAllByRole('listitem')
+      .forEach((item, index) => expect(item).toHaveTextContent(formatTenure(months[index])))
+    expect(timeline.style.getPropertyValue('--career-columns')).toBe(months.map(count => `minmax(220px, ${count}fr)`).join(' '))
   })
 
   it('끝난 연도가 없는 곳은 지금 다니는 곳으로 강조하고 기간 끝에 NOW를 붙여야 합니다', () => {

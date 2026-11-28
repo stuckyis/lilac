@@ -183,12 +183,15 @@ export const MORE_WORKS: MoreWork[] = [
 /** 경력 섹션 제목. 연차가 바뀌면 함께 고친다 (회사별 재직 기간의 합, 2026.10 기준 12년 2개월) */
 export const CAREER_TITLE = '12년의 경력'
 
-/** 경력 타임라인. 오래된 곳부터 적는다. 끝난 연도(end)가 없는 곳이 지금 다니는 곳이다 */
+/**
+ * 경력 타임라인. 오래된 곳부터 적는다. 퇴사한 달(end)이 없는 곳이 지금 다니는 곳이다.
+ * 재직 기간은 입사·퇴사 달로 계산해 보여주고, 타임라인 칸 폭(블록 사이 선 길이)도 재직 기간에 맞춘다.
+ */
 export const CAREER: CareerItem[] = [
-  { start: '2013', end: '2019', company: '트리포스', role: '웹 개발', summary: 'B2B 웹 서비스와 실시간 관제 시스템 개발·유지보수' },
-  { start: '2020', end: '2022', company: '에이클라미디어그룹', role: '웹 프론트엔드', summary: '스포츠 OTT SPOTV NOW·SPOTV ASIA 웹 개발' },
+  { start: '2013.10', end: '2019.09', company: '트리포스', role: '웹 개발', summary: 'B2B 웹 서비스와 실시간 관제 시스템 개발·유지보수' },
+  { start: '2020.08', end: '2022.04', company: '에이클라미디어그룹', role: '웹 프론트엔드', summary: '스포츠 OTT SPOTV NOW·SPOTV ASIA 웹 개발' },
   {
-    start: '2022',
+    start: '2022.06',
     company: '엠브레이스',
     role: '프론트엔드',
     summary: 'TVING 백오피스, CJ ENM GENII·AICBP, 비상교육 온리원, Ostream 웹 서비스 개발',

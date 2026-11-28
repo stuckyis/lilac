@@ -41,10 +41,11 @@ $marker-center-y: 10px;
     padding: 56px 0 40px;
   }
 
-  // 경력 수만큼 같은 폭의 칸을 만든다
+  // 경력 수만큼 칸을 만든다. 칸 폭은 재직 개월 수에 비례한다(--career-columns, Timeline.tsx에서 넣음)
   &__timeline {
     position: relative;
     display: grid;
+    grid-template-columns: var(--career-columns);
     grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
     column-gap: 24px;
@@ -63,6 +64,7 @@ $marker-center-y: 10px;
 
     // 1024px 미만: 위에서 아래로 쌓고, 왼쪽 칸에 세로 선과 블록을 둔다 (768에서 가로 5칸이면 한 칸이 121px라 비좁다)
     @include tablet {
+      grid-template-columns: none;
       grid-auto-flow: row;
       grid-auto-columns: auto;
       row-gap: 28px;
@@ -86,8 +88,10 @@ $marker-center-y: 10px;
     flex-direction: column;
     gap: 12px;
 
+    // 세로 타임라인: 재직 개월 수만큼 칸을 늘려 다음 블록까지의 선 길이로 보여준다 (내용이 더 길면 내용만큼)
     @include tablet {
       gap: 4px;
+      min-height: calc(var(--career-months) * 3px);
     }
   }
 
@@ -149,7 +153,12 @@ $marker-center-y: 10px;
     }
   }
 
+  // 기간 + 재직 기간 칩. 칸이 좁으면 칩이 다음 줄로 내려간다
   &__period {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px 8px;
     font-family: $font-mono;
     font-size: 13px;
     color: $color-muted;
@@ -157,6 +166,18 @@ $marker-center-y: 10px;
     @include mobile {
       font-size: 12px;
     }
+  }
+
+  // 한글이 들어가서 본문 글꼴로 쓴다 (코드 글꼴이면 띄어쓰기가 넓어진다)
+  &__tenure {
+    padding: 2px 8px;
+    border-radius: $radius-pill;
+    background-color: $color-surface-soft;
+    font-family: $font-sans;
+    font-size: 12px;
+    font-weight: $font-weight-medium;
+    line-height: 1.4;
+    color: $color-ink;
   }
 
   &__company {
@@ -195,6 +216,11 @@ $marker-center-y: 10px;
   }
 
   &__node--current &__period {
+    color: $color-accent;
+  }
+
+  &__node--current &__tenure {
+    background-color: $color-accent-soft;
     color: $color-accent;
   }
 }
