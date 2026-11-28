@@ -64,11 +64,17 @@ export const WORKS: Work[] = [
     id: 'visang',
     title: '비상교육 온리원',
     company: '엠브레이스',
-    period: '2026.08 – 2026.10',
-    role: '프론트엔드 화면 개발',
-    // 한 줄 설명과 사용 기술은 사용자에게 받으면 채운다
-    summary: '[한 줄 설명]',
-    tags: [],
+    period: '2026.07 – 2026.11',
+    role: '프론트엔드 개발',
+    summary: '수강생이 라이브 강의를 보며 채팅·퀴즈에 참여하는 교육 방송 시청 웹',
+    // 영상 재생·좋아요·공지는 다른 팀원이 처음 만들어서, 본인 커밋으로 확인된 일만 적는다
+    tasks: [
+      '실시간 채팅 수신 일괄 처리, 가상 스크롤 하단 따라가기',
+      '퀴즈·투표 팝업, 룰렛·타이머 OBS 방송 오버레이',
+      '이모티콘 선택·미리보기 전송, 채팅 보기 탭·저사양 모드',
+      '재방송·VOD 시청 화면, 채팅 소켓 연결·재연결 관리',
+    ],
+    tags: ['Next.js', 'React', 'TypeScript', 'Tailwind CSS', 'TanStack Query', 'Zustand', 'React Virtuoso', 'Ncloud Chat SDK'],
     tone: TONE.MINT,
     imageUrl: '/images/works/visang-live.webp',
     sampleUrl: '/samples/visang-live-viewer.html',
